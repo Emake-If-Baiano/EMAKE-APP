@@ -14,73 +14,108 @@ function button(...data) {
     data[0].style = {
         backgroundColor: "rgb(4, 252, 92)",
     };
-
-    console.log(data[0])
     return PrimaryButton(...data)
 }
 
 export default function StartScreen({ navigation }) {
 
-    const [index, setIndex] = useState("Sim");
+    const [index, setIndex] = useState(0);
 
     useEffect(() => {
-        setIndex("Sim")
+        setIndex(0)
     }, []);
 
     return (
         <Background>
-            {index === "Sim" && <View style={styles.logo}>
+            <View style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+            }}>
+                {index === 0 && <View style={styles.logo}>
 
-            </View>}
+                </View>}
+                {index === 0 && <View style={styles.logo}>
 
-            {index === "Sim" && <View style={styles.logo_if_container}>
-                <Image style={styles.logo_if_image} source={require("../../../assets/logo_if.png")}>
+                </View>}
 
-                </Image>
-            </View>}
+                {index === 0 && <View style={styles.logo_if_container}>
+                    <Image style={styles.logo_if_image} source={require("../../../assets/logo_if.png")}>
 
-            {index === "Sim" && <View style={styles.logo_text_container}>
-                <Text style={styles.logo_text_text}>
-                    Bem vindo ao
-                </Text>
-                <Text style={styles.logo_text_text}>
-                    EMake IF BAIANO!
-                </Text>
-            </View>}
+                    </Image>
+                </View>}
 
-            {index !== "Sim" && <View style={styles.logo_if_container}>
-                <Text></Text>
-            </View>}
+                {index === 0 && <View style={styles.logo_text_container}>
+                    <Text style={styles.logo_text_text}>
+                        Bem vindo ao
+                    </Text>
+                    <Text style={styles.logo_text_text}>
+                        EMake IF BAIANO!
+                    </Text>
+                </View>}
 
-            {index !== "Sim" && <View style={styles.logo_container}>
-                <Image style={styles.logo_image} source={require("../../../assets/logo.png")}>
+                {index !== 0 && <View style={styles.logo_if_container}>
+                    <Text></Text>
+                </View>}
 
-                </Image>
-            </View>}
+                {index !== 0 && <View style={styles.logo_container}>
+                    <Image style={styles.logo_image} source={require("../../../assets/logo.png")}>
+
+                    </Image>
+                </View>}
 
 
-            <View style={index === "Sim" ? styles.image_container : styles.image_container_2}>
+                <View style={index === 0 ? styles.image_container : styles.image_container_2}>
 
-                <OnboardFlow
-                    primaryColor="rgb(4, 252, 92)"
-                    secondaryColor='rgb(4, 252, 92)'
-                    backgroundColor="transparent"
-                    onNext={() => setIndex(index + 1)}
-                    PrimaryButtonComponent={button}
-                    paginationSelectedColor='rgb(4, 252, 92)'
-                    pages={[
-                        {
-                            imageUri: 'https://media.discordapp.net/attachments/1091540686777634826/1099115171470917702/first.png',
-                        },
-                        {
-                            imageUri: 'https://media.discordapp.net/attachments/1091540686777634826/1099115381446164480/second.png'
-                        },
-                        {
-                            imageUri: 'https://media.discordapp.net/attachments/1091540686777634826/1099115477059514570/three.png'
-                        }
-                    ]}
-                    type='inline' // Change to either 'fullscreen', 'bottom-sheet', or 'inline'
-                />
+                    <OnboardFlow
+                        primaryColor="rgb(4, 252, 92)"
+                        secondaryColor='rgb(4, 252, 92)'
+                        backgroundColor="transparent"
+                        onDone={() => {
+                            navigation.navigate("Login")
+                        }}
+                        onNext={() => {
+                            if (index === 2) {
+                                console.log("SETTING - 1");
+
+                                console.log(index);
+
+                                setIndex(i => i - 1);
+
+                                return;
+                            }
+
+                            console.log("SETTING + 1");
+
+                            console.log(index);
+
+                            setIndex(i => i + 1)
+                        }}
+                        onBack={() => {
+                            if (index === 0) return;
+
+                            console.log("SETTING - 1");
+
+                            console.log(index);
+
+                            setIndex(i => i - 1)
+                        }}
+                        PrimaryButtonComponent={button}
+                        paginationSelectedColor='rgb(4, 252, 92)'
+                        pages={[
+                            {
+                                imageUri: 'https://media.discordapp.net/attachments/1091540686777634826/1099115171470917702/first.png',
+                            },
+                            {
+                                imageUri: 'https://media.discordapp.net/attachments/1091540686777634826/1099115381446164480/second.png'
+                            },
+                            {
+                                imageUri: 'https://media.discordapp.net/attachments/1091540686777634826/1099115477059514570/three.png'
+                            }
+                        ]}
+                        type='inline' // Change to either 'fullscreen', 'bottom-sheet', or 'inline'
+                    />
+                </View>
             </View>
 
         </Background>

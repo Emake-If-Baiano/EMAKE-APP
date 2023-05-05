@@ -15,8 +15,6 @@ import Button from '../../components/Button';
 
 import Header from '../../components/Header';
 
-import { ProgressCircle } from 'react-native-svg-charts'
-
 const b = PrimaryButton({ currentPage: 0, totalPages: 3, text: "oi" });
 
 function button(...data) {
@@ -34,25 +32,40 @@ import Login from '../../services/SUAP';
 import { Dimensions } from 'react-native';
 import { Linking } from 'react-native';
 
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
+
 import AsyncStorage
     from '@react-native-async-storage/async-storage';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+
+// import CircularProgress from 'react-native-circular-progress-indicator';
+
 export default function StartScreen({ navigation }) {
 
     const [userInfo, setUserInfo] = useState({});
 
     const [userData, setUserData] = useState({});
 
+    const [boletim, setBoletim] = useState([]);
+
+    const [percent, setPercent] = useState(0);
+
     useEffect(() => {
         AsyncStorage.getItem("userinfo").then(res => {
             const data = JSON.parse(res);
-
+            console.log(res);
             setUserInfo(data);
 
             if (!userData.nome_usual) Login.getUserData(data.token).then(resData => {
                 setUserData(resData);
                 console.log(resData);
-            })
+            });
+
+            if (!boletim.length || !percent) Login.getBoletim(data.token).then(resData => {
+                setBoletim(resData);
+
+                setPercent(100 / (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0)) * (boletim.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0) - boletim.reduce((a, b) => a + Number(b.numero_faltas), 0)));
+            });
         })
     }, [])
 
@@ -86,7 +99,7 @@ export default function StartScreen({ navigation }) {
                     </TouchableOpacity>
 
                     <View style={{
-                        flex: 0.7,
+                        flex: 0.6,
                         flexDirection: "row",
                         justifyContent: "space-around",
                     }}>
@@ -128,7 +141,7 @@ export default function StartScreen({ navigation }) {
                     borderTopStartRadius: 40,
                     width: "95%",
                     alignSelf: "flex-start",
-                    justifyContent: "space-evenly"
+                    justifyContent: "space-evenly",
                 }}>
                     <View style={{
                         flex: 0.3,
@@ -136,8 +149,41 @@ export default function StartScreen({ navigation }) {
                         width: "90%",
                         alignSelf: "center",
                         borderRadius: 15,
+                        justifyContent: "center",
+                        paddingStart: "2%"
                     }}>
-                        <ProgressCircle style={{ height: 200 }} progress={0.7} progressColor={'rgb(134, 65, 244)'} />
+
+                        <AnimatedCircularProgress
+                            size={120}
+                            width={15}
+                            fill={percent}
+                            tintColor="#004AAD"
+                            backgroundColor="white"
+                            lineCap="round"
+                            rotation={180}
+                            duration={4500}
+                        >
+                            {(fill) => (
+                                <Header customStyle={{
+                                    fontSize: 21,
+                                    color: "#004AAD",
+                                    alignSelf: "center",
+                                    fontWeight: "bold"
+                                }}>
+                                    {Math.floor(fill)}%
+                                </Header>
+                            )
+                            }
+                        </AnimatedCircularProgress>
+                    </View>
+
+                    <View style={{
+                        flex: 0.15,
+                        backgroundColor: "#00FF29",
+                        width: "60%",
+                        alignContent: "stretch"
+                    }}>
+
                     </View>
                 </View>
             </View>

@@ -10,6 +10,7 @@ const instance = axios.create({
 
 async function Login(user, password) {
     console.log(user, password, "batata")
+    instance.defaults.headers.common['Authorization'] = null;
     return instance.post(
         '/autenticacao/token/?format=json',
         {
@@ -23,6 +24,17 @@ async function Login(user, password) {
         })
 };
 
+async function getBoletim(token) {
+    instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+    return instance.get("/minhas-informacoes/boletim/2022/1/").then(e => {
+        return e.data
+    }, (err) => {
+        console.log(err);
+
+        return false;
+    })
+};
 async function getUserData(token) {
     instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
@@ -37,5 +49,6 @@ async function getUserData(token) {
 
 export default {
     Login,
-    getUserData
+    getUserData,
+    getBoletim,
 }

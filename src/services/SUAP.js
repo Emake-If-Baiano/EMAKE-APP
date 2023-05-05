@@ -4,6 +4,7 @@ const instance = axios.create({
     baseURL: 'https://suap.ifbaiano.edu.br/api/v2',
     headers: {
         'Content-Type': 'application/json',
+
     }
 });
 
@@ -17,8 +18,24 @@ async function Login(user, password) {
         }).then(res => {
             return res.data
         }, (err) => {
+            console.log(err, user, password)
             return false
         })
+};
+
+async function getUserData(token) {
+    instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+    return instance.get("/minhas-informacoes/meus-dados/").then(e => {
+        return e.data
+    }, (err) => {
+        console.log(err, token);
+
+        return false;
+    })
 }
 
-export default Login;
+export default {
+    Login,
+    getUserData
+}

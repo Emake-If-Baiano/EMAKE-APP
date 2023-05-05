@@ -4,10 +4,10 @@
     "slug": "EMAKE",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/logo.png",
+    "icon": "./assets/icon_app.jpeg",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/logo.png",
+      "image": "./assets/icon_app.jpeg",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -20,13 +20,13 @@
     "android": {
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/logo.png",
+        "foregroundImage": "./assets/icon_app.jpeg",
         "backgroundColor": "#ffffff"
       },
       "package": "com.srwhale.EMAKE"
     },
     "web": {
-      "favicon": "./assets/logo.png"
+      "favicon": "./assets/icon_app.jpeg"
     },
     "extra": {
       "eas": {

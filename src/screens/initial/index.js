@@ -7,6 +7,8 @@ import { Image } from 'react-native';
 
 import { OnboardFlow, PrimaryButton } from 'react-native-onboard';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const b = PrimaryButton({ currentPage: 0, totalPages: 3, text: "oi" });
 
 function button(...data) {
@@ -17,12 +19,17 @@ function button(...data) {
     return PrimaryButton(...data)
 }
 
+
 export default function StartScreen({ navigation }) {
 
     const [index, setIndex] = useState(0);
 
     useEffect(() => {
-        setIndex(0)
+        setIndex(0);
+
+        AsyncStorage.getItem("userinfo").then(res => {
+            if (res) navigation.navigate("Login");
+        })
     }, []);
 
     return (

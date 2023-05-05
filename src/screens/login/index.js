@@ -27,9 +27,14 @@ function button(...data) {
     return PrimaryButton(...data)
 };
 
-import Login from '../../services/SUAP';
+import SUAP from '../../services/SUAP';
+
 import { Dimensions } from 'react-native';
 import { Linking } from 'react-native';
+
+import * as Keychain from 'react-native-keychain';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function StartScreen({ navigation }) {
 
@@ -43,17 +48,30 @@ export default function StartScreen({ navigation }) {
 
     const tryLogin = (user, password) => {
         console.log(user, password)
-        Login(user, password).then(data => {
+        SUAP.Login(user, password).then(data => {
             if (!data) {
                 setUser({ value: user, error: "Usuário ou senha inválidos" })
                 setPassword({ value: password, error: "Usuário ou senha inválidos" })
             } else {
+
+                Keychain.setGenericPassword(user, password);
+       
+                AsyncStorage.setItem("userinfo", JSON.stringify({
+                    user: user,
+                    password: password,
+                    token: data.access,
+                }));
+
                 navigation.navigate("Dashboard")
             }
         })
     }
     useEffect(() => {
-        setIndex("Sim")
+        setIndex("Sim");
+
+        Keychain.getGenericPassword().then(credentials => {
+            tryLogin(credentials.username, credentials.password)
+        })
     }, []);
 
     return (

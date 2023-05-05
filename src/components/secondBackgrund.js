@@ -11,7 +11,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 import * as Keychain from 'react-native-keychain';
 
-export default function Background({ children }) {
+export default function Background({ children, navigation}) {
 
     return (
 
@@ -36,7 +36,7 @@ export default function Background({ children }) {
 
                     <TouchableOpacity
                         style={styles.barViewItem}
-                        onPress={() => navigation.navigate('Shop')}
+                        onPress={() => navigation.navigate('Config')}
                     >
                         <Image
                             source={require("../../assets/config.png")}
@@ -55,7 +55,7 @@ export default function Background({ children }) {
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.barViewItem}
-                        onPress={() => navigation.navigate('Anuncio')}
+                        onPress={() => navigation.navigate('Dashboard')}
                     >
                         <Image
                             source={require("../../assets/home.png")}
@@ -75,17 +75,7 @@ export default function Background({ children }) {
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.barViewItem}
-                        onPress={async () => {
-                            await Keychain.resetGenericPassword();
-
-                            await AsyncStorage.removeItem("username");
-                            await AsyncStorage.removeItem("password");
-
-                            navigation.reset({
-                                index: 0,
-                                routes: [{ name: 'LoginScreen' }],
-                            });
-                        }}
+                        onPress={async () => navigation.navigate("Notificações")}
                     >
                         <Image
                             source={require("../../assets/notificação.png")}

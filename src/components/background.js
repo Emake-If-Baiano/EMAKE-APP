@@ -3,7 +3,7 @@ import { ImageBackground, StyleSheet, KeyboardAvoidingView, StatusBar, View, Dim
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 const Tab = createBottomTabNavigator();
 
-export default function Background({ children }) {
+export default function Background({ children, navigation }) {
 
     return (
 

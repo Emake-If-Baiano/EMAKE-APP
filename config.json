@@ -1,0 +1,5 @@
+{
+    "build": "eas build -p android --profile preview",
+    "buildDev": "eas build -p android --profile development",
+    "buildApk": "eas build -p android"
+}

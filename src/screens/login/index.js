@@ -47,7 +47,7 @@ export default function StartScreen({ navigation }) {
     const [showPassword, setShowPassword] = useState(false);
 
     const tryLogin = (user, password) => {
-        console.log(user, password)
+
         SUAP.Login(user, password).then(data => {
             if (!data) {
                 setUser({ value: user, error: "Usuário ou senha inválidos" })
@@ -55,7 +55,7 @@ export default function StartScreen({ navigation }) {
             } else {
 
                 Keychain.setGenericPassword(user, password);
-       
+
                 AsyncStorage.setItem("userinfo", JSON.stringify({
                     user: user,
                     password: password,
@@ -70,7 +70,7 @@ export default function StartScreen({ navigation }) {
         setIndex("Sim");
 
         Keychain.getGenericPassword().then(credentials => {
-            tryLogin(credentials.username, credentials.password)
+            if (credentials && credentials.username) tryLogin(credentials.username, credentials.password)
         })
     }, []);
 

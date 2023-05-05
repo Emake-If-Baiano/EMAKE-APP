@@ -53,7 +53,7 @@ export default function StartScreen({ navigation }) {
     useEffect(() => {
         AsyncStorage.getItem("userinfo").then(res => {
             const data = JSON.parse(res);
-            console.log(res);
+
             setUserInfo(data);
 
             if (!userData.nome_usual) Login.getUserData(data.token).then(resData => {
@@ -62,12 +62,16 @@ export default function StartScreen({ navigation }) {
             });
 
             if (!boletim.length || !percent) Login.getBoletim(data.token).then(resData => {
+                console.log("GETTING")
+                console.log(boletim.length, percent)
                 setBoletim(resData);
 
-                setPercent(100 / (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0)) * (boletim.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0) - boletim.reduce((a, b) => a + Number(b.numero_faltas), 0)));
+                setPercent(100 / (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0)) * (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0) - resData.reduce((a, b) => a + Number(b.numero_faltas), 0)));
             });
         })
-    }, [])
+    }, []);
+
+    if (percent === 0) return null;
 
     return (
         <Background navigation={navigation}>
@@ -161,7 +165,7 @@ export default function StartScreen({ navigation }) {
                             backgroundColor="white"
                             lineCap="round"
                             rotation={180}
-                            duration={4500}
+                            duration={3000}
                         >
                             {(fill) => (
                                 <Header customStyle={{

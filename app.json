@@ -23,7 +23,8 @@
         "foregroundImage": "./assets/logo.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.srwhale.EMAKE"
+      "package": "com.srwhale.EMAKE",
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/logo.png"

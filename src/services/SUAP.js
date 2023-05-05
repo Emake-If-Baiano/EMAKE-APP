@@ -9,7 +9,7 @@ const instance = axios.create({
 });
 
 async function Login(user, password) {
-    console.log(user, password, "batata")
+
     instance.defaults.headers.common['Authorization'] = null;
     return instance.post(
         '/autenticacao/token/?format=json',
@@ -47,8 +47,21 @@ async function getUserData(token) {
     })
 }
 
+async function obterPeriodoLetivo(token) {
+    instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+    return instance.get("minhas-informacoes/meus-periodos-letivos/").then(e => {
+        return e.data
+    }, (err) => {
+        console.log(err, token);
+
+        return false;
+    })
+}
+
 export default {
     Login,
     getUserData,
     getBoletim,
+    obterPeriodoLetivo
 }

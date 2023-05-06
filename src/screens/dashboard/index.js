@@ -37,6 +37,9 @@ export default function StartScreen({ navigation }) {
             const data = JSON.parse(res);
 
             if (!userData.nome_usual) Login.getUserData(data.token).then(resData => {
+
+                AsyncStorage.setItem("userdata", JSON.stringify(resData));
+
                 setUserData(resData);
                 console.log(resData);
             });
@@ -52,6 +55,11 @@ export default function StartScreen({ navigation }) {
             if (periodo.ano === "2021") Login.obterPeriodoLetivo(data.token).then(resData => {
                 let last = resData.reverse()[1] || resData[0];
 
+                AsyncStorage.setItem('periodo', JSON.stringify({
+                    ano: last.ano_letivo,
+                    semestre: last.periodo_letivo
+                }));
+                
                 setPeriodo({
                     ano: last.ano_letivo,
                     semestre: last.periodo_letivo
@@ -77,7 +85,7 @@ export default function StartScreen({ navigation }) {
             }}>
 
                 <View style={{
-                    flex: 0.3,
+                    flex: 0.25,
                     width: "100%",
                     justifyContent: "center",
                 }}>
@@ -93,8 +101,8 @@ export default function StartScreen({ navigation }) {
                     }}>
                         <Image
                             style={{
-                                width: "20%",
-                                height: "60%",
+                                width: "16%",
+                                height: "45%",
                             }}
                             source={require("../../../assets/share.png")} />
                     </TouchableOpacity>
@@ -110,13 +118,15 @@ export default function StartScreen({ navigation }) {
                             flex: 0.7,
                             alignSelf: "center"
                         }}>
-                            Olá, {userData.nome_usual}
+                            Olá, {userData.nome_usual}!
                         </Header>
 
                         <TouchableOpacity style={{
                             alignItems: "center",
                             justifyContent: "center",
                             flexDirection: "column",
+                        }} onPress={() => {
+                            navigation.navigate("Perfil");
                         }}>
                             <Image
                                 style={{
@@ -139,7 +149,7 @@ export default function StartScreen({ navigation }) {
                 </View>
 
                 <View style={{
-                    flex: 0.7,
+                    flex: 0.75,
                     backgroundColor: "white",
                     borderTopEndRadius: 40,
                     borderTopStartRadius: 40,
@@ -166,11 +176,7 @@ export default function StartScreen({ navigation }) {
                         }}>
                             Progresso Anual
                         </Header>
-                        <LinearGradient
-                            start={{ x: 0, y: 1 }}
-                            end={{ x: 1, y: 0 }}
-
-                            colors={['#00FF12', '#225D62']}
+                        <View
                             style={{
                                 flex: 0.7,
                                 width: "95%",
@@ -178,7 +184,8 @@ export default function StartScreen({ navigation }) {
                                 alignSelf: "center",
                                 alignItems: "center",
                                 flexDirection: "row",
-                                justifyContent: "space-around"
+                                justifyContent: "space-around",
+                                backgroundColor: "transparent"
                             }}>
 
                             <AnimatedCircularProgress
@@ -211,18 +218,19 @@ export default function StartScreen({ navigation }) {
                             }}>
                                 <Header customStyle={{
                                     fontSize: 17,
-                                    color: "#00FF12",
+                                    color: "#225D62",
+                                    fontWeight: "bold",
                                     width: "100%",
                                 }}>Ano Letivo - {periodo.ano}.{periodo.semestre}</Header>
 
                                 <Header customStyle={{
                                     fontSize: 17,
-                                    color: "#00FF12",
-
+                                    color: "#225D62",
+                                    fontWeight: "bold",
                                     width: "100%"
                                 }}>Aulas restantes: {boletim.reduce((a, b) => a + Number(b.carga_horaria), 0) - boletim.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0)} </Header>
                             </View>
-                        </LinearGradient>
+                        </View>
                     </View>
 
                     {[{
@@ -241,7 +249,7 @@ export default function StartScreen({ navigation }) {
                         name: "Notícias",
                         image: require("../../../assets/celular.png"),
                     }].map((category, index) => {
-                        return (<TouchableOpacity style={{
+                        return (<TouchableOpacity key={index} style={{
                             flex: 0.1,
                             backgroundColor: index % 2 ? "#00FF29" : "#004AAD",
                             width: "60%",

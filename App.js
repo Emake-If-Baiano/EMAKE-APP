@@ -7,7 +7,9 @@ import {
   Login,
   Dashboard,
   Config,
-  Notificações
+  Notificações,
+  Perfil,
+  Dados
 } from './src/screens'
 
 const Stack = createStackNavigator()
@@ -31,6 +33,8 @@ export default function App() {
           <Stack.Screen name="Dashboard" headerShown={true} component={Dashboard} />
           <Stack.Screen name="Config" headerShown={true} component={Config} />
           <Stack.Screen name="Notificações" headerShown={true} component={Notificações} />
+          <Stack.Screen name="Perfil" headerShown={true} component={Perfil} />
+          <Stack.Screen name="Dados" headerShown={true} component={Dados} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

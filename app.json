@@ -4,10 +4,10 @@
     "slug": "EMAKE",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/logo.png",
+    "icon": "./assets/logo_app.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/logo.png",
+      "image": "./assets/logo_app.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },

@@ -59,7 +59,7 @@ export default function StartScreen({ navigation }) {
                     ano: last.ano_letivo,
                     semestre: last.periodo_letivo
                 }));
-                
+
                 setPeriodo({
                     ano: last.ano_letivo,
                     semestre: last.periodo_letivo
@@ -159,7 +159,7 @@ export default function StartScreen({ navigation }) {
                 }}>
                     <View style={{
                         flex: 0.3,
-                        backgroundColor: "#00FF29",
+                        backgroundColor: "white",
                         width: "90%",
                         alignSelf: "flex-end",
                         marginEnd: 20,
@@ -169,14 +169,18 @@ export default function StartScreen({ navigation }) {
                     }}>
                         <Header customStyle={{
                             flex: 0.2,
-                            color: "#225D62",
+                            color: "#004AAD",
                             fontSize: 17,
                             alignSelf: "center",
                             fontWeight: "bold"
                         }}>
                             Progresso Anual
                         </Header>
-                        <View
+                        <LinearGradient
+                            colors={["#00FF29", "#004AAD"]}
+                            end={[0.7, 0.2]}
+                            start={[0.1, 0.9]}
+                            locations={[0, 1]}
                             style={{
                                 flex: 0.7,
                                 width: "95%",
@@ -214,23 +218,24 @@ export default function StartScreen({ navigation }) {
                                 flexDirection: "column",
                                 justifyContent: "space-evenly",
                                 alignItems: "center",
-                                alignSelf: "auto"
+                                alignSelf: "auto",
+                                paddingStart: "10%"
                             }}>
                                 <Header customStyle={{
-                                    fontSize: 17,
-                                    color: "#225D62",
+                                    fontSize: 15,
+                                    color: "#00FF29",
                                     fontWeight: "bold",
                                     width: "100%",
                                 }}>Ano Letivo - {periodo.ano}.{periodo.semestre}</Header>
 
                                 <Header customStyle={{
-                                    fontSize: 17,
-                                    color: "#225D62",
+                                    fontSize: 15,
+                                    color: "#00FF29",
                                     fontWeight: "bold",
                                     width: "100%"
                                 }}>Aulas restantes: {boletim.reduce((a, b) => a + Number(b.carga_horaria), 0) - boletim.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0)} </Header>
                             </View>
-                        </View>
+                        </LinearGradient>
                     </View>
 
                     {[{

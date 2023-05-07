@@ -26,10 +26,6 @@ export default function StartScreen({ navigation }) {
 
     useEffect(() => {
         setIndex(0);
-
-        AsyncStorage.getItem("userinfo").then(res => {
-            if (res) navigation.navigate("Login");
-        })
     }, []);
 
     return (

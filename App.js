@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Provider } from 'react-native-paper'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
@@ -11,16 +11,26 @@ import {
   Perfil,
   Dados
 } from './src/screens'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Stack = createStackNavigator()
 
 export default function App() {
-  
+
+  const [exists, setExists] = useState(undefined)
+  useEffect(() => {
+    AsyncStorage.getItem("userinfo").then(res => {
+      setExists(res);
+    })
+  }, []);
+
+  if (exists === undefined) return;
+
   return (
     <Provider>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="StartScreen"
+          initialRouteName={exists ? "Login" : "StartScreen"}
           screenOptions={{
             headerShown: false,
             cardStyle: { backgroundColor: 'rgb(28, 28, 28)' },

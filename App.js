@@ -11,14 +11,44 @@ import {
   Perfil,
   Dados
 } from './src/screens'
+
 import AsyncStorage from '@react-native-async-storage/async-storage'
+
+import * as Notifications from 'expo-notifications'
+import { Alert } from 'react-native'
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
 
 const Stack = createStackNavigator()
 
+
 export default function App() {
 
-  const [exists, setExists] = useState(undefined)
+  const [exists, setExists] = useState(undefined);
+
+
+  const handleCallNotifications = async () => {
+
+    const { status } = await Notifications.getPermissionsAsync();
+
+    if (status !== 'granted') {
+        Alert.alert("Você precisa permitir notificações para usar o aplicativo.")
+        return;
+    } else {
+      const token = (await Notifications.getDevicePushTokenAsync()).data;
+
+      
+    }
+  };
+
   useEffect(() => {
+    handleCallNotifications();
     AsyncStorage.getItem("userinfo").then(res => {
       setExists(res);
     })

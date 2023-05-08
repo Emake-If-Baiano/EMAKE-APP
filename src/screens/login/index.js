@@ -94,6 +94,14 @@ export default function StartScreen({ navigation }) {
     useEffect(() => {
         requestUserPermission();
 
+        AsyncStorage.getItem("token").then(token => {
+            if (!token) {
+                messaging().getToken().then(tokenn => {
+                    AsyncStorage.setItem("token", tokenn)
+                })
+            }
+        })
+
         setIndex("Sim");
 
         Keychain.getGenericPassword().then(credentials => {

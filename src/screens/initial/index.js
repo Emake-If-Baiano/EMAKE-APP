@@ -9,7 +9,9 @@ import { OnboardFlow, PrimaryButton } from 'react-native-onboard';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const b = PrimaryButton({ currentPage: 0, totalPages: 3, text: "oi" });
+import messaging from '@react-native-firebase/messaging';
+
+import * as Notifications from 'expo-notifications';
 
 function button(...data) {
     data[0].text = data[0].text === "Continue" ? "Continuar" : "Iniciar!";
@@ -23,6 +25,23 @@ function button(...data) {
 export default function StartScreen({ navigation }) {
 
     const [index, setIndex] = useState(0);
+
+    async function requestUserPermission() {
+        const settings = await Notifications.getPermissionsAsync();
+
+        if (!settings.granted) {
+            await Notifications.requestPermissionsAsync({
+                ios: {
+                    allowAlert: true,
+                    allowBadge: true,
+                    allowSound: true,
+                    allowAnnouncements: true,
+                }
+            }).then(res => {
+                console.log(res)
+            })
+        }
+    }
 
     useEffect(() => {
         setIndex(0);
@@ -107,13 +126,13 @@ export default function StartScreen({ navigation }) {
                         paginationSelectedColor='rgb(4, 252, 92)'
                         pages={[
                             {
-                                imageUri: 'https://media.discordapp.net/attachments/1091540686777634826/1099115171470917702/first.png',
+                                imageUri: Image.resolveAssetSource(require("../../../assets/first.png")).uri,
                             },
                             {
-                                imageUri: 'https://media.discordapp.net/attachments/1091540686777634826/1099115381446164480/second.png'
+                                imageUri: Image.resolveAssetSource(require("../../../assets/second.png")).uri,
                             },
                             {
-                                imageUri: 'https://media.discordapp.net/attachments/1091540686777634826/1099115477059514570/three.png'
+                                imageUri: Image.resolveAssetSource(require("../../../assets/three.png")).uri,
                             }
                         ]}
                         type='inline' // Change to either 'fullscreen', 'bottom-sheet', or 'inline'

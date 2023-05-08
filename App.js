@@ -34,33 +34,19 @@ export default function App() {
 
   const [exists, setExists] = useState(undefined);
 
-  async function requestUserPermission() {
-    const authStatus = await messaging().requestPermission();
-    const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-    if (enabled) {
-      console.log('Authorization status:', authStatus);
-    }
-  }
-
-
   useEffect(() => {
+
+    AsyncStorage.getItem("token").then(token => {
+      if (!token) {
+        messaging().getToken().then(tokenn => {
+          AsyncStorage.setItem("token", tokenn)
+        })
+      }
+    })
 
     AsyncStorage.getItem("userinfo").then(res => {
       setExists(res);
     })
-
-    if (requestUserPermission()) {
-      AsyncStorage.getItem("token").then(token => {
-        if (!token) {
-          messaging().getToken().then(tokenn => {
-            AsyncStorage.setItem("token", tokenn)
-          })
-        }
-      })
-    }
 
     messaging()
       .getInitialNotification()

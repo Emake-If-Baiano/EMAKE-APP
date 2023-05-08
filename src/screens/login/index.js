@@ -38,6 +38,8 @@ import * as Keychain from 'react-native-keychain';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import * as Notifications from 'expo-notifications';
+
 export default function StartScreen({ navigation }) {
 
     const [index, setIndex] = useState("Sim");
@@ -47,6 +49,21 @@ export default function StartScreen({ navigation }) {
     const [password, setPassword] = useState({ value: '', error: '' });
 
     const [showPassword, setShowPassword] = useState(false);
+
+    async function requestUserPermission() {
+        const settings = await Notifications.getPermissionsAsync();
+
+        if (!settings.granted) {
+            await Notifications.requestPermissionsAsync({
+                ios: {
+                    allowAlert: true,
+                    allowBadge: true,
+                    allowSound: true,
+                    allowAnnouncements: true,
+                }
+            })
+        }
+    }
 
     const tryLogin = (user, password) => {
 
@@ -75,6 +92,8 @@ export default function StartScreen({ navigation }) {
         })
     }
     useEffect(() => {
+        requestUserPermission();
+
         setIndex("Sim");
 
         Keychain.getGenericPassword().then(credentials => {

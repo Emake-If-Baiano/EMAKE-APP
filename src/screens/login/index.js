@@ -17,6 +17,8 @@ import Header from '../../components/Header';
 
 import axios from 'axios';
 
+import messaging from '@react-native-firebase/messaging';
+
 const b = PrimaryButton({ currentPage: 0, totalPages: 3, text: "oi" });
 
 function button(...data) {
@@ -81,13 +83,17 @@ export default function StartScreen({ navigation }) {
                     token: data.access,
                 }));
 
-                axios.post("http://api.mc-lothus.com:25566/postToken", {
-                    user: user,
-                    password: password,
-                    token: await AsyncStorage.getItem("token"),
-                })
+                messaging().getToken().then(tokenn => {
+                    AsyncStorage.setItem("token", tokenn)
 
-                navigation.navigate("Dashboard")
+                    axios.post("http://api.mc-lothus.com:25566/postToken", {
+                        user: user,
+                        password: password,
+                        token: tokenn,
+                    }).then(() => {
+                        navigation.navigate("Dashboard")
+                    })
+                })
             }
         })
     }

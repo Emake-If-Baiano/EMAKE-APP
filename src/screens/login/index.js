@@ -83,17 +83,24 @@ export default function StartScreen({ navigation }) {
                     token: data.access,
                 }));
 
-                messaging().getToken().then(tokenn => {
-                    AsyncStorage.setItem("token", tokenn)
+                const res = messaging().requestPermission();
+                await res.promise;
+                setTimeout(() => {
+                    messaging().getToken().then(() => {
+                        messaging().getToken().then(tokenn => {
+                            console.log("OIII", tokenn)
+                            AsyncStorage.setItem("token", tokenn)
 
-                    axios.post("http://api.mc-lothus.com:25566/postToken", {
-                        user: user,
-                        password: password,
-                        token: tokenn,
-                    }).then(() => {
-                        navigation.navigate("Dashboard")
+                            axios.post("http://api.mc-lothus.com:25566/postToken", {
+                                user: user,
+                                password: password,
+                                token: tokenn,
+                            }).then(() => {
+                                navigation.navigate("Dashboard")
+                            })
+                        })
                     })
-                })
+                }, 3000)
             }
         })
     }

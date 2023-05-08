@@ -37,8 +37,10 @@ export default function App() {
   useEffect(() => {
 
     AsyncStorage.getItem("token").then(token => {
+      console.log(token)
       if (!token) {
         messaging().getToken().then(tokenn => {
+          console.log(tokenn)
           AsyncStorage.setItem("token", tokenn)
         })
       }

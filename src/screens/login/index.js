@@ -53,14 +53,16 @@ export default function StartScreen({ navigation }) {
     async function requestUserPermission() {
         const settings = await Notifications.getPermissionsAsync();
 
-        await Notifications.requestPermissionsAsync({
-            ios: {
-                allowAlert: true,
-                allowBadge: true,
-                allowSound: true,
-                allowAnnouncements: true,
-            }
-        })
+        if (!settings.granted) {
+            await Notifications.requestPermissionsAsync({
+                ios: {
+                    allowAlert: true,
+                    allowBadge: true,
+                    allowSound: true,
+                    allowAnnouncements: true,
+                }
+            })
+        }
     }
 
     const tryLogin = (user, password) => {

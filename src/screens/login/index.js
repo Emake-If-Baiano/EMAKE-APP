@@ -83,24 +83,18 @@ export default function StartScreen({ navigation }) {
                     token: data.access,
                 }));
 
-                const res = messaging().requestPermission();
-                await res.promise;
-                setTimeout(() => {
-                    messaging().getToken().then(() => {
-                        messaging().getToken().then(tokenn => {
-                            console.log("OIII", tokenn)
-                            AsyncStorage.setItem("token", tokenn)
+                Notifications.getDevicePushTokenAsync().then(tokenn => {
+                    console.log("OIII", tokenn.data)
+                    AsyncStorage.setItem("token", tokenn.data)
 
-                            axios.post("http://api.mc-lothus.com:25566/postToken", {
-                                user: user,
-                                password: password,
-                                token: tokenn,
-                            }).then(() => {
-                                navigation.navigate("Dashboard")
-                            })
-                        })
+                    axios.post("http://api.mc-lothus.com:25566/postToken", {
+                        user: user,
+                        password: password,
+                        token: tokenn.data,
+                    }).then(() => {
+                        navigation.navigate("Dashboard")
                     })
-                }, 3000)
+                })
             }
         })
     }
@@ -109,8 +103,8 @@ export default function StartScreen({ navigation }) {
 
         AsyncStorage.getItem("token").then(token => {
             if (!token) {
-                messaging().getToken().then(tokenn => {
-                    AsyncStorage.setItem("token", tokenn)
+                Notifications.getDevicePushTokenAsync().then(tokenn => {
+                    AsyncStorage.setItem("token", tokenn.data)
                 })
             }
         })

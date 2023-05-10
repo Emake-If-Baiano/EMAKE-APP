@@ -62,7 +62,11 @@ export default function Notificações({ navigation }) {
                 <View style={{
                     flex: 0.05,
                 }}>
-                    <TouchableOpacity style={{
+                    <TouchableOpacity onPress={() => {
+                        AsyncStorage.removeItem("userinfo").then(() => {
+                            navigation.navigate("Login");
+                        });
+                    }} style={{
                         flexDirection: "row",
                         justifyContent: "flex-start",
                         alignItems: "flex-start",

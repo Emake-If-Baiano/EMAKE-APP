@@ -45,8 +45,7 @@ export default function App() {
 
     SUAP.Login(user, password).then(async data => {
       if (!data) {
-        setUser({ value: user, error: "Usuário ou senha inválidos" })
-        setPassword({ value: password, error: "Usuário ou senha inválidos" })
+       setExists(false)
       } else {
 
         Keychain.setGenericPassword(user, password);
@@ -131,7 +130,7 @@ export default function App() {
     <Provider>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName={exists ? "Login" : "StartScreen"}
+          initialRouteName={exists ? "Dashboard" : "Login"}
           screenOptions={{
             headerShown: false,
             cardStyle: { backgroundColor: 'rgb(28, 28, 28)' },

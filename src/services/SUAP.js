@@ -30,7 +30,6 @@ async function getBoletim(token) {
     return instance.get("/minhas-informacoes/boletim/2022/1/").then(e => {
         return e.data
     }, (err) => {
-        console.log(err);
 
         return false;
     })

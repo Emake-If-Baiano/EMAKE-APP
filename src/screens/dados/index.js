@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import Background from '../../components/secondBackgrund';
-import { Text } from 'react-native';
+import { ScrollView, Text } from 'react-native';
 import { View } from 'react-native';
 import { Image } from 'react-native';
 
@@ -37,15 +37,59 @@ import { TouchableOpacity } from 'react-native';
 
 export default function Notificações({ navigation }) {
 
-    const [userData, setUserData] = useState({});
+    const [userData, setUserData] = useState(false);
+
+    const [ira, setIra] = useState(0);
+
+    function calcIRA(boletins) { 
+        const p1 = boletins
+            .map((boletim) => {
+                if (boletim.quantidade_avaliacoes === 4) {
+                    return (
+                        ((boletim.nota_etapa_1.nota * 2 +
+                            boletim.nota_etapa_2.nota * 2 +
+                            boletim.nota_etapa_3.nota * 3 +
+                            boletim.nota_etapa_4.nota * 3) /
+                            10) *
+                        boletim.carga_horaria
+                    )
+                } else {
+                    return (
+                        ((boletim.nota_etapa_1.nota * 2 + boletim.nota_etapa_2.nota * 3) /
+                            5) *
+                        boletim.carga_horaria
+                    )
+                }
+            })
+            .reduce((a, b) => a + b, 0)
+        const p2 = boletins
+            .map((boletim) => boletim.carga_horaria)
+            .reduce((a, b) => a + b, 0)
+
+        return Number((p1 / p2).toFixed(2))
+    };
 
     useEffect(() => {
         AsyncStorage.getItem("userdata").then(data => {
+
             setUserData(JSON.parse(data));
         });
+        AsyncStorage.getItem("userinfo").then(data => {
+            const parse = JSON.parse(data);
 
+            Login.getBoletim(parse.token).then(res => {
+
+                const ira = calcIRA(res);
+                setIra(ira);
+
+            })
+        })
         console.log(userData)
     }, [])
+
+    if (!userData) return null;
+    
+    if(!ira) return null;
 
     return (
         <Background navigation={navigation}>
@@ -60,7 +104,11 @@ export default function Notificações({ navigation }) {
                 <View style={{
                     flex: 0.05,
                 }}>
-                    <TouchableOpacity style={{
+                    <TouchableOpacity onPress={() => {
+                        AsyncStorage.removeItem("userinfo").then(() => {
+                            navigation.navigate("Login");
+                        });
+                    }} style={{
                         flexDirection: "row",
                         justifyContent: "flex-start",
                         alignItems: "flex-start",
@@ -73,12 +121,157 @@ export default function Notificações({ navigation }) {
                         }}>Sair </Header>
                     </TouchableOpacity>
                 </View>
-                <View style={{
+                <ScrollView style={{
                     flex: 0.9,
                     backgroundColor: "white",
                     width: "100%",
                 }}>
-                    <Header style={{
+                    {[{
+                        name: "Dados Gerais",
+                        image: require("../../../assets/dados_gerais.png"),
+                        backColor: "#00FF29",
+                        textColor: "#225D62",
+                        components: [{
+                            name: "Nome",
+                            value: userData?.nome_usual,
+                        }, {
+                            name: "Email Acadêmico",
+                            value: userData.email
+                        }, {
+                            name: "CPF",
+                            value: userData.cpf
+                        }, {
+                            name: "Situação Sistêmica",
+                            value: userData.vinculo?.situacao_sistemica
+                        }]
+                    }, {
+                        name: "Dados acadêmicos",
+                        image: require("../../../assets/dados_academicos.png"),
+                        backColor: "#004AAD",
+                        textColor: "#00FF12",
+                        components: [{
+                            name: "Matrícula",
+                            value: userData.matricula
+                        }, {
+                            name: "Curso",
+                            value: userData.vinculo.curso
+                        }, {
+                            name: "Campus",
+                            value: userData.vinculo.campus
+                        }, {
+                            name: "I.R.A",
+                            value: ira
+                        }, {
+                            name: "Vinculo",
+                            value: userData.tipo_vinculo
+                        }, {
+                            name: "Currículo Lattes",
+                            value: userData.vinculo.curriculo_lattes
+                        }]
+                    }].map((ei, i) => {
+                        return (
+                            <View>
+                                <View style={{
+                                    flexDirection: "row",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    marginTop: "5%"
+                                }}>
+                                    <Image
+                                        style={{
+                                            width: 50,
+                                            height: 50,
+                                            alignSelf: "center",
+                                            marginStart: "3%"
+                                        }}
+                                        source={ei.image}
+                                    />
+
+                                    <Header style={{
+                                        color: "#225D62",
+                                        fontSize: 20,
+                                        fontWeight: "bold",
+                                        marginStart: "1%"
+                                    }}>
+                                        {ei.name}
+                                    </Header>
+                                </View>
+
+                                {ei.components.map((e, i) => {
+                                    return (
+                                        <View style={{
+                                            flex: 0.1,
+                                            marginTop: "5%"
+                                        }}>
+
+                                            {e.name === "Nome" ?
+                                                (
+                                                    <View style={{
+                                                        flex: 0.1,
+                                                        flexDirection: "row",
+                                                        marginTop: "5%"
+                                                    }}>
+                                                        <Image
+                                                            style={{
+                                                                width: 50,
+                                                                height: 50,
+                                                                alignSelf: "center",
+                                                                borderRadius: 40,
+                                                                marginStart: "3%"
+                                                            }}
+                                                            source={{
+                                                                uri: "https://suap.ifbaiano.edu.br/" + userData.url_foto_75x100
+                                                            }}
+                                                        />
+
+                                                        <Header adjustsFontSizeToFit={true} customStyle={{
+                                                            color: "#225D62",
+                                                            fontSize: 17,
+                                                            alignSelf: "center",
+                                                            maxWidth: "80%",
+                                                            marginStart: "3%"
+                                                        }}>
+                                                            {userData?.vinculo?.nome}
+                                                        </Header>
+                                                    </View>)
+                                                :
+                                                (
+                                                    <View>
+                                                        <View style={{
+                                                            flex: 0.5,
+                                                            backgroundColor: ei.backColor,
+                                                            width: "40%",
+                                                            borderTopEndRadius: 25,
+                                                            borderBottomEndRadius: 25,
+
+                                                        }}>
+                                                            <Header customStyle={{
+                                                                fontSize: 15.5,
+                                                                color: ei.textColor,
+                                                                alignSelf: "center",
+                                                                fontWeight: "bold"
+                                                            }}>
+                                                                {e.name}
+                                                            </Header>
+                                                        </View>
+
+                                                        <Header selectable={true} customStyle={{
+                                                            fontSize: 15,
+                                                            color: "#225D62",
+                                                            flex: 0.6,
+                                                            fontWeight: "bold",
+                                                            marginStart: "5%",
+                                                        }}>
+                                                            {e.value}
+                                                        </Header>
+                                                    </View>
+                                                )}
+                                        </View>
+                                    )
+                                })}
+                            </View>)
+                    })}
+                    {/* <Header style={{
                         flex: 0.05,
                         color: "#225D62",
                         fontSize: 20,
@@ -242,8 +435,8 @@ export default function Notificações({ navigation }) {
                         }}>
                             {userData.vinculo?.situacao_sistemica}
                         </Header>
-                    </View>
-                </View>
+                    </View> */}
+                </ScrollView>
             </View>
         </Background>
     )

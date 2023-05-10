@@ -19,7 +19,7 @@ export default function Background({ children, navigation}) {
             style={styles.background}
             source={require('../../assets/initial_background.png')}
         >
-            <StatusBar translucent backgroundColor="transparent" />
+            {/* <StatusBar translucent backgroundColor="transparent" /> */}
             <KeyboardAvoidingView style={styles.container} behavior="position" enabled>
                 {children}
             </KeyboardAvoidingView>

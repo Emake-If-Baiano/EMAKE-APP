@@ -103,7 +103,7 @@ export default function Notificações({ navigation }) {
                     }].map((ei, i) => {
                         console.log(ei)
                         return (
-                            <View>
+                            <View key={i}>
                                 <View style={{
                                     flexDirection: "row",
                                     justifyContent: "center",

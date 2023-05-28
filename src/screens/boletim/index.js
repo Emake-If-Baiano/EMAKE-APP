@@ -43,8 +43,8 @@ export default function Notificações({ navigation }) {
             setDetals(e)
         })
     }
-    const render = () => {
 
+    const render = () => {
         if (visible) return (<Modal
             visible={visible}
             transparent={true}
@@ -61,130 +61,6 @@ export default function Notificações({ navigation }) {
                 setVisible(!visible)
             }}
         >
-            <Modal
-                visible={Boolean(materia)}
-                transparent={true}
-                animationType="slide"
-                onDismiss={() => {
-                    setMateria(false)
-                }}
-                onRequestClose={() => {
-                    setMateria(false)
-                }}
-            >
-                <View style={{
-                    flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center"
-                }}>
-                    <View style={{
-                        width: "100%",
-                        flex: 0.8,
-                        backgroundColor: "white",
-                    }}>
-
-                        <View style={{
-                            width: "95%",
-                            flex: 0.1,
-                            backgroundColor: "#BCFFC6",
-                            borderRadius: 40,
-                            borderWidth: 3,
-                            borderColor: "black",
-                            justifyContent: "center",
-                            alignSelf: "center"
-                        }}>
-                            <Header customStyle={{
-                                fontSize: 20,
-                                color: "#004AAD",
-                                fontWeight: "bold",
-                                textAlign: "center"
-                            }}>
-                                {materia.disciplina?.split("- ")[1]}
-                            </Header>
-                        </View>
-
-                        <Header customStyle={{
-                            flex: 0.05,
-                            fontSize: 16,
-                            color: "#004AAD",
-                            marginStart: "5%",
-                            fontWeight: "bold"
-                        }}>
-                            Prof: {detal.Professores || "Nenhum professor cadastrado"}
-                        </Header>
-
-                        {Object.entries(detal["Detalhamento das Notas"] || []).map(([key, value], i) => {
-                            console.log(value)
-                            return (<View style={{
-                                flex: 0.5,
-                                width: "100%",
-                                backgroundColor: "pink"
-                            }}>
-                                <Header customStyle={{
-                                    flex: 0.2,
-                                    fontSize: 17,
-                                    color: "#004AAD",
-                                    marginStart: "3%",
-                                    marginTop: "2%",
-                                    fontWeight: "bold"
-                                }}>
-                                    {key}
-                                </Header>
-
-                                <View style={{
-                                    flex: 0.15,
-                                    flexDirection: "row",
-                                    justifyContent: "space-around",
-                                    marginTop: "1%"
-                                }}>
-                                    {["Sigla", "Tipo", "Descrição", "Peso", "Obteve"].map((e, i) => {
-                                        return (<View style={{
-                                            backgroundColor: "#004AAD",
-                                            borderRadius: 40,
-                                            flex: 0.2,
-                                            justifyContent: "center",
-                                            alignItems: "center"
-                                        }}>
-                                            <Header customStyle={{
-                                                color: "#00FF12",
-                                                fontSize: 15
-                                            }}>
-                                                {e}
-                                            </Header>
-                                        </View>)
-                                    })}
-                                </View>
-
-                                {value.map((e, j) => {
-
-                                    return (<View style={{
-                                        flex: 0.2,
-                                        flexDirection: "row",
-                                        justifyContent: "space-around",
-                                        opacity: 0.6
-                                    }}>
-                                        {Object.values(e).map((e, i) => {
-                                            return (<View style={{
-                                                backgroundColor: j % 2 === 0 ? "#004AAD" : "#00FF12",
-                                                flex: 0.2,
-                                                justifyContent: "center",
-                                                alignItems: "center",
-                                            }}>
-                                                <Header customStyle={{
-                                                    color: j % 2 !== 0 ? "#004AAD" : "#00FF12",
-                                                    fontSize: 10
-                                                }}>
-                                                    {e}
-                                                </Header>
-                                            </View>)
-                                        })}
-                                    </View>)
-                                })}
-                            </View>)
-                        })}
-                    </View>
-                </View>
-            </Modal>
             <View style={{
                 justifyContent: "center",
                 alignItems: "center",
@@ -203,13 +79,15 @@ export default function Notificações({ navigation }) {
                     }} contentContainerStyle={{
                         padding: "3%"
                     }}>
-                        {[boletim.map(b => {
-                            return (<TouchableOpacity>
+                        {[boletim.map((b, i) => {
+                            return (<TouchableOpacity key={i}>
                                 <Header customStyle={{
                                     color: "#00FF12",
                                     fontSize: 18,
                                     padding: "2%"
                                 }} onPress={() => {
+                                    setDetals({});
+
                                     setMateria(b);
 
                                     loadDetals(credentials.user, credentials.password, periodo.ano, periodo.periodo, b.codigo_diario)
@@ -291,6 +169,142 @@ export default function Notificações({ navigation }) {
 
     return (
         <Background navigation={navigation}>
+
+            <Modal
+                visible={Boolean(materia)}
+                transparent={true}
+                animationType="slide"
+                onDismiss={() => {
+                    setDetals({});
+                    setMateria(false);
+
+                }}
+                onRequestClose={() => {
+                    setDetals({});
+                    setMateria(false)
+                }}
+            >
+                <View style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center"
+                }}>
+                    <View style={{
+                        width: "100%",
+                        flex: 0.8,
+                        backgroundColor: "white",
+                    }}>
+
+                        <View style={{
+                            width: "95%",
+                            flex: 0.1,
+                            backgroundColor: "#BCFFC6",
+                            borderRadius: 40,
+                            borderWidth: 3,
+                            borderColor: "black",
+                            justifyContent: "center",
+                            alignSelf: "center"
+                        }}>
+                            <Header customStyle={{
+                                fontSize: 20,
+                                color: "#004AAD",
+                                fontWeight: "bold",
+                                textAlign: "center"
+                            }}>
+                                {materia.disciplina?.split("- ")[1]}
+                            </Header>
+                        </View>
+
+                        <Header customStyle={{
+                            flex: 0.05,
+                            fontSize: 16,
+                            color: "#004AAD",
+                            marginStart: "5%",
+                            fontWeight: "bold"
+                        }}>
+                            Prof: {detal.Professores || "Nenhum professor cadastrado"}
+                        </Header>
+
+                        {!Object.entries(detal["Detalhamento das Notas"] || {}).length && (
+                            <Header customStyle={{
+                                textAlign: "center",
+                                fontSize: 20,
+                                color: "PINK"
+                            }}>
+                                Carregando...
+                            </Header>
+                        )}
+                        {Object.entries(detal["Detalhamento das Notas"] || []).map(([key, value], i) => {
+                            console.log(value)
+                            return (<View style={{
+                                flex: 0.5,
+                                width: "100%",
+                            }}>
+                                <Header customStyle={{
+                                    flex: 0.2,
+                                    fontSize: 17,
+                                    color: "#004AAD",
+                                    marginStart: "3%",
+                                    marginTop: "2%",
+                                    fontWeight: "bold"
+                                }}>
+                                    {key}
+                                </Header>
+
+                                <View style={{
+                                    flex: 0.15,
+                                    flexDirection: "row",
+                                    justifyContent: "space-around",
+                                    marginTop: "1%"
+                                }}>
+                                    {["Sigla", "Tipo", "Descrição", "Peso", "Obteve"].map((e, i) => {
+                                        return (<View style={{
+                                            backgroundColor: "#004AAD",
+                                            borderRadius: 40,
+                                            flex: 0.2,
+                                            justifyContent: "center",
+                                            alignItems: "center"
+                                        }}>
+                                            <Header customStyle={{
+                                                color: "#00FF12",
+                                                fontSize: 11
+                                            }}>
+                                                {e}
+                                            </Header>
+                                        </View>)
+                                    })}
+                                </View>
+
+                                {value.map((e, j) => {
+
+                                    return (<View style={{
+                                        flex: 0.2,
+                                        flexDirection: "row",
+                                        justifyContent: "space-around",
+                                    }}>
+                                        {Object.values(e).map((e, i) => {
+                                            return (<View style={{
+                                                backgroundColor: j % 2 === 0 ? "rgba(0, 74, 173, 0.6)" : "rgba(0, 255, 18, 0.4)",
+                                                flex: 0.2,
+                                                justifyContent: "center",
+                                                alignItems: "center",
+                                            }}>
+                                                <Header customStyle={{
+                                                    color: j % 2 !== 0 ? "#004AAD" : "#00FF12",
+                                                    fontSize: 10,
+                                                }}>
+                                                    {e}
+                                                </Header>
+                                            </View>)
+                                        })}
+                                    </View>)
+                                })}
+                            </View>)
+                        })}
+                    </View>
+                </View>
+            </Modal>
+
             <View style={{
                 flex: 1,
                 justifyContent: "flex-end",
@@ -369,9 +383,9 @@ export default function Notificações({ navigation }) {
                                 alignItems: "center",
                                 width: "100%"
                             }}>
-                            {periodos.map(p => {
+                            {periodos.map((p, i) => {
                                 return (
-                                    <TouchableOpacity style={{
+                                    <TouchableOpacity key={i} style={{
                                         width: "30%",
                                         backgroundColor: "#06FF5B",
                                         borderRadius: 40,
@@ -409,7 +423,7 @@ export default function Notificações({ navigation }) {
                     }}>Matéria</Header>
 
                     <TouchableOpacity style={{
-                        flex: 0.1,
+                        flex: 0.07,
                         backgroundColor: "#004AAD",
                         width: "90%",
                         borderRadius: 40,
@@ -464,7 +478,7 @@ export default function Notificações({ navigation }) {
                             color: "#00FF29",
                             flex: 0.125
                         }].map((item, index) => {
-                            return (<View style={{
+                            return (<View key={index} style={{
                                 flex: item.flex,
                                 backgroundColor: item.color,
                                 justifyContent: "center",
@@ -481,7 +495,7 @@ export default function Notificações({ navigation }) {
                         })}
                     </View>
                     <View style={{
-                        flex: 0.46,
+                        flex: 0.49,
                         backgroundColor: "FFFFFF",
                         width: "100%",
                     }}>
@@ -489,17 +503,22 @@ export default function Notificações({ navigation }) {
                             flex: 1
                         }}>
                             {boletim?.map((item, index) => {
-                                return (<View style={{
+                                return (<View key={index} style={{
                                     height: "5%",
                                     backgroundColor: "#FFFFFF",
                                     flexDirection: "row",
                                 }}>
-                                    <View style={{
+                                    <TouchableOpacity style={{
                                         height: "100%",
                                         backgroundColor: "white",
                                         alignItems: "center",
                                         width: "50%",
                                         justifyContent: "center"
+                                    }} onPress={() => {
+                                        console.log(item);
+                                        setMateria(item);
+
+                                        loadDetals(credentials.user, credentials.password, periodo.ano, periodo.periodo, item.codigo_diario)
                                     }}>
                                         <Header customStyle={{
                                             color: "#004AAD",
@@ -519,7 +538,7 @@ export default function Notificações({ navigation }) {
                                         }}>
 
                                         </View>
-                                    </View>
+                                    </TouchableOpacity>
                                     <View style={{
                                         width: "12.5%",
                                         height: "100%",

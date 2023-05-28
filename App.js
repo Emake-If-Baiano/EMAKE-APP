@@ -9,7 +9,9 @@ import {
   Config,
   Notificações,
   Perfil,
-  Dados
+  Dados,
+  Documentos,
+  Boletim
 } from './src/screens'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -145,6 +147,8 @@ export default function App() {
           <Stack.Screen name="Notificações" headerShown={true} component={Notificações} />
           <Stack.Screen name="Perfil" headerShown={true} component={Perfil} />
           <Stack.Screen name="Dados" headerShown={true} component={Dados} />
+          <Stack.Screen name="Documentos" headerShown={true} component={Documentos} />
+          <Stack.Screen name="Boletim" headerShown={true} component={Boletim} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

@@ -5,3 +5,5 @@ export { default as Config } from "./config";
 export { default as Notificações } from "./notificações"
 export { default as Dados } from "./dados"
 export { default as Perfil } from "./perfil"
+export { default as Documentos } from "./documentos"
+export { default as Boletim } from "./boletim"

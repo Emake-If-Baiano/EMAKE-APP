@@ -5,7 +5,7 @@ import { Text } from 'react-native-paper'
 
 export default function Header(props) {
 
-    return <Text style={[styles.header, props.customStyle]} {...props} />
+    return <Text  style={[styles.header, props.customStyle]} {...props} />
 }
 
 const styles = StyleSheet.create({

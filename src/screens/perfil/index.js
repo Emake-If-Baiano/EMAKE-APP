@@ -146,7 +146,7 @@ export default function Notificações({ navigation }) {
                             name: "Documentos",
                             image: require("../../../assets/documentos.png"),
                             color: "rgb(204, 220, 220)",
-                            touch: () => navigation.navigate("Perfil")
+                            touch: () => navigation.navigate("Documentos")
                         }].map((category, index) => {
                             return (
                                 <TouchableOpacity key={index} style={{

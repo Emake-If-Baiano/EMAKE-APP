@@ -65,9 +65,6 @@ export default function StartScreen({ navigation }) {
                     semestre: last.periodo_letivo
                 })
             });
-
-            console.log(userData)
-            console.log(`https://suap.ifbaiano.edu.br${userData.url_foto_150x200}`)
         })
     }, []);
 
@@ -241,6 +238,7 @@ export default function StartScreen({ navigation }) {
                     {[{
                         name: "Boletim",
                         image: require("../../../assets/paginas.png"),
+                        navigate: () => navigation.navigate("Boletim")
                     }, {
                         name: "Calendário Acadêmico",
                         image: require("../../../assets/calendário.png"),
@@ -263,6 +261,8 @@ export default function StartScreen({ navigation }) {
                             marginStart: index % 2 ? 20 : 0,
                             borderRadius: 15,
                             flexDirection: "row"
+                        }} onPress={() => {
+                            if (category.navigate) category.navigate()
                         }}>
                             <Image
                                 style={{

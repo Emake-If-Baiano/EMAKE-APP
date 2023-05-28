@@ -8,6 +8,23 @@ const instance = axios.create({
     }
 });
 
+async function getFiles(user, password) {
+    return axios.get(`http://api.mc-lothus.com:25566/docs?user=${user}&password=${password}`).then(res => res.data)
+}
+
+async function getNotasDetalhadas(user, password, ano, periodo, codigo) {
+    console.log(user, password, ano, periodo, codigo)
+    const params = new URLSearchParams({
+        user,
+        password,
+        ano,
+        periodo,
+        codigo
+    });
+
+    return axios.get(`http://api.mc-lothus.com:25566/notas?${params.toString()}`).then(res => res.data)
+}
+
 async function Login(user, password) {
 
     instance.defaults.headers.common['Authorization'] = null;
@@ -24,10 +41,10 @@ async function Login(user, password) {
         })
 };
 
-async function getBoletim(token) {
+async function getBoletim(token, ano, periodo) {
     instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-    return instance.get("/minhas-informacoes/boletim/2022/1/").then(e => {
+    return instance.get(`/minhas-informacoes/boletim/${ano || 2022}/${periodo || 1}/`).then(e => {
         return e.data
     }, (err) => {
 
@@ -62,5 +79,7 @@ export default {
     Login,
     getUserData,
     getBoletim,
-    obterPeriodoLetivo
+    obterPeriodoLetivo,
+    getFiles,
+    getNotasDetalhadas
 }

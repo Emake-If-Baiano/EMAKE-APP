@@ -47,7 +47,7 @@ export default function App() {
 
     SUAP.Login(user, password).then(async data => {
       if (!data) {
-       setExists(false)
+        setExists(false)
       } else {
 
         Keychain.setGenericPassword(user, password);
@@ -88,7 +88,7 @@ export default function App() {
     })
 
     AsyncStorage.getItem("userinfo").then(res => {
-      if(!res) {
+      if (!res) {
         setExists(false)
         return;
       }
@@ -126,7 +126,7 @@ export default function App() {
     return unsubscribe;
   }, []);
 
-  if (exists === undefined) return;
+  if (exists === undefined) return null;
 
   return (
     <Provider>

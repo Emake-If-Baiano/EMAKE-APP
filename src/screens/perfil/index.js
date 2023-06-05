@@ -34,6 +34,7 @@ import { Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { TouchableOpacity } from 'react-native';
+import loading from '../loading';
 
 export default function Notificações({ navigation }) {
 
@@ -47,7 +48,7 @@ export default function Notificações({ navigation }) {
         console.log(userData)
     }, []);
 
-    if (!userData) return null;
+    if (!userData) return loading();
 
     return (
         <Background navigation={navigation}>

@@ -13,8 +13,7 @@
     "preview": {
       "android": {
         "buildType": "apk"
-      },
-      "developmentClient": true
+      }
     },
     "production": {
       "ios": {

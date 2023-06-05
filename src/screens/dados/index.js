@@ -17,6 +17,8 @@ import Header from '../../components/Header';
 
 const b = PrimaryButton({ currentPage: 0, totalPages: 3, text: "oi" });
 
+import loading from "../loading";
+
 function button(...data) {
     data[0].text = data[0].text === "Continue" ? "Continuar" : "Iniciar!";
     data[0].style = {
@@ -41,7 +43,8 @@ export default function Notificações({ navigation }) {
 
     const [ira, setIra] = useState(0);
 
-    function calcIRA(boletins) { 
+    function calcIRA(boletins) {
+        console.log(boletins, "oi")
         const p1 = boletins
             .map((boletim) => {
                 if (boletim.quantidade_avaliacoes === 4) {
@@ -74,11 +77,23 @@ export default function Notificações({ navigation }) {
 
             setUserData(JSON.parse(data));
         });
+
+        AsyncStorage.getItem("boletim").then(res => {
+            if (res) {
+                const ira = calcIRA(JSON.parse(res));
+
+                setIra(ira);
+            }
+        })
         AsyncStorage.getItem("userinfo").then(data => {
             const parse = JSON.parse(data);
 
             Login.getBoletim(parse.token).then(res => {
 
+                if (!res) {
+                    navigation.navigate("Login");
+                    return;
+                }
                 const ira = calcIRA(res);
                 setIra(ira);
 
@@ -87,9 +102,9 @@ export default function Notificações({ navigation }) {
         console.log(userData)
     }, [])
 
-    if (!userData) return null;
-    
-    if(!ira) return null;
+    if (!userData) return loading()
+
+    if (!ira) return loading();
 
     return (
         <Background navigation={navigation}>
@@ -103,6 +118,7 @@ export default function Notificações({ navigation }) {
             }}>
                 <View style={{
                     flex: 0.05,
+                    marginTop: "10%",
                 }}>
                     <TouchableOpacity onPress={() => {
                         AsyncStorage.removeItem("userinfo").then(() => {
@@ -170,7 +186,7 @@ export default function Notificações({ navigation }) {
                         }]
                     }].map((ei, i) => {
                         return (
-                            <View>
+                            <View key={i}>
                                 <View style={{
                                     flexDirection: "row",
                                     justifyContent: "center",
@@ -197,12 +213,12 @@ export default function Notificações({ navigation }) {
                                     </Header>
                                 </View>
 
-                                {ei.components.map((e, i) => {
+                                {ei.components.map((e, ina) => {
                                     return (
                                         <View style={{
                                             flex: 0.1,
                                             marginTop: "5%"
-                                        }}>
+                                        }} key={ina}>
 
                                             {e.name === "Nome" ?
                                                 (

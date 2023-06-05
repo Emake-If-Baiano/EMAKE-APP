@@ -36,6 +36,7 @@ import { Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { TouchableOpacity } from 'react-native';
+import loading from '../loading';
 
 export default function Notificações({ navigation }) {
 
@@ -48,16 +49,26 @@ export default function Notificações({ navigation }) {
 
             setUserData(JSON.parse(data));
         });
+
+        AsyncStorage.getItem("documents").then(data => {
+            if (data) {
+                setDocuments(JSON.parse(data));
+            }
+        })
         AsyncStorage.getItem("userinfo").then(data => {
             const parse = JSON.parse(data);
 
             Login.getFiles(parse.user, parse.password).then(res => {
-                setDocuments(res.data)
+                setDocuments(res.data);
+
+                AsyncStorage.setItem("documents", JSON.stringify(res.data));
             })
         });
     }, [])
 
-    if (!userData) return null;
+    if (!userData) return loading();
+
+    if (!documents.length) return loading();
 
     return (
         <Background navigation={navigation}>

@@ -15,6 +15,7 @@ import { Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { TouchableOpacity } from 'react-native';
+import loading from '../loading';
 
 export default function Notificações({ navigation }) {
 
@@ -144,6 +145,29 @@ export default function Notificações({ navigation }) {
 
             setUserData(JSON.parse(data));
         });
+
+        AsyncStorage.getItem("boletim").then(data => {
+            if (data) {
+                setBoletim(JSON.parse(data));
+
+                setIra(calcIRA(JSON.parse(data)))
+            }
+        });
+
+        AsyncStorage.getItem("periodos").then(data => {
+            if (data) {
+                const p = JSON.parse(data);
+
+                setPeriodos(p);
+
+                let last = p.reverse()[1] || p[0];
+
+                setPeriodo({
+                    ano: last.ano_letivo,
+                    periodo: last.periodo_letivo
+                });
+            }
+        })
         AsyncStorage.getItem("userinfo").then(data => {
             const parse = JSON.parse(data);
 
@@ -152,7 +176,9 @@ export default function Notificações({ navigation }) {
             Login.obterPeriodoLetivo(parse.token).then(periodos => {
                 setPeriodos(periodos);
 
-                let last = periodos.reverse()[1] || resData[0];
+                AsyncStorage.setItem("periodos", JSON.stringify(periodos));
+
+                let last = periodos.reverse()[1] || periodos[0];
 
                 setPeriodo({
                     ano: last.ano_letivo,
@@ -164,8 +190,8 @@ export default function Notificações({ navigation }) {
         });
     }, [])
 
-    if (!boletim) return null;
-    if (!ira) return null;
+    if (!boletim) return loading();
+    if (!ira) return loading();
 
     return (
         <Background navigation={navigation}>

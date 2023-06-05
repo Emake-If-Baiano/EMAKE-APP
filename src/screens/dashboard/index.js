@@ -18,6 +18,7 @@ import AsyncStorage
 import { TouchableOpacity } from 'react-native';
 
 import { LinearGradient } from 'expo-linear-gradient';
+import loading from '../loading';
 
 export default function StartScreen({ navigation }) {
 
@@ -33,6 +34,33 @@ export default function StartScreen({ navigation }) {
     });
 
     useEffect(() => {
+        AsyncStorage.getItem("userdata").then(res => {
+            if (res) {
+                console.log("SETTING USER DATA")
+                setUserData(JSON.parse(res));
+            }
+        });
+
+        AsyncStorage.getItem("boletim").then(res => {
+            if (res) {
+                console.log("SETTING BOLETIM")
+                setBoletim(JSON.parse(res));
+            }
+        });
+
+        AsyncStorage.getItem("percent").then(res => {
+            if (res) {
+                console.log("SETTING PERCENT", res)
+                setPercent(Number(res));
+            }
+        });
+
+        AsyncStorage.getItem("periodo").then(res => {
+            if (res) {
+                setPeriodo(JSON.parse(res))
+            }
+        });
+
         AsyncStorage.getItem("userinfo").then(res => {
             const data = JSON.parse(res);
 
@@ -45,8 +73,11 @@ export default function StartScreen({ navigation }) {
             });
 
             if (!boletim.length || !percent) Login.getBoletim(data.token).then(resData => {
-                console.log("GETTING")
-                console.log(boletim.length, percent)
+
+                AsyncStorage.setItem('boletim', JSON.stringify(resData));
+
+                AsyncStorage.setItem("percent", `${100 / (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0)) * (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0) - resData.reduce((a, b) => a + Number(b.numero_faltas), 0))}`)
+
                 setBoletim(resData);
 
                 setPercent(100 / (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0)) * (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0) - resData.reduce((a, b) => a + Number(b.numero_faltas), 0)));
@@ -68,7 +99,7 @@ export default function StartScreen({ navigation }) {
         })
     }, []);
 
-    if (percent === 0) return null;
+    if (percent === 0) return loading()
 
     return (
         <Background navigation={navigation}>

@@ -13,7 +13,7 @@ async function getFiles(user, password) {
 }
 
 async function getNotasDetalhadas(user, password, ano, periodo, codigo) {
-    console.log(user, password, ano, periodo, codigo)
+
     const params = new URLSearchParams({
         user,
         password,
@@ -28,6 +28,7 @@ async function getNotasDetalhadas(user, password, ano, periodo, codigo) {
 async function Login(user, password) {
 
     instance.defaults.headers.common['Authorization'] = null;
+
     return instance.post(
         '/autenticacao/token/?format=json',
         {

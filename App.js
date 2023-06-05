@@ -38,6 +38,7 @@ Notifications.setNotificationHandler({
 });
 
 import messaging from '@react-native-firebase/messaging';
+import loading from './src/screens/loading'
 
 export default function App() {
 
@@ -71,6 +72,8 @@ export default function App() {
           })
         })
       }
+    }).catch(err => {
+      setExists(true);
     })
   }
 
@@ -95,6 +98,8 @@ export default function App() {
       const parse = JSON.parse(res);
 
       tryLogin(parse.user, parse.password);
+
+      setExists(true);
     })
 
     messaging()
@@ -126,7 +131,7 @@ export default function App() {
     return unsubscribe;
   }, []);
 
-  if (exists === undefined) return null;
+  if (exists === undefined) return loading()
 
   return (
     <Provider>

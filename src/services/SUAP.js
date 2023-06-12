@@ -9,7 +9,7 @@ const instance = axios.create({
 });
 
 async function getFiles(user, password) {
-    return axios.get(`http://api.mc-lothus.com:25566/docs?user=${user}&password=${password}`).then(res => res.data)
+    return axios.get(`http://35.247.244.48:25566/docs?user=${user}&password=${password}`).then(res => res.data)
 }
 
 async function getNotasDetalhadas(user, password, ano, periodo, codigo) {
@@ -22,7 +22,7 @@ async function getNotasDetalhadas(user, password, ano, periodo, codigo) {
         codigo
     });
 
-    return axios.get(`http://api.mc-lothus.com:25566/notas?${params.toString()}`).then(res => res.data)
+    return axios.get(`http://35.247.244.48:25566/notas?${params.toString()}`).then(res => res.data)
 }
 
 async function Login(user, password) {

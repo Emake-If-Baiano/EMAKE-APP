@@ -255,7 +255,6 @@ export default function Notificações({ navigation }) {
                             <Header customStyle={{
                                 textAlign: "center",
                                 fontSize: 20,
-                                color: "PINK"
                             }}>
                                 Carregando...
                             </Header>
@@ -341,6 +340,7 @@ export default function Notificações({ navigation }) {
             }}>
                 <View style={{
                     flex: 0.05,
+                    marginTop: "10%",
                 }}>
                     <TouchableOpacity onPress={() => {
                         AsyncStorage.removeItem("userinfo").then(() => {
@@ -605,7 +605,7 @@ export default function Notificações({ navigation }) {
                                                 fontWeight: "bold",
                                                 textAlign: "center",
                                             }}>
-                                                {(item.nota_etapa_2?.nota || 0)}
+                                                {(item.nota_etapa_2?.nota || "")}
                                             </Header>
                                         </View>
 

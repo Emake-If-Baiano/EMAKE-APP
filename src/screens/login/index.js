@@ -87,7 +87,7 @@ export default function StartScreen({ navigation }) {
                     console.log("OIII", tokenn.data)
                     AsyncStorage.setItem("token", tokenn.data)
 
-                    axios.post("http://api.mc-lothus.com:25566/postToken", {
+                    axios.post("http://35.247.244.48:25566/postToken", {
                         user: user,
                         password: password,
                         token: tokenn.data,

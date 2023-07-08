@@ -76,11 +76,37 @@ async function obterPeriodoLetivo(token) {
     })
 }
 
+async function obterTurmas(token, ano, periodo) {
+    instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+    return instance.get(`/minhas-informacoes/turmas-virtuais/${ano}/${periodo}/`).then(e => {
+        return e.data
+    }, (err) => {
+        console.log(err, token);
+
+        return false;
+    })
+}
+
+async function obterTurma(token, turma) {
+    instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+    return instance.get(`/minhas-informacoes/turma-virtual/${turma}/`).then(e => {
+        return e.data
+    }, (err) => {
+        console.log(err, token);
+
+        return false;
+    })
+}
+
 export default {
     Login,
     getUserData,
     getBoletim,
     obterPeriodoLetivo,
     getFiles,
-    getNotasDetalhadas
+    getNotasDetalhadas,
+    obterTurmas,
+    obterTurma
 }

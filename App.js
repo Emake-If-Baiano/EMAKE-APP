@@ -11,7 +11,8 @@ import {
   Perfil,
   Dados,
   Documentos,
-  Boletim
+  Boletim,
+  Turmas
 } from './src/screens'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -154,6 +155,7 @@ export default function App() {
           <Stack.Screen name="Dados" headerShown={true} component={Dados} />
           <Stack.Screen name="Documentos" headerShown={true} component={Documentos} />
           <Stack.Screen name="Boletim" headerShown={true} component={Boletim} />
+          <Stack.Screen name="Turmas" headerShown={true} component={Turmas} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

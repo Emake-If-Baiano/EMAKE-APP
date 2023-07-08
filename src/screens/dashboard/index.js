@@ -57,49 +57,67 @@ export default function StartScreen({ navigation }) {
 
         AsyncStorage.getItem("periodo").then(res => {
             if (res) {
+                console.log("SETTING PERIODO")
                 setPeriodo(JSON.parse(res))
             }
         });
 
-        AsyncStorage.getItem("userinfo").then(res => {
-            const data = JSON.parse(res);
+        AsyncStorage.getItem("userinfo").then(resD => {
+            if (!resD) return navigation.navigate("Login");
+            const p = JSON.parse(resD);
 
-            if (!userData.nome_usual) Login.getUserData(data.token).then(resData => {
+            Login.Login(p.user, p.password).then(res => {
+                const data = res;
+                data.token = data.access;
 
-                AsyncStorage.setItem("userdata", JSON.stringify(resData));
+                AsyncStorage.setItem("userinfo", JSON.stringify({
+                    user: p.user,
+                    password: p.password,
+                    token: data.access,
+                }))
+                if (!data.token) return navigation.navigate("Login");
 
-                setUserData(resData);
-                console.log(resData);
-            });
+                if (!userData.nome_usual) Login.getUserData(data.token).then(resData => {
 
-            if (!boletim.length || !percent) Login.getBoletim(data.token).then(resData => {
+                    AsyncStorage.setItem("userdata", JSON.stringify(resData));
 
-                AsyncStorage.setItem('boletim', JSON.stringify(resData));
+                    setUserData(resData);
+                });
 
-                AsyncStorage.setItem("percent", `${100 / (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0)) * (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0) - resData.reduce((a, b) => a + Number(b.numero_faltas), 0))}`)
+                if (!boletim.length || !percent) Login.getBoletim(data.token).then(resData => {
 
-                setBoletim(resData);
+                    AsyncStorage.setItem('boletim', JSON.stringify(resData));
 
-                setPercent(100 / (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0)) * (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0) - resData.reduce((a, b) => a + Number(b.numero_faltas), 0)));
-            });
+                    AsyncStorage.setItem("percent", `${100 / (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0)) * (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0) - resData.reduce((a, b) => a + Number(b.numero_faltas), 0))}`)
 
-            if (periodo.ano === "2021") Login.obterPeriodoLetivo(data.token).then(resData => {
-                let last = resData.reverse()[1] || resData[0];
+                    setBoletim(resData);
 
-                AsyncStorage.setItem('periodo', JSON.stringify({
-                    ano: last.ano_letivo,
-                    semestre: last.periodo_letivo
-                }));
+                    setPercent(100 / (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0)) * (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0) - resData.reduce((a, b) => a + Number(b.numero_faltas), 0)));
+                });
 
-                setPeriodo({
-                    ano: last.ano_letivo,
-                    semestre: last.periodo_letivo
-                })
-            });
+                if (periodo.ano === "2021") Login.obterPeriodoLetivo(data.token).then(resData => {
+                    let last = resData.reverse()[1] || resData[0];
+
+                    AsyncStorage.setItem('periodo', JSON.stringify({
+                        ano: last.ano_letivo,
+                        semestre: last.periodo_letivo
+                    }));
+
+                    setPeriodo({
+                        ano: last.ano_letivo,
+                        semestre: last.periodo_letivo
+                    })
+                });
+
+            }).catch(Err => {
+                console.log(Err, "suamaeeee")
+            })
         })
     }, []);
 
-    if (percent === 0) return loading()
+    if (percent === 0) return loading();
+
+    if (!userData.nome_usual) return loading();
 
     return (
         <Background navigation={navigation}>
@@ -276,6 +294,7 @@ export default function StartScreen({ navigation }) {
                     }, {
                         name: "Minhas Turmas",
                         image: require("../../../assets/pessoas.png"),
+                        navigate: () => navigation.navigate("Turmas")
                     }, {
                         name: "Notícias",
                         image: require("../../../assets/celular.png"),

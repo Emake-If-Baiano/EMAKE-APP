@@ -291,6 +291,7 @@ export default function StartScreen({ navigation }) {
                     }, {
                         name: "Calendário Acadêmico",
                         image: require("../../../assets/calendário.png"),
+                        navigate: () => navigation.navigate("Calendario")
                     }, {
                         name: "Minhas Turmas",
                         image: require("../../../assets/pessoas.png"),
@@ -298,9 +299,11 @@ export default function StartScreen({ navigation }) {
                     }, {
                         name: "Notícias",
                         image: require("../../../assets/celular.png"),
+                        navigate: () => navigation.navigate("Noticias")
                     }, {
                         name: "Notícias",
                         image: require("../../../assets/celular.png"),
+                        navigate: () => navigation.navigate("Noticias")
                     }].map((category, index) => {
                         return (<TouchableOpacity key={index} style={{
                             flex: 0.1,

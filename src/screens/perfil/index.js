@@ -34,6 +34,7 @@ import { Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { TouchableOpacity } from 'react-native';
+import loading from '../loading';
 
 export default function Notificações({ navigation }) {
 
@@ -47,7 +48,7 @@ export default function Notificações({ navigation }) {
         console.log(userData)
     }, []);
 
-    if (!userData) return null;
+    if (!userData) return loading();
 
     return (
         <Background navigation={navigation}>
@@ -62,7 +63,11 @@ export default function Notificações({ navigation }) {
                 <View style={{
                     flex: 0.05,
                 }}>
-                    <TouchableOpacity style={{
+                    <TouchableOpacity onPress={() => {
+                        AsyncStorage.removeItem("userinfo").then(() => {
+                            navigation.navigate("Login");
+                        });
+                    }} style={{
                         flexDirection: "row",
                         justifyContent: "flex-start",
                         alignItems: "flex-start",
@@ -142,7 +147,7 @@ export default function Notificações({ navigation }) {
                             name: "Documentos",
                             image: require("../../../assets/documentos.png"),
                             color: "rgb(204, 220, 220)",
-                            touch: () => navigation.navigate("Perfil")
+                            touch: () => navigation.navigate("Documentos")
                         }].map((category, index) => {
                             return (
                                 <TouchableOpacity key={index} style={{

@@ -5,6 +5,8 @@ import { ScrollView, Text } from 'react-native';
 import { View } from 'react-native';
 import { Image } from 'react-native';
 
+import { Linking } from 'react-native';
+
 import { OnboardFlow, PrimaryButton } from 'react-native-onboard';
 
 import TextInput from '../../components/TextInput';
@@ -16,8 +18,6 @@ import Button from '../../components/Button';
 import Header from '../../components/Header';
 
 const b = PrimaryButton({ currentPage: 0, totalPages: 3, text: "oi" });
-
-import loading from "../loading";
 
 function button(...data) {
     data[0].text = data[0].text === "Continue" ? "Continuar" : "Iniciar!";
@@ -36,41 +36,13 @@ import { Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { TouchableOpacity } from 'react-native';
+import loading from '../loading';
 
 export default function Notificações({ navigation }) {
 
     const [userData, setUserData] = useState(false);
 
-    const [ira, setIra] = useState(0);
-
-    function calcIRA(boletins) {
-        console.log(boletins, "oi")
-        const p1 = boletins
-            .map((boletim) => {
-                if (boletim.quantidade_avaliacoes === 4) {
-                    return (
-                        ((boletim.nota_etapa_1.nota * 2 +
-                            boletim.nota_etapa_2.nota * 2 +
-                            boletim.nota_etapa_3.nota * 3 +
-                            boletim.nota_etapa_4.nota * 3) /
-                            10) *
-                        boletim.carga_horaria
-                    )
-                } else {
-                    return (
-                        ((boletim.nota_etapa_1.nota * 2 + boletim.nota_etapa_2.nota * 3) /
-                            5) *
-                        boletim.carga_horaria
-                    )
-                }
-            })
-            .reduce((a, b) => a + b, 0)
-        const p2 = boletins
-            .map((boletim) => boletim.carga_horaria)
-            .reduce((a, b) => a + b, 0)
-
-        return Number((p1 / p2).toFixed(2))
-    };
+    const [documents, setDocuments] = useState([]);
 
     useEffect(() => {
         AsyncStorage.getItem("userdata").then(data => {
@@ -78,33 +50,25 @@ export default function Notificações({ navigation }) {
             setUserData(JSON.parse(data));
         });
 
-        AsyncStorage.getItem("boletim").then(res => {
-            if (res) {
-                const ira = calcIRA(JSON.parse(res));
-
-                setIra(ira);
+        AsyncStorage.getItem("documents").then(data => {
+            if (data) {
+                setDocuments(JSON.parse(data));
             }
         })
         AsyncStorage.getItem("userinfo").then(data => {
             const parse = JSON.parse(data);
 
-            Login.getBoletim(parse.token).then(res => {
+            Login.getFiles(parse.user, parse.password).then(res => {
+                setDocuments(res.data);
 
-                if (!res) {
-                    navigation.navigate("Login");
-                    return;
-                }
-                const ira = calcIRA(res);
-                setIra(ira);
-
+                AsyncStorage.setItem("documents", JSON.stringify(res.data));
             })
-        })
-        console.log(userData)
+        });
     }, [])
 
-    if (!userData) return loading()
+    if (!userData) return loading();
 
-    if (!ira) return loading();
+    if (!documents.length) return loading();
 
     return (
         <Background navigation={navigation}>
@@ -118,7 +82,6 @@ export default function Notificações({ navigation }) {
             }}>
                 <View style={{
                     flex: 0.05,
-                    marginTop: "10%",
                 }}>
                     <TouchableOpacity onPress={() => {
                         AsyncStorage.removeItem("userinfo").then(() => {
@@ -143,48 +106,13 @@ export default function Notificações({ navigation }) {
                     width: "100%",
                 }}>
                     {[{
-                        name: "Dados Gerais",
-                        image: require("../../../assets/dados_gerais.png"),
-                        backColor: "#61e786",
+                        name: "Documentos",
+                        image: require("../../../assets/documentos.png"),
+                        backColor: "#00FF29",
                         textColor: "#225D62",
-                        components: [{
-                            name: "Nome",
-                            value: userData?.nome_usual,
-                        }, {
-                            name: "Email Acadêmico",
-                            value: userData.email
-                        }, {
-                            name: "CPF",
-                            value: userData.cpf
-                        }, {
-                            name: "Situação Sistêmica",
-                            value: userData.vinculo?.situacao_sistemica
-                        }]
-                    }, {
-                        name: "Dados acadêmicos",
-                        image: require("../../../assets/dados_academicos.png"),
-                        backColor: "#004AAD",
-                        textColor: "#00FF12",
-                        components: [{
-                            name: "Matrícula",
-                            value: userData.matricula
-                        }, {
-                            name: "Curso",
-                            value: userData.vinculo.curso
-                        }, {
-                            name: "Campus",
-                            value: userData.vinculo.campus
-                        }, {
-                            name: "I.R.A",
-                            value: ira
-                        }, {
-                            name: "Vinculo",
-                            value: userData.tipo_vinculo
-                        }, {
-                            name: "Currículo Lattes",
-                            value: userData.vinculo.curriculo_lattes
-                        }]
+                        components: documents
                     }].map((ei, i) => {
+                        console.log(ei)
                         return (
                             <View key={i}>
                                 <View style={{
@@ -213,78 +141,38 @@ export default function Notificações({ navigation }) {
                                     </Header>
                                 </View>
 
-                                {ei.components.map((e, ina) => {
-                                    return (
-                                        <View style={{
-                                            flex: 0.1,
-                                            marginTop: "5%"
-                                        }} key={ina}>
-
-                                            {e.name === "Nome" ?
-                                                (
-                                                    <View style={{
-                                                        flex: 0.1,
-                                                        flexDirection: "row",
-                                                        marginTop: "5%"
-                                                    }}>
-                                                        <Image
-                                                            style={{
-                                                                width: 50,
-                                                                height: 50,
-                                                                alignSelf: "center",
-                                                                borderRadius: 40,
-                                                                marginStart: "3%"
-                                                            }}
-                                                            source={{
-                                                                uri: "https://suap.ifbaiano.edu.br/" + userData.url_foto_75x100
-                                                            }}
-                                                        />
-
-                                                        <Header adjustsFontSizeToFit={true} customStyle={{
-                                                            color: "#225D62",
-                                                            fontSize: 17,
-                                                            alignSelf: "center",
-                                                            maxWidth: "80%",
-                                                            marginStart: "3%"
-                                                        }}>
-                                                            {userData?.vinculo?.nome}
-                                                        </Header>
-                                                    </View>)
-                                                :
-                                                (
-                                                    <View>
-                                                        <View style={{
-                                                            flex: 0.5,
-                                                            backgroundColor: ei.backColor,
-                                                            width: "40%",
-                                                            borderTopEndRadius: 25,
-                                                            borderBottomEndRadius: 25,
-
-                                                        }}>
-                                                            <Header customStyle={{
-                                                                fontSize: 15.5,
-                                                                color: ei.textColor,
-                                                                alignSelf: "center",
-                                                                fontWeight: "bold"
-                                                            }}>
-                                                                {e.name}
-                                                            </Header>
-                                                        </View>
-
-                                                        <Header selectable={true} customStyle={{
-                                                            fontSize: 15,
-                                                            color: "#225D62",
-                                                            flex: 0.6,
-                                                            fontWeight: "bold",
-                                                            marginStart: "5%",
-                                                        }}>
-                                                            {e.value}
-                                                        </Header>
-                                                    </View>
-                                                )}
-                                        </View>
-                                    )
-                                })}
+                                {ei.components.length ? ei.components.map((e, index) => {
+                                    return (<TouchableOpacity key={index} style={{
+                                        flex: 0.3,
+                                        backgroundColor: index % 2 ? "#61e786" : "#004AAD",
+                                        width: "85%",
+                                        alignSelf: index % 2 ? "flex-start" : "flex-end",
+                                        borderRadius: 15,
+                                        flexDirection: "row",
+                                        marginTop: "10%",
+                                        padding: "1%"
+                                    }} onPress={() => {
+                                        Linking.openURL("https://suap.ifbaiano.edu.br" + e.link)
+                                    }}>
+                                        <Header style={{
+                                            color: index % 2 ? "#225D62" : "#00FF12",
+                                            fontSize: e.nome.length > 30 ? 17 : 20,
+                                            alignSelf: "center",
+                                            fontWeight: "bold",
+                                            marginStart: "5%",
+                                            flex: 1
+                                        }}>
+                                            {e.nome}
+                                        </Header>
+                                    </TouchableOpacity>)
+                                }) : <View>
+                                    <Header customStyle={{
+                                        color: "black",
+                                        fontSize: 25,
+                                        alignSelf: "center",
+                                        fontWeight: "bold",
+                                    }}>Carregando...</Header>
+                                </View>}
                             </View>)
                     })}
                     {/* <Header style={{

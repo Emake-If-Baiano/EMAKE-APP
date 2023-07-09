@@ -4,19 +4,19 @@
     "slug": "EMAKE",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/logo_app.png",
+    "icon": "./assets/logo.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/logo_app.png",
+      "image": "./assets/logo.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#222222"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "notification": {
       "icon": "./assets/logo.png",
-      "color": "#ffffff"
+      "color": "#111111"
     },
     "ios": {
       "supportsTablet": true
@@ -26,10 +26,10 @@
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#000000"
       },
       "package": "com.srwhale.EMAKE",
-      "versionCode": 4
+      "versionCode": 12
     },
     "web": {
       "favicon": "./assets/logo.png"

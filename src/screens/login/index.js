@@ -17,6 +17,8 @@ import Header from '../../components/Header';
 
 import axios from 'axios';
 
+import messaging from '@react-native-firebase/messaging';
+
 const b = PrimaryButton({ currentPage: 0, totalPages: 3, text: "oi" });
 
 function button(...data) {
@@ -38,6 +40,8 @@ import * as Keychain from 'react-native-keychain';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import * as Notifications from 'expo-notifications';
+
 export default function StartScreen({ navigation }) {
 
     const [index, setIndex] = useState("Sim");
@@ -47,6 +51,21 @@ export default function StartScreen({ navigation }) {
     const [password, setPassword] = useState({ value: '', error: '' });
 
     const [showPassword, setShowPassword] = useState(false);
+
+    async function requestUserPermission() {
+        const settings = await Notifications.getPermissionsAsync();
+
+        if (!settings.granted) {
+            await Notifications.requestPermissionsAsync({
+                ios: {
+                    allowAlert: true,
+                    allowBadge: true,
+                    allowSound: true,
+                    allowAnnouncements: true,
+                }
+            })
+        }
+    }
 
     const tryLogin = (user, password) => {
 
@@ -64,17 +83,32 @@ export default function StartScreen({ navigation }) {
                     token: data.access,
                 }));
 
-                axios.post("http://api.mc-lothus.com:25566/postToken", {
-                    user: user,
-                    password: password,
-                    token: await AsyncStorage.getItem("token"),
-                })
+                Notifications.getDevicePushTokenAsync().then(tokenn => {
+                    console.log("OIII", tokenn.data)
+                    AsyncStorage.setItem("token", tokenn.data)
 
-                navigation.navigate("Dashboard")
+                    axios.post("http://35.247.244.48:25566/postToken", {
+                        user: user,
+                        password: password,
+                        token: tokenn.data,
+                    }).then(() => {
+                        navigation.navigate("Dashboard")
+                    })
+                })
             }
         })
     }
-    useEffect(() => {
+    useEffect(() => {        
+        requestUserPermission();
+
+        AsyncStorage.getItem("token").then(token => {
+            if (!token) {
+                Notifications.getDevicePushTokenAsync().then(tokenn => {
+                    AsyncStorage.setItem("token", tokenn.data)
+                })
+            }
+        })
+
         setIndex("Sim");
 
         Keychain.getGenericPassword().then(credentials => {
@@ -124,7 +158,7 @@ export default function StartScreen({ navigation }) {
                     </Header>
                     <Header></Header>
                     <TextInput
-                        placeholderTextColor={"#06FF5B"}
+                        placeholderTextColor={"#61e786"}
                         placeholder={"Matrícula"}
                         style={{
                             backgroundColor: "rgb(72, 100, 128)",
@@ -140,7 +174,7 @@ export default function StartScreen({ navigation }) {
                         autoCapitalize="none"
                     />
                     <TextInput
-                        placeholderTextColor={"#06FF5B"}
+                        placeholderTextColor={"#61e786"}
                         placeholder={"Senha"}
                         style={{
                             backgroundColor: "rgb(72, 100, 128)",

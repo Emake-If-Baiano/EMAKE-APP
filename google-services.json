@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "825760742447",
+    "project_id": "emake-69f91",
+    "storage_bucket": "emake-69f91.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:825760742447:android:a3f8ab8e6ac41647c89ada",
+        "android_client_info": {
+          "package_name": "com.srwhale.EMAKE"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "825760742447-botsu4cuehsuljof2em36qvg2j11h14r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.srwhale.EMAKE",
+            "certificate_hash": "0ac45ef84f550a4d9a9da106c3b932c03668f1bf"
+          }
+        },
+        {
+          "client_id": "825760742447-ht16k12n8last5ahilea5qc9007u45ki.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.srwhale.EMAKE",
+            "certificate_hash": "bef97243cc25860f3d2f8a5adbfc97ab2167452c"
+          }
+        },
+        {
+          "client_id": "825760742447-g3a7ksc3uchottg6npjq19nbpe34shlg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDTHoJZtlSsROvvfzd2c8WHwzEV0lCD80"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "825760742447-g3a7ksc3uchottg6npjq19nbpe34shlg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

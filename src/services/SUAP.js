@@ -8,9 +8,27 @@ const instance = axios.create({
     }
 });
 
+async function getFiles(user, password) {
+    return axios.get(`http://35.247.244.48:25566/docs?user=${user}&password=${password}`).then(res => res.data)
+}
+
+async function getNotasDetalhadas(user, password, ano, periodo, codigo) {
+
+    const params = new URLSearchParams({
+        user,
+        password,
+        ano,
+        periodo,
+        codigo
+    });
+
+    return axios.get(`http://35.247.244.48:25566/notas?${params.toString()}`).then(res => res.data)
+}
+
 async function Login(user, password) {
 
     instance.defaults.headers.common['Authorization'] = null;
+
     return instance.post(
         '/autenticacao/token/?format=json',
         {
@@ -24,13 +42,12 @@ async function Login(user, password) {
         })
 };
 
-async function getBoletim(token) {
+async function getBoletim(token, ano, periodo) {
     instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-    return instance.get("/minhas-informacoes/boletim/2022/1/").then(e => {
+    return instance.get(`/minhas-informacoes/boletim/${ano || 2022}/${periodo || 1}/`).then(e => {
         return e.data
     }, (err) => {
-        console.log(err);
 
         return false;
     })
@@ -59,9 +76,37 @@ async function obterPeriodoLetivo(token) {
     })
 }
 
+async function obterTurmas(token, ano, periodo) {
+    instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+    return instance.get(`/minhas-informacoes/turmas-virtuais/${ano}/${periodo}/`).then(e => {
+        return e.data
+    }, (err) => {
+        console.log(err, token);
+
+        return false;
+    })
+}
+
+async function obterTurma(token, turma) {
+    instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+    return instance.get(`/minhas-informacoes/turma-virtual/${turma}/`).then(e => {
+        return e.data
+    }, (err) => {
+        console.log(err, token);
+
+        return false;
+    })
+}
+
 export default {
     Login,
     getUserData,
     getBoletim,
-    obterPeriodoLetivo
+    obterPeriodoLetivo,
+    getFiles,
+    getNotasDetalhadas,
+    obterTurmas,
+    obterTurma
 }

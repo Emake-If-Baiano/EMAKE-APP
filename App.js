@@ -9,7 +9,12 @@ import {
   Config,
   Notificações,
   Perfil,
-  Dados
+  Dados,
+  Documentos,
+  Boletim,
+  Turmas,
+  Noticias,
+  Calendario
 } from './src/screens'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -20,6 +25,13 @@ import * as Device from 'expo-device'
 
 const Stack = createStackNavigator()
 
+import SUAP from './src/services/SUAP'
+
+import axios from 'axios'
+
+import * as Keychain from 'react-native-keychain'
+
+
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -29,38 +41,77 @@ Notifications.setNotificationHandler({
 });
 
 import messaging from '@react-native-firebase/messaging';
+import loading from './src/screens/loading'
 
 export default function App() {
 
   const [exists, setExists] = useState(undefined);
 
-  async function requestUserPermission() {
-    const authStatus = await messaging().requestPermission();
-    const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+  const tryLogin = (user, password) => {
 
-    if (enabled) {
-      console.log('Authorization status:', authStatus);
-    }
+    SUAP.Login(user, password).then(async data => {
+      if (!data) {
+        setExists(false)
+      } else {
+
+        Keychain.setGenericPassword(user, password);
+
+        AsyncStorage.setItem("userinfo", JSON.stringify({
+          user: user,
+          password: password,
+          token: data.access,
+        }));
+
+        setExists(true)
+
+        Notifications.getDevicePushTokenAsync().then(tokenn => {
+
+          AsyncStorage.setItem("token", tokenn.data)
+
+          axios.post("http://35.247.244.48:25566/postToken", {
+            user: user,
+            password: password,
+            token: tokenn.data,
+          })
+        })
+      }
+    }).catch(err => {
+      setExists(true);
+    })
   }
-
 
   useEffect(() => {
 
-    AsyncStorage.getItem("userinfo").then(res => {
-      setExists(res);
+    AsyncStorage.getItem("token").then(token => {
+      console.log(token)
+      if (!token) {
+        console.log("GETTING TOKEN")
+        messaging().getToken().then(tokenn => {
+          console.log(tokenn)
+          AsyncStorage.setItem("token", tokenn)
+        })
+      }
     })
 
-    if (requestUserPermission()) {
-      AsyncStorage.getItem("token").then(token => {
-        if (!token) {
-          messaging().getToken().then(tokenn => {
-            AsyncStorage.setItem("token", tokenn)
-          })
-        }
-      })
-    }
+    AsyncStorage.getItem("userinfo").then(res => {
+      if (!res) {
+        AsyncStorage.getItem("firstTime").then(res2 => {
+          if (!res2) {
+            setExists(null);
+
+            AsyncStorage.setItem("firstTime", "true");
+          } else {
+            setExists(false);
+          }
+        })
+        return;
+      }
+      const parse = JSON.parse(res);
+
+      tryLogin(parse.user, parse.password);
+
+      setExists(true);
+    })
 
     messaging()
       .getInitialNotification()
@@ -91,13 +142,13 @@ export default function App() {
     return unsubscribe;
   }, []);
 
-  if (exists === undefined) return;
+  if (exists === undefined) return loading()
 
   return (
     <Provider>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName={exists ? "Login" : "StartScreen"}
+          initialRouteName={exists === true ? "Dashboard" : exists === null ? "Initial" : "Login"}
           screenOptions={{
             headerShown: false,
             cardStyle: { backgroundColor: 'rgb(28, 28, 28)' },
@@ -112,6 +163,11 @@ export default function App() {
           <Stack.Screen name="Notificações" headerShown={true} component={Notificações} />
           <Stack.Screen name="Perfil" headerShown={true} component={Perfil} />
           <Stack.Screen name="Dados" headerShown={true} component={Dados} />
+          <Stack.Screen name="Documentos" headerShown={true} component={Documentos} />
+          <Stack.Screen name="Boletim" headerShown={true} component={Boletim} />
+          <Stack.Screen name="Turmas" headerShown={true} component={Turmas} />
+          <Stack.Screen name="Noticias" headerShown={true} component={Noticias} />
+          <Stack.Screen name="Calendario" headerShown={true} component={Calendario} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

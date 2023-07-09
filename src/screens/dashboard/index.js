@@ -18,6 +18,7 @@ import AsyncStorage
 import { TouchableOpacity } from 'react-native';
 
 import { LinearGradient } from 'expo-linear-gradient';
+import loading from '../loading';
 
 export default function StartScreen({ navigation }) {
 
@@ -33,45 +34,90 @@ export default function StartScreen({ navigation }) {
     });
 
     useEffect(() => {
-        AsyncStorage.getItem("userinfo").then(res => {
-            const data = JSON.parse(res);
+        AsyncStorage.getItem("userdata").then(res => {
+            if (res) {
+                console.log("SETTING USER DATA")
+                setUserData(JSON.parse(res));
+            }
+        });
 
-            if (!userData.nome_usual) Login.getUserData(data.token).then(resData => {
+        AsyncStorage.getItem("boletim").then(res => {
+            if (res) {
+                console.log("SETTING BOLETIM")
+                setBoletim(JSON.parse(res));
+            }
+        });
 
-                AsyncStorage.setItem("userdata", JSON.stringify(resData));
+        AsyncStorage.getItem("percent").then(res => {
+            if (res) {
+                console.log("SETTING PERCENT", res)
+                setPercent(Number(res));
+            }
+        });
 
-                setUserData(resData);
-                console.log(resData);
-            });
+        AsyncStorage.getItem("periodo").then(res => {
+            if (res) {
+                console.log("SETTING PERIODO")
+                setPeriodo(JSON.parse(res))
+            }
+        });
 
-            if (!boletim.length || !percent) Login.getBoletim(data.token).then(resData => {
-                console.log("GETTING")
-                console.log(boletim.length, percent)
-                setBoletim(resData);
+        AsyncStorage.getItem("userinfo").then(resD => {
+            if (!resD) return navigation.navigate("Login");
+            const p = JSON.parse(resD);
 
-                setPercent(100 / (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0)) * (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0) - resData.reduce((a, b) => a + Number(b.numero_faltas), 0)));
-            });
+            Login.Login(p.user, p.password).then(res => {
+                const data = res;
+                data.token = data.access;
 
-            if (periodo.ano === "2021") Login.obterPeriodoLetivo(data.token).then(resData => {
-                let last = resData.reverse()[1] || resData[0];
+                AsyncStorage.setItem("userinfo", JSON.stringify({
+                    user: p.user,
+                    password: p.password,
+                    token: data.access,
+                }))
+                if (!data.token) return navigation.navigate("Login");
 
-                AsyncStorage.setItem('periodo', JSON.stringify({
-                    ano: last.ano_letivo,
-                    semestre: last.periodo_letivo
-                }));
+                if (!userData.nome_usual) Login.getUserData(data.token).then(resData => {
 
-                setPeriodo({
-                    ano: last.ano_letivo,
-                    semestre: last.periodo_letivo
-                })
-            });
+                    AsyncStorage.setItem("userdata", JSON.stringify(resData));
 
-            console.log(userData)
-            console.log(`https://suap.ifbaiano.edu.br${userData.url_foto_150x200}`)
+                    setUserData(resData);
+                });
+
+                if (!boletim.length || !percent) Login.getBoletim(data.token).then(resData => {
+
+                    AsyncStorage.setItem('boletim', JSON.stringify(resData));
+
+                    AsyncStorage.setItem("percent", `${100 / (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0)) * (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0) - resData.reduce((a, b) => a + Number(b.numero_faltas), 0))}`)
+
+                    setBoletim(resData);
+
+                    setPercent(100 / (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0)) * (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0) - resData.reduce((a, b) => a + Number(b.numero_faltas), 0)));
+                });
+
+                if (periodo.ano === "2021") Login.obterPeriodoLetivo(data.token).then(resData => {
+                    let last = resData.reverse()[1] || resData[0];
+
+                    AsyncStorage.setItem('periodo', JSON.stringify({
+                        ano: last.ano_letivo,
+                        semestre: last.periodo_letivo
+                    }));
+
+                    setPeriodo({
+                        ano: last.ano_letivo,
+                        semestre: last.periodo_letivo
+                    })
+                });
+
+            }).catch(Err => {
+                console.log(Err, "suamaeeee")
+            })
         })
     }, []);
 
-    if (percent === 0) return null;
+    if (percent === 0) return loading();
+
+    if (!userData.nome_usual) return loading();
 
     return (
         <Background navigation={navigation}>
@@ -113,7 +159,7 @@ export default function StartScreen({ navigation }) {
                         justifyContent: "space-around",
                     }}>
                         <Header customStyle={{
-                            color: "#00FF29",
+                            color: "#61e786",
                             fontSize: 22,
                             flex: 0.7,
                             alignSelf: "center"
@@ -141,7 +187,7 @@ export default function StartScreen({ navigation }) {
 
                             <Header customStyle={{
                                 fontSize: 14,
-                                color: "#00FF29",
+                                color: "#61e786",
                                 alignSelf: "center"
                             }}>Perfil</Header>
                         </TouchableOpacity>
@@ -176,11 +222,7 @@ export default function StartScreen({ navigation }) {
                         }}>
                             Progresso Anual
                         </Header>
-                        <LinearGradient
-                            colors={["#00FF29", "#004AAD"]}
-                            end={[0.7, 0.2]}
-                            start={[0.1, 0.9]}
-                            locations={[0, 1]}
+                        <View
                             style={{
                                 flex: 0.7,
                                 width: "95%",
@@ -189,7 +231,7 @@ export default function StartScreen({ navigation }) {
                                 alignItems: "center",
                                 flexDirection: "row",
                                 justifyContent: "space-around",
-                                backgroundColor: "transparent"
+                                backgroundColor: "#61e786"
                             }}>
 
                             <AnimatedCircularProgress
@@ -223,46 +265,53 @@ export default function StartScreen({ navigation }) {
                             }}>
                                 <Header customStyle={{
                                     fontSize: 15,
-                                    color: "#00FF29",
+                                    color: "#004AAD",
                                     fontWeight: "bold",
                                     width: "100%",
                                 }}>Ano Letivo - {periodo.ano}.{periodo.semestre}</Header>
 
                                 <Header customStyle={{
                                     fontSize: 15,
-                                    color: "#00FF29",
+                                    color: "#004AAD",
                                     fontWeight: "bold",
                                     width: "100%"
                                 }}>Aulas restantes: {boletim.reduce((a, b) => a + Number(b.carga_horaria), 0) - boletim.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0)} </Header>
                             </View>
-                        </LinearGradient>
+                        </View>
                     </View>
 
                     {[{
                         name: "Boletim",
                         image: require("../../../assets/paginas.png"),
+                        navigate: () => navigation.navigate("Boletim")
                     }, {
                         name: "Calendário Acadêmico",
                         image: require("../../../assets/calendário.png"),
+                        navigate: () => navigation.navigate("Calendario")
                     }, {
                         name: "Minhas Turmas",
                         image: require("../../../assets/pessoas.png"),
+                        navigate: () => navigation.navigate("Turmas")
                     }, {
                         name: "Notícias",
                         image: require("../../../assets/celular.png"),
+                        navigate: () => navigation.navigate("Noticias")
                     }, {
                         name: "Notícias",
                         image: require("../../../assets/celular.png"),
+                        navigate: () => navigation.navigate("Noticias")
                     }].map((category, index) => {
                         return (<TouchableOpacity key={index} style={{
                             flex: 0.1,
-                            backgroundColor: index % 2 ? "#00FF29" : "#004AAD",
+                            backgroundColor: index % 2 ? "#61e786" : "#004AAD",
                             width: "60%",
                             alignSelf: index % 2 ? "flex-start" : "flex-end",
                             marginEnd: index % 2 ? 0 : 20,
                             marginStart: index % 2 ? 20 : 0,
                             borderRadius: 15,
                             flexDirection: "row"
+                        }} onPress={() => {
+                            if (category.navigate) category.navigate()
                         }}>
                             <Image
                                 style={{
@@ -275,7 +324,7 @@ export default function StartScreen({ navigation }) {
                             />
 
                             <Header style={{
-                                color: index % 2 ? "#225D62" : "#00FF12",
+                                color: index % 2 ? "#142b6f" : "#61e786",
                                 fontSize: 17,
                                 alignSelf: "center",
                                 fontWeight: "bold",

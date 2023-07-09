@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import Background from '../../components/secondBackgrund';
-import { Share } from 'react-native';
+import { ImageBackground, Linking, Share } from 'react-native';
 import { View } from 'react-native';
 import { Image } from 'react-native';
 
@@ -20,6 +20,9 @@ import { TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import loading from '../loading';
 
+import axios from 'axios';
+
+import { load } from 'cheerio';
 export default function StartScreen({ navigation }) {
 
     const [userData, setUserData] = useState({});
@@ -33,11 +36,23 @@ export default function StartScreen({ navigation }) {
         semestre: "2"
     });
 
+    const [noticies, setNoticies] = useState([]);
+
+    const [noticieIndex, setNoticieIndex] = useState(0);
+
     useEffect(() => {
         AsyncStorage.getItem("userdata").then(res => {
             if (res) {
-                console.log("SETTING USER DATA")
                 setUserData(JSON.parse(res));
+                Login.obterNoticias(JSON.parse(res).vinculo.campus).then(res => {
+                    setNoticies(res);
+
+                    setInterval(() => {
+                        setNoticieIndex(nou => nou === 2 ? 0 : nou + 1);
+
+                        console.log("NOTICIEINDEX ALTERADO PARA " + noticieIndex)
+                    }, 10000)
+                })
             }
         });
 
@@ -292,14 +307,6 @@ export default function StartScreen({ navigation }) {
                         name: "Minhas Turmas",
                         image: require("../../../assets/pessoas.png"),
                         navigate: () => navigation.navigate("Turmas")
-                    }, {
-                        name: "Notícias",
-                        image: require("../../../assets/celular.png"),
-                        navigate: () => navigation.navigate("Noticias")
-                    }, {
-                        name: "Notícias",
-                        image: require("../../../assets/celular.png"),
-                        navigate: () => navigation.navigate("Noticias")
                     }].map((category, index) => {
                         return (<TouchableOpacity key={index} style={{
                             flex: 0.1,
@@ -335,6 +342,49 @@ export default function StartScreen({ navigation }) {
                             </Header>
                         </TouchableOpacity>)
                     })}
+
+                    {noticieIndex >= 0 ? noticies.length > 1 && <TouchableOpacity onPress={() => {
+                        console.log("PRESSSED!")
+                        Linking.openURL(noticies[noticieIndex].link)
+                    }} style={{
+                        flex: 0.3,
+                        width: "75%",
+                        justifyContent: "center",
+                        alignSelf: "center",
+                        borderRadius: 15,
+                    }}>
+                        <ImageBackground onPress={() => {
+                            console.log("YA")
+                        }} source={{
+                            uri: noticies[noticieIndex]?.link
+                        }} style={{
+                            flex: 1,
+                            width: "100%",
+                            justifyContent: "flex-end",
+                            alignItems: "center",
+                        }} imageStyle={{
+                            borderRadius: 15
+                        }}>
+                            <TouchableOpacity onPress={() => {
+                                Linking.openURL(noticies[noticieIndex].link)
+                            }} style={{
+                                flex: 1,
+                                width: "100%",
+                                justifyContent: "flex-end",
+                                alignItems: "center",
+
+                            }}>
+                                <Header style={{
+                                    fontSize: 16,
+                                    color: "white",
+                                    marginBottom: "5%",
+                                    maxWidth: "95%"
+                                }}>
+                                    {noticies[noticieIndex] ? noticies[noticieIndex].nome : "Carregando..."}
+                                </Header>
+                            </TouchableOpacity>
+                        </ImageBackground>
+                    </TouchableOpacity> : ""}
                 </View>
             </View>
         </Background>

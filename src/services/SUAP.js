@@ -100,6 +100,13 @@ async function obterTurma(token, turma) {
     })
 }
 
+async function obterNoticias(campus) {
+    const params = new URLSearchParams({
+        campus: campus
+    });
+    return axios.get(`http://35.247.244.48:25566/campus?${params.toString()}`).then(res => res.data)
+}
+
 export default {
     Login,
     getUserData,
@@ -108,5 +115,6 @@ export default {
     getFiles,
     getNotasDetalhadas,
     obterTurmas,
-    obterTurma
+    obterTurma,
+    obterNoticias
 }

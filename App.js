@@ -12,7 +12,9 @@ import {
   Dados,
   Documentos,
   Boletim,
-  Turmas
+  Turmas,
+  Noticias,
+  Calendario
 } from './src/screens'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -93,7 +95,15 @@ export default function App() {
 
     AsyncStorage.getItem("userinfo").then(res => {
       if (!res) {
-        setExists(false)
+        AsyncStorage.getItem("firstTime").then(res2 => {
+          if (!res2) {
+            setExists(null);
+
+            AsyncStorage.setItem("firstTime", "true");
+          } else {
+            setExists(false);
+          }
+        })
         return;
       }
       const parse = JSON.parse(res);
@@ -138,7 +148,7 @@ export default function App() {
     <Provider>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName={exists ? "Dashboard" : "Login"}
+          initialRouteName={exists === true ? "Dashboard" : exists === null ? "Initial" : "Login"}
           screenOptions={{
             headerShown: false,
             cardStyle: { backgroundColor: 'rgb(28, 28, 28)' },
@@ -156,6 +166,8 @@ export default function App() {
           <Stack.Screen name="Documentos" headerShown={true} component={Documentos} />
           <Stack.Screen name="Boletim" headerShown={true} component={Boletim} />
           <Stack.Screen name="Turmas" headerShown={true} component={Turmas} />
+          <Stack.Screen name="Noticias" headerShown={true} component={Noticias} />
+          <Stack.Screen name="Calendario" headerShown={true} component={Calendario} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

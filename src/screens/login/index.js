@@ -98,7 +98,7 @@ export default function StartScreen({ navigation }) {
             }
         })
     }
-    useEffect(() => {
+    useEffect(() => {        
         requestUserPermission();
 
         AsyncStorage.getItem("token").then(token => {
@@ -158,7 +158,7 @@ export default function StartScreen({ navigation }) {
                     </Header>
                     <Header></Header>
                     <TextInput
-                        placeholderTextColor={"#06FF5B"}
+                        placeholderTextColor={"#61e786"}
                         placeholder={"Matrícula"}
                         style={{
                             backgroundColor: "rgb(72, 100, 128)",
@@ -174,7 +174,7 @@ export default function StartScreen({ navigation }) {
                         autoCapitalize="none"
                     />
                     <TextInput
-                        placeholderTextColor={"#06FF5B"}
+                        placeholderTextColor={"#61e786"}
                         placeholder={"Senha"}
                         style={{
                             backgroundColor: "rgb(72, 100, 128)",

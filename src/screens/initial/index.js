@@ -151,7 +151,7 @@ const styles = {
     },
     logo_image: {
         width: "100%",
-        height: 210,
+        height: 220,
     },
     pageStyleBoard: {
         borderRadius: 25,

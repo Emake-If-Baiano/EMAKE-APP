@@ -36,6 +36,7 @@ import { TouchableOpacity } from 'react-native';
 import loading from '../loading';
 
 import SelectDropdown from 'react-native-select-dropdown'
+import { Linking } from 'react-native';
 
 export default function Turmas({ navigation }) {
 
@@ -227,30 +228,16 @@ export default function Turmas({ navigation }) {
                                 </TouchableOpacity>
 
                                 <TouchableOpacity onPress={() => {
-                                    setNow("materiais")
+                                    setNow("materiais_de_aula")
                                 }} style={{
 
                                 }}>
                                     <Header style={{
-                                        color: now === "materiais" ? "green" : "black",
+                                        color: now === "materiais_de_aula" ? "green" : "black",
                                         fontWeight: "bold",
                                         fontSize: 16,
                                     }}>
                                         Materiais
-                                    </Header>
-                                </TouchableOpacity>
-
-                                <TouchableOpacity onPress={() => {
-                                    setNow("atvs")
-                                }} style={{
-                                    flex: 0.333
-                                }}>
-                                    <Header style={{
-                                        color: now === "atvs" ? "green" : "black",
-                                        fontWeight: "bold",
-                                        fontSize: 16,
-                                    }}>
-                                        Atvs
                                     </Header>
                                 </TouchableOpacity>
                             </View>
@@ -365,7 +352,40 @@ export default function Turmas({ navigation }) {
                                                     alignSelf: "flex-start",
                                                     marginTop: "3%"
                                                 }}>Professor: {b.professor} </Header>
-                                            </View>
+                                            </View>,
+                                            "materiais_de_aula": <TouchableOpacity onPress={() => {
+                                                Linking.openURL(`https://suap.ifbaiano.edu.br${b.url}`)
+                                            }} style={{
+                                                backgroundColor: "#f9f1e5",
+                                                width: "80%",
+                                                height: 120,
+                                                borderRadius: 20,
+                                                marginTop: "5%",
+                                                alignSelf: "center",
+                                                shadowColor: 'black',
+                                                shadowOffset: { width: -5, height: 10 },
+                                                shadowOpacity: 0.5,
+                                                shadowRadius: 10,
+                                                elevation: 10,
+                                                alignItems: "center",
+                                            }}>
+                                                <Header customStyle={{
+                                                    fontWeight: "bold",
+                                                    fontSize: 17,
+                                                    color: "black",
+                                                    marginStart: "5%",
+                                                    marginTop: "10%"
+                                                }}>{b.descricao?.substring(0, 40) + (b.descricao?.length > 40 ? "..." : "")}</Header>
+
+                                                <Header customStyle={{
+                                                    fontWeight: "bold",
+                                                    fontSize: 15,
+                                                    color: "black",
+                                                    marginStart: "5%",
+                                                    alignSelf: "flex-start",
+                                                    marginTop: "5%"
+                                                }}>Data de vinculação: {b.data_vinculacao?.split("-").reverse().join("/")} </Header>
+                                            </TouchableOpacity>
                                         }
                                         return formats[now]
                                     })}
@@ -427,7 +447,7 @@ export default function Turmas({ navigation }) {
                                 return (
                                     <TouchableOpacity key={i} style={{
                                         width: "30%",
-                                        backgroundColor: "#06FF5B",
+                                        backgroundColor: "#61e786",
                                         borderRadius: 40,
                                         height: "80%",
                                         opacity: periodo?.ano === p.ano_letivo ? 1 : 0.55,

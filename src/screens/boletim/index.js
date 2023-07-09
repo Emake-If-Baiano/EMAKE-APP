@@ -75,7 +75,7 @@ export default function Notificações({ navigation }) {
                         backgroundColor: "#004AAD",
                         width: "100%",
                         borderRadius: 30,
-                        borderColor: "#00FF12",
+                        borderColor: "#61e786",
                         borderWidth: 4,
                     }} contentContainerStyle={{
                         padding: "3%"
@@ -83,7 +83,7 @@ export default function Notificações({ navigation }) {
                         {[boletim.map((b, i) => {
                             return (<TouchableOpacity key={i}>
                                 <Header customStyle={{
-                                    color: "#00FF12",
+                                    color: "#61e786",
                                     fontSize: 18,
                                     padding: "2%"
                                 }} onPress={() => {
@@ -291,7 +291,7 @@ export default function Notificações({ navigation }) {
                                             alignItems: "center"
                                         }}>
                                             <Header customStyle={{
-                                                color: "#00FF12",
+                                                color: "#61e786",
                                                 fontSize: 11
                                             }}>
                                                 {e}
@@ -315,7 +315,7 @@ export default function Notificações({ navigation }) {
                                                 alignItems: "center",
                                             }}>
                                                 <Header customStyle={{
-                                                    color: j % 2 !== 0 ? "#004AAD" : "#00FF12",
+                                                    color: j % 2 !== 0 ? "#004AAD" : "#61e786",
                                                     fontSize: 10,
                                                 }}>
                                                     {e}
@@ -413,7 +413,7 @@ export default function Notificações({ navigation }) {
                                 return (
                                     <TouchableOpacity key={i} style={{
                                         width: "30%",
-                                        backgroundColor: "#06FF5B",
+                                        backgroundColor: "#61e786",
                                         borderRadius: 40,
                                         height: "80%",
                                         opacity: periodo?.ano === p.ano_letivo ? 1 : 0.55,
@@ -454,14 +454,14 @@ export default function Notificações({ navigation }) {
                         width: "90%",
                         borderRadius: 40,
                         borderWidth: 5,
-                        borderColor: "#00FF12",
+                        borderColor: "#61e786",
                         justifyContent: "center",
                     }} onPress={() => {
                         setVisible(!visible)
                     }}>
                         <Header customStyle={{
                             fontSize: 19,
-                            color: "#00FF29",
+                            color: "#61e786",
                             fontWeight: "bold",
                             textAlign: "left",
                             marginStart: "5%"
@@ -489,19 +489,19 @@ export default function Notificações({ navigation }) {
                             flex: 0.5
                         }, {
                             name: "N1",
-                            color: "#00FF29",
+                            color: "#61e786",
                             flex: 0.125
                         }, {
                             name: "N2",
-                            color: "#00FF29",
+                            color: "#61e786",
                             flex: 0.125
                         }, {
                             name: "MD",
-                            color: "#00FF29",
+                            color: "#61e786",
                             flex: 0.125
                         }, {
                             name: "NAF",
-                            color: "#00FF29",
+                            color: "#61e786",
                             flex: 0.125
                         }].map((item, index) => {
                             return (<View key={index} style={{
@@ -511,7 +511,7 @@ export default function Notificações({ navigation }) {
                                 alignItems: "center",
                             }}>
                                 <Header customStyle={{
-                                    color: index === 0 ? "#00FF29" : "#004AAD",
+                                    color: index === 0 ? "#61e786" : "#004AAD",
                                     fontSize: 20,
                                     fontWeight: "bold"
                                 }}>
@@ -558,7 +558,7 @@ export default function Notificações({ navigation }) {
 
                                         <View style={{
                                             height: "15%",
-                                            backgroundColor: "#00FF12",
+                                            backgroundColor: "#61e786",
                                             width: "100%",
                                             opacity: 0.4
                                         }}>
@@ -574,7 +574,7 @@ export default function Notificações({ navigation }) {
                                             backgroundColor: "#004AAD"
                                         }}>
                                             <Header style={{
-                                                color: "#00FF12",
+                                                color: "#61e786",
                                                 fontSize: 20,
                                                 fontWeight: "bold",
                                                 textAlign: "center",
@@ -585,7 +585,7 @@ export default function Notificações({ navigation }) {
 
                                         <View style={{
                                             height: "15%",
-                                            backgroundColor: "#00FF12",
+                                            backgroundColor: "#61e786",
                                             width: "100%",
                                             opacity: 0.4
                                         }}>
@@ -600,7 +600,7 @@ export default function Notificações({ navigation }) {
                                             backgroundColor: "white"
                                         }}>
                                             <Header style={{
-                                                color: "#00FF12",
+                                                color: "#61e786",
                                                 fontSize: 20,
                                                 fontWeight: "bold",
                                                 textAlign: "center",
@@ -611,7 +611,7 @@ export default function Notificações({ navigation }) {
 
                                         <View style={{
                                             height: "15%",
-                                            backgroundColor: "#00FF12",
+                                            backgroundColor: "#61e786",
                                             width: "100%",
                                             opacity: 0.4
                                         }}>
@@ -627,7 +627,7 @@ export default function Notificações({ navigation }) {
                                             backgroundColor: "#004AAD"
                                         }}>
                                             <Header style={{
-                                                color: (item.nota_etapa_1?.nota + (item.nota_etapa_2?.nota || 0)) / 2 > 60 ? "#00FF12" : "red",
+                                                color: (item.nota_etapa_1?.nota + (item.nota_etapa_2?.nota || 0)) / 2 > 60 ? "#61e786" : "red",
                                                 fontSize: 20,
                                                 fontWeight: "bold",
                                                 textAlign: "center",
@@ -638,7 +638,7 @@ export default function Notificações({ navigation }) {
 
                                         <View style={{
                                             height: "15%",
-                                            backgroundColor: "#00FF12",
+                                            backgroundColor: "#61e786",
                                             width: "100%",
                                             opacity: 0.4
                                         }}>
@@ -653,7 +653,7 @@ export default function Notificações({ navigation }) {
                                             backgroundColor: "white"
                                         }}>
                                             <Header style={{
-                                                color: "#00FF12",
+                                                color: "#61e786",
                                                 fontSize: 20,
                                                 fontWeight: "bold",
                                                 textAlign: "center",
@@ -664,7 +664,7 @@ export default function Notificações({ navigation }) {
 
                                         <View style={{
                                             height: "15%",
-                                            backgroundColor: "#00FF12",
+                                            backgroundColor: "#61e786",
                                             width: "100%",
                                             opacity: 0.4
                                         }}>

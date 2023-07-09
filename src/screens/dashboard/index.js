@@ -159,7 +159,7 @@ export default function StartScreen({ navigation }) {
                         justifyContent: "space-around",
                     }}>
                         <Header customStyle={{
-                            color: "#00FF29",
+                            color: "#61e786",
                             fontSize: 22,
                             flex: 0.7,
                             alignSelf: "center"
@@ -187,7 +187,7 @@ export default function StartScreen({ navigation }) {
 
                             <Header customStyle={{
                                 fontSize: 14,
-                                color: "#00FF29",
+                                color: "#61e786",
                                 alignSelf: "center"
                             }}>Perfil</Header>
                         </TouchableOpacity>
@@ -222,11 +222,7 @@ export default function StartScreen({ navigation }) {
                         }}>
                             Progresso Anual
                         </Header>
-                        <LinearGradient
-                            colors={["#00FF29", "#004AAD"]}
-                            end={[0.7, 0.2]}
-                            start={[0.1, 0.9]}
-                            locations={[0, 1]}
+                        <View
                             style={{
                                 flex: 0.7,
                                 width: "95%",
@@ -235,7 +231,7 @@ export default function StartScreen({ navigation }) {
                                 alignItems: "center",
                                 flexDirection: "row",
                                 justifyContent: "space-around",
-                                backgroundColor: "transparent"
+                                backgroundColor: "#61e786"
                             }}>
 
                             <AnimatedCircularProgress
@@ -269,19 +265,19 @@ export default function StartScreen({ navigation }) {
                             }}>
                                 <Header customStyle={{
                                     fontSize: 15,
-                                    color: "#00FF29",
+                                    color: "#004AAD",
                                     fontWeight: "bold",
                                     width: "100%",
                                 }}>Ano Letivo - {periodo.ano}.{periodo.semestre}</Header>
 
                                 <Header customStyle={{
                                     fontSize: 15,
-                                    color: "#00FF29",
+                                    color: "#004AAD",
                                     fontWeight: "bold",
                                     width: "100%"
                                 }}>Aulas restantes: {boletim.reduce((a, b) => a + Number(b.carga_horaria), 0) - boletim.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0)} </Header>
                             </View>
-                        </LinearGradient>
+                        </View>
                     </View>
 
                     {[{
@@ -307,7 +303,7 @@ export default function StartScreen({ navigation }) {
                     }].map((category, index) => {
                         return (<TouchableOpacity key={index} style={{
                             flex: 0.1,
-                            backgroundColor: index % 2 ? "#00FF29" : "#004AAD",
+                            backgroundColor: index % 2 ? "#61e786" : "#004AAD",
                             width: "60%",
                             alignSelf: index % 2 ? "flex-start" : "flex-end",
                             marginEnd: index % 2 ? 0 : 20,
@@ -328,7 +324,7 @@ export default function StartScreen({ navigation }) {
                             />
 
                             <Header style={{
-                                color: index % 2 ? "#225D62" : "#00FF12",
+                                color: index % 2 ? "#142b6f" : "#61e786",
                                 fontSize: 17,
                                 alignSelf: "center",
                                 fontWeight: "bold",

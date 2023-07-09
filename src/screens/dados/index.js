@@ -145,7 +145,7 @@ export default function Notificações({ navigation }) {
                     {[{
                         name: "Dados Gerais",
                         image: require("../../../assets/dados_gerais.png"),
-                        backColor: "#00FF29",
+                        backColor: "#61e786",
                         textColor: "#225D62",
                         components: [{
                             name: "Nome",

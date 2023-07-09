@@ -27,11 +27,7 @@ export default function Background({ children, navigation }) {
             <KeyboardAvoidingView style={{
                 flex: 0.1
             }} behavior='position' enabled>
-                <LinearGradient
-                    start={{ x: 0, y: 1 }}
-                    end={{ x: 1, y: 0 }}
-
-                    colors={['#00FF12', '#225D62']}
+                <View
                     style={styles.barView}>
 
                     <TouchableOpacity
@@ -48,6 +44,7 @@ export default function Background({ children, navigation }) {
                         <Header
                             customStyle={{
                                 fontSize: 10.5,
+                                fontWeight: "bold",
                             }}
                         >
                             CONFIGURAÇÕES
@@ -68,6 +65,7 @@ export default function Background({ children, navigation }) {
                         <Header
                             customStyle={{
                                 fontSize: 10.5,
+                                fontWeight: "bold",
                             }}
                         >
                             INÍCIO
@@ -88,12 +86,13 @@ export default function Background({ children, navigation }) {
                         <Header
                             customStyle={{
                                 fontSize: 10.5,
+                                fontWeight: "bold",
                             }}
                         >
                             NOTIFICAÇÕES
                         </Header>
                     </TouchableOpacity>
-                </LinearGradient>
+                </View>
             </KeyboardAvoidingView>
         </ImageBackground>
     )
@@ -118,6 +117,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         height: "100%",
+        backgroundColor: "#61e786"
     },
     barViewItem: {
         flex: 0.33,

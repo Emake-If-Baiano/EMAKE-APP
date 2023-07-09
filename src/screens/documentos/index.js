@@ -144,7 +144,7 @@ export default function Notificações({ navigation }) {
                                 {ei.components.length ? ei.components.map((e, index) => {
                                     return (<TouchableOpacity key={index} style={{
                                         flex: 0.3,
-                                        backgroundColor: index % 2 ? "#00FF29" : "#004AAD",
+                                        backgroundColor: index % 2 ? "#61e786" : "#004AAD",
                                         width: "85%",
                                         alignSelf: index % 2 ? "flex-start" : "flex-end",
                                         borderRadius: 15,

@@ -32,14 +32,21 @@ export default function Calendario({ navigation }) {
             setUserData(JSON.parse(data));
         });
 
+        AsyncStorage.getItem("calendario").then(data => {
+            if (data) {
+                setCalendario(JSON.parse(data));
+            }
+        });
+
         AsyncStorage.getItem("userinfo").then(data => {
             const parse = JSON.parse(data);
 
             setCredentials(parse);
 
             if (!calendario.length) Login.obterCalendario(parse.user, parse.password).then(data => {
-                console.log(data)
                 setCalendario(data);
+
+                AsyncStorage.setItem("calendario", JSON.stringify(data));
             })
         });
     }, [])

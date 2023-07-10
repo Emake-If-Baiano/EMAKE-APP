@@ -494,7 +494,7 @@ export default function Turmas({ navigation }) {
                                     setVisible(b);
 
                                 }} style={{
-                                    backgroundColor: "#f9f1e5",
+                                    backgroundColor: "#D3D3D3",
                                     width: "80%",
                                     height: 120,
                                     borderRadius: 20,

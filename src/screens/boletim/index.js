@@ -250,7 +250,7 @@ export default function Notificações({ navigation }) {
                             </Header>
                         </View>
 
-                        <Header customStyle={{
+                        {Boolean(detal.Professores) && <Header customStyle={{
                             flex: 0.05,
                             fontSize: 16,
                             color: "#004AAD",
@@ -258,18 +258,20 @@ export default function Notificações({ navigation }) {
                             fontWeight: "bold"
                         }}>
                             Prof: {detal.Professores || "Nenhum professor cadastrado"}
-                        </Header>
+                        </Header>}
 
-                        {!Object.entries(detal["Detalhamento das Notas"] || {}).length && (
-                            <Header customStyle={{
-                                textAlign: "center",
-                                fontSize: 20,
-                            }}>
-                                Carregando...
-                            </Header>
-                        )}
+                        {!Boolean(detal.Professores) && <Header customStyle={{
+                            fontSize: 25,
+                            color: "#004AAD",
+                            marginStart: "5%",
+                            fontWeight: "bold"
+                        }}>
+                            Carregando...
+                        </Header>
+                        }
+
                         {Object.entries(detal["Detalhamento das Notas"] || []).map(([key, value], i) => {
-                            console.log(value)
+
                             return (<View style={{
                                 flex: 0.5,
                                 width: "100%",
@@ -289,13 +291,14 @@ export default function Notificações({ navigation }) {
                                     flex: 0.15,
                                     flexDirection: "row",
                                     justifyContent: "space-around",
-                                    marginTop: "1%"
+                                    marginTop: "1%",
+                                    marginBottom: "1%"
                                 }}>
                                     {["Sigla", "Tipo", "Descrição", "Peso", "Obteve"].map((e, i) => {
                                         return (<View style={{
                                             backgroundColor: "#004AAD",
                                             borderRadius: 40,
-                                            flex: 0.2,
+                                            flex: ["Tipo", "Descrição"].includes(e) ? 0.3 : 0.1333,
                                             justifyContent: "center",
                                             alignItems: "center"
                                         }}>
@@ -319,13 +322,14 @@ export default function Notificações({ navigation }) {
                                         {Object.values(e).map((e, i) => {
                                             return (<View style={{
                                                 backgroundColor: j % 2 === 0 ? "rgba(0, 74, 173, 0.6)" : "rgba(0, 255, 18, 0.4)",
-                                                flex: 0.2,
+                                                flex: [1, 2].includes(i) ? 0.3 : 0.1333,
                                                 justifyContent: "center",
-                                                alignItems: "center",
+                                                alignItems: [1, 2].includes(i) ? "flex-start" : "center"
                                             }}>
                                                 <Header customStyle={{
                                                     color: j % 2 !== 0 ? "#004AAD" : "#61e786",
-                                                    fontSize: 10,
+                                                    fontSize: 13,
+                                                    marginStart: [1, 2].includes(i) ? "15%" : 0
                                                 }}>
                                                     {e}
                                                 </Header>
@@ -555,7 +559,7 @@ export default function Notificações({ navigation }) {
                                         justifyContent: "center",
                                         alignItems: "center",
                                     }} onPress={() => {
-                                        console.log(item);
+                                        console.log(item, Boolean(detal.Professores));
                                         setMateria(item);
 
                                         loadDetals(credentials.user, credentials.password, periodo.ano, periodo.periodo, item.codigo_diario)

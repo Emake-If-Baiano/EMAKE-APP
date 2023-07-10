@@ -44,15 +44,6 @@ export default function StartScreen({ navigation }) {
         AsyncStorage.getItem("userdata").then(res => {
             if (res) {
                 setUserData(JSON.parse(res));
-                Login.obterNoticias(JSON.parse(res).vinculo.campus).then(res => {
-                    setNoticies(res);
-
-                    setInterval(() => {
-                        setNoticieIndex(nou => nou === 2 ? 0 : nou + 1);
-
-                        console.log("NOTICIEINDEX ALTERADO PARA " + noticieIndex)
-                    }, 10000)
-                })
             }
         });
 
@@ -95,6 +86,14 @@ export default function StartScreen({ navigation }) {
                 if (!userData.nome_usual) Login.getUserData(data.token).then(resData => {
 
                     AsyncStorage.setItem("userdata", JSON.stringify(resData));
+
+                    if (!noticies.find(n => n.nome)) Login.obterNoticias(resData.vinculo.campus).then(res => {
+                        setNoticies(res);
+
+                        setInterval(() => {
+                            setNoticieIndex(nou => nou === 2 ? 0 : nou + 1);
+                        }, 8500)
+                    })
 
                     setUserData(resData);
                 });
@@ -343,10 +342,7 @@ export default function StartScreen({ navigation }) {
                         </TouchableOpacity>)
                     })}
 
-                    {noticieIndex >= 0 ? noticies.length > 1 && <TouchableOpacity onPress={() => {
-                        console.log("PRESSSED!")
-                        Linking.openURL(noticies[noticieIndex].link)
-                    }} style={{
+                    {noticieIndex >= 0 ? noticies.length > 1 && <View style={{
                         flex: 0.3,
                         width: "75%",
                         justifyContent: "center",
@@ -365,10 +361,50 @@ export default function StartScreen({ navigation }) {
                         }} imageStyle={{
                             borderRadius: 15
                         }}>
+                            <View style={{
+                                flex: 0.5,
+                                width: "100%",
+                                flexDirection: "row",
+                            }}>
+                                <TouchableOpacity style={{
+                                    flex: 0.5,
+                                    justifyContent: "flex-end",
+                                    width: "100%",
+                                }} onPress={() => {
+                                    setNoticieIndex(nou => nou === 0 ? 2 : nou - 1);
+                                }}>
+                                    <Header customStyle={{
+                                        fontSize: 35,
+                                        fontWeight: "bold",
+                                        marginStart: "5%",
+                                        alignSelf: "flex-start",
+                                    }}>
+                                        {"<"}
+                                    </Header>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity onPress={() => {
+                                    setNoticieIndex(nou => nou === 2 ? 0 : nou + 1);
+                                }} style={{
+                                    flex: 0.5,
+                                    justifyContent: "flex-end",
+                                    width: "100%",
+                                }}>
+                                    <Header customStyle={{
+                                        fontSize: 35,
+                                        fontWeight: "bold",
+                                        marginEnd: "5%",
+                                        alignSelf: "flex-end",
+                                        textAlign: "right",
+                                    }}>
+                                        {">"}
+                                    </Header>
+                                </TouchableOpacity>
+                            </View>
                             <TouchableOpacity onPress={() => {
-                                Linking.openURL(noticies[noticieIndex].link)
+                                Linking.openURL(noticies[noticieIndex].site)
                             }} style={{
-                                flex: 1,
+                                flex: 0.5,
                                 width: "100%",
                                 justifyContent: "flex-end",
                                 alignItems: "center",
@@ -378,13 +414,13 @@ export default function StartScreen({ navigation }) {
                                     fontSize: 16,
                                     color: "white",
                                     marginBottom: "5%",
-                                    maxWidth: "95%"
+                                    maxWidth: "95%",
                                 }}>
                                     {noticies[noticieIndex] ? noticies[noticieIndex].nome : "Carregando..."}
                                 </Header>
                             </TouchableOpacity>
                         </ImageBackground>
-                    </TouchableOpacity> : ""}
+                    </View> : ""}
                 </View>
             </View>
         </Background>

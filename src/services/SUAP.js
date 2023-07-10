@@ -107,6 +107,27 @@ async function obterNoticias(campus) {
     return axios.get(`http://35.247.244.48:25566/campus?${params.toString()}`).then(res => res.data)
 }
 
+async function obterNotificacoes(user, password) {
+
+    const params = new URLSearchParams({
+        user,
+        password
+    });
+
+    return axios.get(`http://35.247.244.48:25566/notificacoes?${params.toString()}`).then(res => res.data)
+}
+
+async function obterCalendario(user, password) {
+
+    const params = new URLSearchParams({
+        user,
+        password
+    });
+
+    return axios.get(`http://35.247.244.48:25566/calendario?${params.toString()}`).then(res => res.data)
+}
+
+
 export default {
     Login,
     getUserData,
@@ -116,5 +137,7 @@ export default {
     getNotasDetalhadas,
     obterTurmas,
     obterTurma,
-    obterNoticias
+    obterNoticias,
+    obterNotificacoes,
+    obterCalendario,
 }

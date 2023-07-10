@@ -81,7 +81,7 @@ export default function Notificações({ navigation }) {
                 height: Dimensions.get("window").height,
             }}>
                 <View style={{
-                    flex: 0.05,
+                    flex: 0.1,
                 }}>
                     <TouchableOpacity onPress={() => {
                         AsyncStorage.removeItem("userinfo").then(() => {
@@ -90,7 +90,7 @@ export default function Notificações({ navigation }) {
                     }} style={{
                         flexDirection: "row",
                         justifyContent: "flex-start",
-                        alignItems: "flex-start",
+                        alignItems: "flex-end",
                         flex: 1,
                     }}>
                         <Header customStyle={{

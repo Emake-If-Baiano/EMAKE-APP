@@ -217,19 +217,28 @@ export default function Notificações({ navigation }) {
                 }}>
                     <View style={{
                         width: "100%",
-                        flex: 0.8,
+                        flex: 0.85,
                         backgroundColor: "white",
+                        borderRadius: 25,
+                        borderColor: "black",
+                        borderTopWidth: 4,
+                        borderLeftWidth: 4,
+                        borderRightWidth: 4,
+                        borderBottomWidth: 4,
                     }}>
 
                         <View style={{
-                            width: "95%",
+                            width: "100%",
                             flex: 0.1,
                             backgroundColor: "#BCFFC6",
                             borderRadius: 40,
-                            borderWidth: 3,
                             borderColor: "black",
                             justifyContent: "center",
-                            alignSelf: "center"
+                            alignSelf: "center",
+                            borderTopWidth: 1,
+                            borderLeftWidth: 3,
+                            borderRightWidth: 3,
+                            borderBottomWidth: 3,
                         }}>
                             <Header customStyle={{
                                 fontSize: 20,
@@ -363,7 +372,7 @@ export default function Notificações({ navigation }) {
                     flex: 0.95,
                     backgroundColor: "white",
                     width: "100%",
-                    alignItems: "center"
+                    alignItems: "center",
                 }}>
                     <View style={{
                         flexDirection: "row",
@@ -445,11 +454,11 @@ export default function Notificações({ navigation }) {
                         fontSize: 25,
                         fontWeight: "bold",
                         textAlign: "center",
-                        flex: 0.05,
+                        flex: 0.07,
                     }}>Matéria</Header>
 
                     <TouchableOpacity style={{
-                        flex: 0.07,
+                        flex: 0.06,
                         backgroundColor: "#004AAD",
                         width: "90%",
                         borderRadius: 40,
@@ -460,11 +469,12 @@ export default function Notificações({ navigation }) {
                         setVisible(!visible)
                     }}>
                         <Header customStyle={{
-                            fontSize: 19,
+                            fontSize: 17,
                             color: "#61e786",
                             fontWeight: "bold",
                             textAlign: "left",
-                            marginStart: "5%"
+                            marginStart: "5%",
+                            fontFamily: "times"
                         }}>
                             Toque para escolher uma matéria
                         </Header>
@@ -480,29 +490,29 @@ export default function Notificações({ navigation }) {
                     {render()}
 
                     <View style={{
-                        flex: 0.1,
+                        flex: 0.08,
                         flexDirection: "row"
                     }}>
                         {[{
                             name: "Disciplina",
                             color: "#004AAD",
-                            flex: 0.5
+                            flex: 0.6
                         }, {
                             name: "N1",
                             color: "#61e786",
-                            flex: 0.125
+                            flex: 0.1
                         }, {
                             name: "N2",
                             color: "#61e786",
-                            flex: 0.125
+                            flex: 0.1
                         }, {
                             name: "MD",
                             color: "#61e786",
-                            flex: 0.125
+                            flex: 0.1
                         }, {
                             name: "NAF",
                             color: "#61e786",
-                            flex: 0.125
+                            flex: 0.1
                         }].map((item, index) => {
                             return (<View key={index} style={{
                                 flex: item.flex,
@@ -521,40 +531,49 @@ export default function Notificações({ navigation }) {
                         })}
                     </View>
                     <View style={{
-                        flex: 0.49,
+                        flex: 0.5,
                         backgroundColor: "FFFFFF",
                         width: "100%",
                     }}>
-                        <ScrollView style={{
-                            flex: 1
+                        <ScrollView contentContainerStyle={{
+
+                        }} style={{
+                            height: "100%"
                         }}>
-                            {boletim?.map((item, index) => {
+                            {boletim?.sort((a, b) => a.disciplina?.split("- ")[1] - b.disciplina?.split("- ")[1]).map((item, index) => {
                                 return (<View key={index} style={{
-                                    height: "5%",
+                                    height: 50,
                                     backgroundColor: "#FFFFFF",
                                     flexDirection: "row",
+                                    justifyContent: "center",
+                                    alignItems: "center",
                                 }}>
                                     <TouchableOpacity style={{
-                                        height: "100%",
                                         backgroundColor: "white",
                                         alignItems: "center",
-                                        width: "50%",
-                                        justifyContent: "center"
+                                        width: "60%",
+                                        justifyContent: "center",
+                                        alignItems: "center",
                                     }} onPress={() => {
                                         console.log(item);
                                         setMateria(item);
 
                                         loadDetals(credentials.user, credentials.password, periodo.ano, periodo.periodo, item.codigo_diario)
                                     }}>
-                                        <Header customStyle={{
-                                            color: "#004AAD",
-                                            fontSize: 17,
-                                            fontWeight: "bold",
+                                        <View style={{
                                             height: "85%",
-
+                                            justifyContent: "center",
+                                            alignItems: "center",
                                         }}>
-                                            {item.disciplina?.split("- ")[1]}
-                                        </Header>
+                                            <Header customStyle={{
+                                                color: "#004AAD",
+                                                fontSize: 17,
+                                                fontWeight: "bold",
+                                                textAlign: "center",
+                                            }}>
+                                                {item.disciplina?.split("- ")[1]}
+                                            </Header>
+                                        </View>
 
                                         <View style={{
                                             height: "15%",
@@ -566,16 +585,18 @@ export default function Notificações({ navigation }) {
                                         </View>
                                     </TouchableOpacity>
                                     <View style={{
-                                        width: "12.5%",
+                                        width: "10%",
                                         height: "100%",
                                     }}>
                                         <View style={{
                                             height: "85%",
-                                            backgroundColor: "#004AAD"
+                                            backgroundColor: "#004AAD",
+                                            justifyContent: "center",
+                                            alignItems: "center",
                                         }}>
                                             <Header style={{
                                                 color: "#61e786",
-                                                fontSize: 20,
+                                                fontSize: 17.5,
                                                 fontWeight: "bold",
                                                 textAlign: "center",
                                             }}>
@@ -592,16 +613,19 @@ export default function Notificações({ navigation }) {
                                         </View>
                                     </View>
                                     <View style={{
-                                        width: "12.5%",
+                                        width: "10%",
                                         height: "100%",
                                     }}>
                                         <View style={{
                                             height: "85%",
-                                            backgroundColor: "white"
+                                            backgroundColor: "#61e786",
+                                            opacity: 0.7,
+                                            justifyContent: "center",
+                                            alignItems: "center",
                                         }}>
                                             <Header style={{
-                                                color: "#61e786",
-                                                fontSize: 20,
+                                                color: "#004AAD",
+                                                fontSize: 17.5,
                                                 fontWeight: "bold",
                                                 textAlign: "center",
                                             }}>
@@ -619,16 +643,18 @@ export default function Notificações({ navigation }) {
                                     </View>
 
                                     <View style={{
-                                        width: "12.5%",
+                                        width: "10%",
                                         height: "100%",
                                     }}>
                                         <View style={{
                                             height: "85%",
-                                            backgroundColor: "#004AAD"
+                                            backgroundColor: "#004AAD",
+                                            justifyContent: "center",
+                                            alignItems: "center",
                                         }}>
                                             <Header style={{
                                                 color: (item.nota_etapa_1?.nota + (item.nota_etapa_2?.nota || 0)) / 2 > 60 ? "#61e786" : "red",
-                                                fontSize: 20,
+                                                fontSize: 17.5,
                                                 fontWeight: "bold",
                                                 textAlign: "center",
                                             }}>
@@ -645,16 +671,19 @@ export default function Notificações({ navigation }) {
                                         </View>
                                     </View>
                                     <View style={{
-                                        width: "12.5%",
+                                        width: "10%",
                                         height: "100%",
                                     }}>
                                         <View style={{
                                             height: "85%",
-                                            backgroundColor: "white"
+                                            backgroundColor: "#61e786",
+                                            opacity: 0.7,
+                                            justifyContent: "center",
+                                            alignItems: "center",
                                         }}>
                                             <Header style={{
-                                                color: "#61e786",
-                                                fontSize: 20,
+                                                color: "#004AAD",
+                                                fontSize: 17.5,
                                                 fontWeight: "bold",
                                                 textAlign: "center",
                                             }}>

@@ -123,43 +123,19 @@ export default function Calendario({ navigation }) {
                                 return <View style={{
                                     width: "100%",
                                     flexDirection: "row",
-                                    height: 300,
                                     justifyContent: "space-around",
                                 }}>
                                     {calendario?.sort((a, b) => a.indice - b.indice).slice(i * 2, i * 2 + 2).map((b, i) => {
                                         return <Image source={{
                                             uri: `data:image/png;base64,${b.buffer}`
                                         }} style={{
-                                            width: "47%",
+                                            width: "49%",
+                                            height: 350,
+                                            marginTop: "5%"
                                         }} />
-
                                     })}
                                 </View>
                             })}
-                            {/* {calendario?.map((b, i) => {
-                                return <View style={{
-                                    backgroundColor: "#f9f1e5",
-                                    width: "80%",
-                                    height: 120,
-                                    borderRadius: 20,
-                                    marginTop: "5%",
-                                    alignSelf: "center",
-                                    shadowColor: 'black',
-                                    shadowOffset: { width: -5, height: 10 },
-                                    shadowOpacity: 0.5,
-                                    shadowRadius: 10,
-                                    elevation: 10,
-                                    alignItems: "center"
-                                }}>
-                                    <Image style={{
-                                        width: "40%",
-                                        height: "40%",
-                                    }} source={{
-                                        uri: `data:image/png;base64,${b}`
-                                    }}>
-                                    </Image>
-                                </View>
-                            })} */}
                         </ScrollView>
                     </View>
                 </View>

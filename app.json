@@ -9,14 +9,14 @@
     "splash": {
       "image": "./assets/logo.png",
       "resizeMode": "contain",
-      "backgroundColor": "#222222"
+      "backgroundColor": "#29473b"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "notification": {
       "icon": "./assets/logo.png",
-      "color": "#111111"
+      "color": "#29473b"
     },
     "ios": {
       "supportsTablet": true
@@ -26,7 +26,7 @@
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo.png",
-        "backgroundColor": "#000000"
+        "backgroundColor": "#29473b"
       },
       "package": "com.srwhale.EMAKE",
       "versionCode": 12

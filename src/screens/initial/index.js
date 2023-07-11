@@ -7,10 +7,6 @@ import { Image } from 'react-native';
 
 import { OnboardFlow, PrimaryButton } from 'react-native-onboard';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-import messaging from '@react-native-firebase/messaging';
-
 import * as Notifications from 'expo-notifications';
 
 function button(...data) {
@@ -25,23 +21,6 @@ function button(...data) {
 export default function StartScreen({ navigation }) {
 
     const [index, setIndex] = useState(0);
-
-    async function requestUserPermission() {
-        const settings = await Notifications.getPermissionsAsync();
-
-        if (!settings.granted) {
-            await Notifications.requestPermissionsAsync({
-                ios: {
-                    allowAlert: true,
-                    allowBadge: true,
-                    allowSound: true,
-                    allowAnnouncements: true,
-                }
-            }).then(res => {
-                console.log(res)
-            })
-        }
-    }
 
     useEffect(() => {
         setIndex(0);
@@ -135,7 +114,7 @@ export default function StartScreen({ navigation }) {
                                 imageUri: Image.resolveAssetSource(require("../../../assets/three.png")).uri,
                             }
                         ]}
-                        type='inline' // Change to either 'fullscreen', 'bottom-sheet', or 'inline'
+                        type='inline'
                     />
                 </View>
             </View>

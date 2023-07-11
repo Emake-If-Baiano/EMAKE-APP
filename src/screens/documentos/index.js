@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from 'react'
 
 import Background from '../../components/secondBackgrund';
-import { ScrollView, Text } from 'react-native';
+import { ScrollView } from 'react-native';
 import { View } from 'react-native';
 import { Image } from 'react-native';
 
 import { Linking } from 'react-native';
 
-import { OnboardFlow, PrimaryButton } from 'react-native-onboard';
+import { PrimaryButton } from 'react-native-onboard';
 
-import TextInput from '../../components/TextInput';
-
-import Logo from '../../components/Logo';
-
-import Button from '../../components/Button';
+import * as Keychain from 'react-native-keychain';
 
 import Header from '../../components/Header';
 
@@ -81,16 +77,22 @@ export default function Notificações({ navigation }) {
                 height: Dimensions.get("window").height,
             }}>
                 <View style={{
-                    flex: 0.05,
+                    flex: 0.1,
                 }}>
                     <TouchableOpacity onPress={() => {
                         AsyncStorage.removeItem("userinfo").then(() => {
-                            navigation.navigate("Login");
+                            AsyncStorage.removeItem("userdata").then(() => {
+                                Keychain.resetGenericPassword().then(() => {
+                                    AsyncStorage.removeItem("darkmode");
+
+                                    navigation.navigate("Login");
+                                })
+                            })
                         });
                     }} style={{
                         flexDirection: "row",
                         justifyContent: "flex-start",
-                        alignItems: "flex-start",
+                        alignItems: "flex-end",
                         flex: 1,
                     }}>
                         <Header customStyle={{

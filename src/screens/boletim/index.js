@@ -17,6 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableOpacity } from 'react-native';
 import loading from '../loading';
 
+import * as Keychain from 'react-native-keychain';
 export default function Notificações({ navigation }) {
 
     const [userData, setUserData] = useState(false);
@@ -67,6 +68,15 @@ export default function Notificações({ navigation }) {
                 alignItems: "center",
                 height: "100%",
             }}>
+                <TouchableOpacity onPress={() => {
+                    setVisible(!visible)
+                }} style={{
+                    height: "25%",
+                    width: "85%",
+                    backgroundColor: "transparent",
+                }}>
+
+                </TouchableOpacity>
                 <View style={{
                     height: "50%",
                     width: "85%",
@@ -99,6 +109,16 @@ export default function Notificações({ navigation }) {
                         })]}
                     </ScrollView>
                 </View>
+
+                <TouchableOpacity onPress={() => {
+                    setVisible(!visible)
+                }} style={{
+                    height: "25%",
+                    width: "85%",
+                    backgroundColor: "transparent",
+                }}>
+
+                </TouchableOpacity>
             </View>
         </Modal>)
     }
@@ -215,6 +235,16 @@ export default function Notificações({ navigation }) {
                     justifyContent: "center",
                     alignItems: "center"
                 }}>
+                    <TouchableOpacity onPress={() => {
+                        setDetals({});
+                        setMateria(false)
+                    }} style={{
+                        flex: 0.075,
+                        width: "100%",
+                        backgroundColor: "transparent",
+                    }}>
+
+                    </TouchableOpacity>
                     <View style={{
                         width: "100%",
                         flex: 0.85,
@@ -272,7 +302,7 @@ export default function Notificações({ navigation }) {
 
                         {Object.entries(detal["Detalhamento das Notas"] || []).map(([key, value], i) => {
 
-                            return (<View style={{
+                            return (<View key={i} style={{
                                 flex: 0.5,
                                 width: "100%",
                             }}>
@@ -340,6 +370,17 @@ export default function Notificações({ navigation }) {
                             </View>)
                         })}
                     </View>
+
+                    <TouchableOpacity onPress={() => {
+                        setDetals({});
+                        setMateria(false)
+                    }} style={{
+                        flex: 0.075,
+                        width: "100%",
+                        backgroundColor: "transparent",
+                    }}>
+
+                    </TouchableOpacity>
                 </View>
             </Modal>
 
@@ -357,7 +398,13 @@ export default function Notificações({ navigation }) {
                 }}>
                     <TouchableOpacity onPress={() => {
                         AsyncStorage.removeItem("userinfo").then(() => {
-                            navigation.navigate("Login");
+                            AsyncStorage.removeItem("userdata").then(() => {
+                                Keychain.resetGenericPassword().then(() => {
+                                    AsyncStorage.removeItem("darkmode");
+
+                                    navigation.navigate("Login");
+                                })
+                            })
                         });
                     }} style={{
                         flexDirection: "row",
@@ -526,7 +573,7 @@ export default function Notificações({ navigation }) {
                             }}>
                                 <Header customStyle={{
                                     color: index === 0 ? "#61e786" : "#004AAD",
-                                    fontSize: 20,
+                                    fontSize: 18.5,
                                     fontWeight: "bold"
                                 }}>
                                     {item.name}

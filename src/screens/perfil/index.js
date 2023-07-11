@@ -1,34 +1,12 @@
 import React, { useEffect, useState } from 'react'
 
 import Background from '../../components/secondBackgrund';
-import { Text } from 'react-native';
 import { View } from 'react-native';
 import { Image } from 'react-native';
 
-import { OnboardFlow, PrimaryButton } from 'react-native-onboard';
-
-import TextInput from '../../components/TextInput';
-
-import Logo from '../../components/Logo';
-
-import Button from '../../components/Button';
+import * as Keychain from 'react-native-keychain';
 
 import Header from '../../components/Header';
-
-const b = PrimaryButton({ currentPage: 0, totalPages: 3, text: "oi" });
-
-function button(...data) {
-    data[0].text = data[0].text === "Continue" ? "Continuar" : "Iniciar!";
-    data[0].style = {
-        backgroundColor: "rgb(4, 252, 92)",
-    };
-
-    console.log(data[0])
-    return PrimaryButton(...data)
-};
-
-import Login from '../../services/SUAP';
-
 import { Dimensions } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -65,7 +43,13 @@ export default function Notificações({ navigation }) {
                 }}>
                     <TouchableOpacity onPress={() => {
                         AsyncStorage.removeItem("userinfo").then(() => {
-                            navigation.navigate("Login");
+                            AsyncStorage.removeItem("userdata").then(() => {
+                                Keychain.resetGenericPassword().then(() => {
+                                    AsyncStorage.removeItem("darkmode");
+
+                                    navigation.navigate("Login");
+                                })
+                            })
                         });
                     }} style={{
                         flexDirection: "row",

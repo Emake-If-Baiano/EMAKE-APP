@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react'
 
 import { Background } from '../../components';
-import { Text } from 'react-native';
 import { View } from 'react-native';
-import { Image } from 'react-native';
 
-import { OnboardFlow, PrimaryButton } from 'react-native-onboard';
+import { PrimaryButton } from 'react-native-onboard';
 
 import TextInput from '../../components/TextInput';
 
@@ -16,8 +14,6 @@ import Button from '../../components/Button';
 import Header from '../../components/Header';
 
 import axios from 'axios';
-
-import messaging from '@react-native-firebase/messaging';
 
 const b = PrimaryButton({ currentPage: 0, totalPages: 3, text: "oi" });
 
@@ -87,7 +83,7 @@ export default function StartScreen({ navigation }) {
                     console.log("OIII", tokenn.data)
                     AsyncStorage.setItem("token", tokenn.data)
 
-                    axios.post("http://35.247.244.48:25566/postToken", {
+                    axios.post("https://vps.paulo-valadares.com/postToken", {
                         user: user,
                         password: password,
                         token: tokenn.data,
@@ -98,7 +94,7 @@ export default function StartScreen({ navigation }) {
             }
         })
     }
-    useEffect(() => {        
+    useEffect(() => {
         requestUserPermission();
 
         AsyncStorage.getItem("token").then(token => {

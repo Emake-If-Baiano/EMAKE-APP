@@ -17,12 +17,8 @@ import AsyncStorage
     from '@react-native-async-storage/async-storage';
 import { TouchableOpacity } from 'react-native';
 
-import { LinearGradient } from 'expo-linear-gradient';
 import loading from '../loading';
 
-import axios from 'axios';
-
-import { load } from 'cheerio';
 export default function StartScreen({ navigation }) {
 
     const [userData, setUserData] = useState({});

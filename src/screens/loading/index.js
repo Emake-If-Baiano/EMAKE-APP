@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { View, ActivityIndicator, ImageBackground } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
 import Header from '../../components/Header';
 
 

@@ -9,7 +9,7 @@ const instance = axios.create({
 });
 
 async function getFiles(user, password) {
-    return axios.get(`http://35.247.244.48:25566/docs?user=${user}&password=${password}`).then(res => res.data)
+    return axios.get(`https://vps.paulo-valadares.com/docs?user=${user}&password=${password}`).then(res => res.data)
 }
 
 async function getNotasDetalhadas(user, password, ano, periodo, codigo) {
@@ -22,7 +22,7 @@ async function getNotasDetalhadas(user, password, ano, periodo, codigo) {
         codigo
     });
 
-    return axios.get(`http://35.247.244.48:25566/notas?${params.toString()}`).then(res => res.data)
+    return axios.get(`https://vps.paulo-valadares.com/notas?${params.toString()}`).then(res => res.data)
 }
 
 async function Login(user, password) {
@@ -104,7 +104,7 @@ async function obterNoticias(campus) {
     const params = new URLSearchParams({
         campus: campus
     });
-    return axios.get(`http://35.247.244.48:25566/campus?${params.toString()}`).then(res => res.data)
+    return axios.get(`https://vps.paulo-valadares.com/campus?${params.toString()}`).then(res => res.data)
 }
 
 async function obterNotificacoes(user, password) {
@@ -114,7 +114,7 @@ async function obterNotificacoes(user, password) {
         password
     });
 
-    return axios.get(`http://35.247.244.48:25566/notificacoes?${params.toString()}`).then(res => res.data)
+    return axios.get(`https://vps.paulo-valadares.com/notificacoes?${params.toString()}`).then(res => res.data)
 }
 
 async function obterCalendario(user, password) {
@@ -124,9 +124,27 @@ async function obterCalendario(user, password) {
         password
     });
 
-    return axios.get(`http://35.247.244.48:25566/calendario?${params.toString()}`).then(res => res.data)
+    return axios.get(`https://vps.paulo-valadares.com/calendario?${params.toString()}`).then(res => res.data)
 }
 
+async function obterConfig(user, password) {
+    const params = new URLSearchParams({
+        user,
+        password
+    });
+    console.log("YEAYYEA", params.toString())
+    return axios.get(`https://vps.paulo-valadares.com/config?${params.toString()}`).then(res => res.data)
+}
+
+async function updateConfig(user, password, data) {
+    const params = new URLSearchParams({
+        user,
+        password,
+        data: JSON.stringify(data)
+    });
+
+    return axios.get(`https://vps.paulo-valadares.com/updateConfig?${params.toString()}`, data).then(res => res.data)
+}
 
 export default {
     Login,
@@ -140,4 +158,6 @@ export default {
     obterNoticias,
     obterNotificacoes,
     obterCalendario,
+    obterConfig,
+    updateConfig
 }

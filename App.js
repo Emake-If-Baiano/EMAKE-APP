@@ -13,7 +13,6 @@ import {
   Documentos,
   Boletim,
   Turmas,
-  Noticias,
   Calendario
 } from './src/screens'
 
@@ -68,7 +67,7 @@ export default function App() {
 
           AsyncStorage.setItem("token", tokenn.data)
 
-          axios.post("http://35.247.244.48:25566/postToken", {
+          axios.post("https://vps.paulo-valadares.com/postToken", {
             user: user,
             password: password,
             token: tokenn.data,
@@ -166,7 +165,6 @@ export default function App() {
           <Stack.Screen name="Documentos" headerShown={true} component={Documentos} />
           <Stack.Screen name="Boletim" headerShown={true} component={Boletim} />
           <Stack.Screen name="Turmas" headerShown={true} component={Turmas} />
-          <Stack.Screen name="Noticias" headerShown={true} component={Noticias} />
           <Stack.Screen name="Calendario" headerShown={true} component={Calendario} />
         </Stack.Navigator>
       </NavigationContainer>

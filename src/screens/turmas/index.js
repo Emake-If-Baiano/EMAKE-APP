@@ -2,29 +2,11 @@ import React, { useEffect, useState } from 'react'
 
 import Background from '../../components/secondBackgrund';
 
-import { Modal, Image, View, Text, ScrollView } from 'react-native';
-
-import { OnboardFlow, PrimaryButton } from 'react-native-onboard';
-
-import TextInput from '../../components/TextInput';
-
-import Logo from '../../components/Logo';
-
-import Button from '../../components/Button';
+import { Modal, Image, View, ScrollView } from 'react-native';
 
 import Header from '../../components/Header';
 
-const b = PrimaryButton({ currentPage: 0, totalPages: 3, text: "oi" });
-
-function button(...data) {
-    data[0].text = data[0].text === "Continue" ? "Continuar" : "Iniciar!";
-    data[0].style = {
-        backgroundColor: "rgb(4, 252, 92)",
-    };
-
-    console.log(data[0])
-    return PrimaryButton(...data)
-};
+import * as Keychain from 'react-native-keychain';
 
 import Login from '../../services/SUAP';
 
@@ -34,8 +16,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { TouchableOpacity } from 'react-native';
 import loading from '../loading';
-
-import SelectDropdown from 'react-native-select-dropdown'
 import { Linking } from 'react-native';
 
 export default function Turmas({ navigation }) {
@@ -155,7 +135,13 @@ export default function Turmas({ navigation }) {
                 }}>
                     <TouchableOpacity onPress={() => {
                         AsyncStorage.removeItem("userinfo").then(() => {
-                            navigation.navigate("Login");
+                            AsyncStorage.removeItem("userdata").then(() => {
+                                Keychain.resetGenericPassword().then(() => {
+                                    AsyncStorage.removeItem("darkmode");
+
+                                    navigation.navigate("Login");
+                                })
+                            })
                         });
                     }} style={{
                         flexDirection: "row",
@@ -494,7 +480,7 @@ export default function Turmas({ navigation }) {
                                     setVisible(b);
 
                                 }} style={{
-                                    backgroundColor: "#D3D3D3",
+                                    backgroundColor: "#f3fcf9",
                                     width: "80%",
                                     height: 120,
                                     borderRadius: 20,

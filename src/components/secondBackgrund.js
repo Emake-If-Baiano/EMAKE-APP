@@ -5,12 +5,6 @@ const Tab = createBottomTabNavigator();
 
 import Header from './Header';
 
-import { LinearGradient } from 'expo-linear-gradient';
-
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-
-import * as Keychain from 'react-native-keychain';
-
 export default function Background({ children, navigation }) {
 
     return (

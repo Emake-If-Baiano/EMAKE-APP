@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react'
 
 import Background from '../../components/secondBackgrund';
 
-import { Modal, Image, View, ScrollView } from 'react-native';
+import { Image, View, ScrollView } from 'react-native';
 
 import Header from '../../components/Header';
 
+import * as Keychain from 'react-native-keychain';
 
 import Login from '../../services/SUAP';
 
@@ -15,8 +16,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { TouchableOpacity } from 'react-native';
 import loading from '../loading';
-
-import { Linking } from 'react-native';
 
 export default function Notificacoes({ navigation }) {
 
@@ -62,7 +61,13 @@ export default function Notificacoes({ navigation }) {
                 }}>
                     <TouchableOpacity onPress={() => {
                         AsyncStorage.removeItem("userinfo").then(() => {
-                            navigation.navigate("Login");
+                            AsyncStorage.removeItem("userdata").then(() => {
+                                Keychain.resetGenericPassword().then(() => {
+                                    AsyncStorage.removeItem("darkmode");
+
+                                    navigation.navigate("Login");
+                                })
+                            })
                         });
                     }} style={{
                         flexDirection: "row",

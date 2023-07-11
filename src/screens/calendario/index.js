@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import Background from '../../components/secondBackgrund';
 
-import { Modal, Image, View, ScrollView } from 'react-native';
+import { Image, View, ScrollView } from 'react-native';
 
 import Header from '../../components/Header';
 
@@ -16,8 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableOpacity } from 'react-native';
 import loading from '../loading';
 
-import { Linking } from 'react-native';
-
+import * as Keychain from 'react-native-keychain';
 export default function Calendario({ navigation }) {
 
     const [userData, setUserData] = useState({});
@@ -69,7 +68,13 @@ export default function Calendario({ navigation }) {
                 }}>
                     <TouchableOpacity onPress={() => {
                         AsyncStorage.removeItem("userinfo").then(() => {
-                            navigation.navigate("Login");
+                            AsyncStorage.removeItem("userdata").then(() => {
+                                Keychain.resetGenericPassword().then(() => {
+                                    AsyncStorage.removeItem("darkmode");
+
+                                    navigation.navigate("Login");
+                                })
+                            })
                         });
                     }} style={{
                         flexDirection: "row",

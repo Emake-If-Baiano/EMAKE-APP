@@ -59,11 +59,15 @@ module.exports = {
         "header": "#004AAD"
     },
     "perfil": {
-        "background": "white",
-        "primary": "rgb(196, 212, 236)",
-        "secondary": "rgb(204, 220, 220)",
-        "header": "#225D62",
-        "textColor": "#225D62"
+        "background": "#022A35",
+        "primary": "#113548",
+        "secondary": "#225D62",
+        "header": "white",
+        "textColor": "white",
+        "tinColorOne": "white",
+        "tinColorTwo": "white",
+        "textColorOne": "white",
+        "textColorTwo": "white"
     },
     "turmas": {
         "background": "white",

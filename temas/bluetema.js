@@ -2,8 +2,14 @@ module.exports = {
     "name": "bluetema",
     "dashboard": {
         "background": "white",
-        "primary": "#61e786",
-        "secondary": "#004AAD"
+        "secondary": "#61e786",
+        "primary": "#113548",
+        "textColor": "#61e786",
+        "periodColor": "#61e786",
+        "fillColor": "white",
+        "firstTextColor": "#113548",
+        "secondTextColor": "#63E384",
+        "navColor": "#61e786"
     },
     "boletim": {
         "background": "white",
@@ -54,10 +60,14 @@ module.exports = {
     },
     "perfil": {
         "background": "white",
-        "primary": "rgb(196, 212, 236)",
-        "secondary": "rgb(204, 220, 220)",
-        "header": "#225D62",
-        "textColor": "#225D62"
+        "primary": "#113548",
+        "secondary": "#225D62",
+        "header": "#004AAD",
+        "textColor": "white",
+        "tinColorOne": "white",
+        "tinColorTwo": "white",
+        "textColorOne": "white",
+        "textColorTwo": "white"
     },
     "turmas": {
         "background": "white",

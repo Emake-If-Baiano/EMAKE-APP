@@ -10,6 +10,7 @@ const themeImages = {
     normal: require('../../assets/normal_background.png'),
     bluedark: require('../../assets/bluedark_background.png'),
     reddark: require('../../assets/reddark_background.png'),
+    bluetema: require('../../assets/bluetema_background.png'),
 };
 
 export default function Background({ children, navigation, changeTheme }) {

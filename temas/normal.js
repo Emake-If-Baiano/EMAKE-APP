@@ -63,7 +63,11 @@ module.exports = {
         "primary": "rgb(196, 212, 236)",
         "secondary": "rgb(204, 220, 220)",
         "header": "#225D62",
-        "textColor": "#225D62"
+        "textColor": "#225D62",
+        "tinColorOne": null,
+        "tinColorTwo": null,
+        "textColorOne": "#225D62",
+        "textColorTwo": "#225D62"
     },
     "turmas": {
         "background": "white",

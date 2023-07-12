@@ -156,12 +156,13 @@ export default function Notificações({ navigation }) {
                                             width: 50,
                                             height: 50,
                                             alignSelf: "center",
+                                            tintColor: index % 2 == 0 ? theme.tinColorOne : theme.tinColorTwo,
                                         }}
                                         source={category.image}
                                     />
 
                                     <Header customStyle={{
-                                        color: theme.textColor,
+                                        color: index % 2 == 0 ? theme.textColorOne : theme.textColorTwo,
                                         fontSize: 20,
                                         opacity: 1
                                     }}>

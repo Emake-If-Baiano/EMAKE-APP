@@ -38,5 +38,35 @@ module.exports = {
         "textColor_1": "#225D62",
         "textColor_2": "#00FF12",
         "headerColor": "#225D62"
+    },
+    "documentos": {
+        "background": "white",
+        "primary": "#61e786",
+        "secondary": "#004AAD",
+        "header": "#225D62"
+    },
+    "notificacoes": {
+        "background": "white",
+        "primary": "#f3fcf9",
+        "secondary": "black",
+        "header": "#004AAD"
+    },
+    "perfil": {
+        "background": "white",
+        "primary": "rgb(196, 212, 236)",
+        "secondary": "rgb(204, 220, 220)",
+        "header": "#225D62",
+        "textColor": "#225D62"
+    },
+    "turmas": {
+        "background": "white",
+        "primary": "#f3fcf9",
+        "semestreSelector": {
+            "background": "#004AAD",
+            "textColor": "white",
+            "primary": "#61e786",
+        },
+        "textColor": "black",
+        "sair": "#61e786"
     }
 }

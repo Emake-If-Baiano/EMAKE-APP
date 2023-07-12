@@ -20,8 +20,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import * as Notifications from 'expo-notifications'
 
-import * as Device from 'expo-device'
-
 const Stack = createStackNavigator()
 
 import SUAP from './src/services/SUAP'

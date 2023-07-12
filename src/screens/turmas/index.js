@@ -18,6 +18,8 @@ import { TouchableOpacity } from 'react-native';
 import loading from '../loading';
 import { Linking } from 'react-native';
 
+import themes from '../../../temas/';
+
 export default function Turmas({ navigation }) {
 
     const [userData, setUserData] = useState({});
@@ -38,6 +40,8 @@ export default function Turmas({ navigation }) {
 
     const [turma, setTurma] = useState({});
 
+    const [theme, setTheme] = useState(false);
+
     function loadPeriodBoletim(token, ano, periodo) {
         Login.getBoletim(token, ano, periodo).then(data => {
 
@@ -47,6 +51,10 @@ export default function Turmas({ navigation }) {
         })
     }
     useEffect(() => {
+        AsyncStorage.getItem("theme").then(res => {
+            setTheme(themes[res || "normal"].turmas);
+        })
+
         AsyncStorage.getItem("userdata").then(data => {
 
             setUserData(JSON.parse(data));
@@ -150,7 +158,7 @@ export default function Turmas({ navigation }) {
                         flex: 1,
                     }}>
                         <Header customStyle={{
-                            color: "#00FF29",
+                            color: theme.sair,
                             width: "100%",
                             marginStart: "5%"
                         }}>Sair</Header>
@@ -173,7 +181,7 @@ export default function Turmas({ navigation }) {
                     }}>
                         <View style={{
                             flex: 0.8,
-                            backgroundColor: "white",
+                            backgroundColor: theme.background,
                             width: "100%",
 
                         }}>
@@ -181,7 +189,7 @@ export default function Turmas({ navigation }) {
                                 flex: 0.1,
                                 justifyContent: "space-around",
                                 alignItems: "center",
-                                backgroundColor: "#f9f1e5",
+                                backgroundColor: theme.primary,
                                 width: "100%",
                                 flexDirection: "row"
                             }}>
@@ -189,7 +197,7 @@ export default function Turmas({ navigation }) {
                                     setNow("participantes")
                                 }}>
                                     <Header style={{
-                                        color: now === "participantes" ? "green" : "black",
+                                        color: now === "participantes" ? "green" : theme.textColor,
                                         fontWeight: "bold",
                                         fontSize: 16,
                                     }}>
@@ -205,7 +213,7 @@ export default function Turmas({ navigation }) {
 
                                     }}>
                                     <Header style={{
-                                        color: now === "aulas" ? "green" : "black",
+                                        color: now === "aulas" ? "green" : theme.textColor,
                                         fontWeight: "bold",
                                         fontSize: 16,
                                     }}>
@@ -219,7 +227,7 @@ export default function Turmas({ navigation }) {
 
                                 }}>
                                     <Header style={{
-                                        color: now === "materiais_de_aula" ? "green" : "black",
+                                        color: now === "materiais_de_aula" ? "green" : theme.textColor,
                                         fontWeight: "bold",
                                         fontSize: 16,
                                     }}>
@@ -234,14 +242,14 @@ export default function Turmas({ navigation }) {
                                 <ScrollView vertical={true} contentContainerStyle={{
 
                                 }} style={{
-                                    backgroundColor: "white",
+                                    backgroundColor: theme.background,
                                     width: "100%",
 
                                 }}>
                                     {turma?.[now]?.map((b, i) => {
                                         const formats = {
                                             "participantes": <View style={{
-                                                backgroundColor: "#f9f1e5",
+                                                backgroundColor: theme.primary,
                                                 width: "80%",
                                                 height: 120,
                                                 borderRadius: 20,
@@ -278,7 +286,7 @@ export default function Turmas({ navigation }) {
                                                     <Header customStyle={{
                                                         fontWeight: "bold",
                                                         fontSize: 14,
-                                                        color: "black",
+                                                        color: theme.textColor,
                                                         marginStart: "5%",
                                                         flex: 0.4,
                                                     }}>{b.nome}</Header>
@@ -286,14 +294,14 @@ export default function Turmas({ navigation }) {
                                                     <Header customStyle={{
                                                         fontWeight: "bold",
                                                         fontSize: 11,
-                                                        color: "black",
+                                                        color: theme.textColor,
                                                         flex: 0.6,
                                                         marginStart: "5%"
                                                     }}>Matrícula n° {b.matricula}</Header>
                                                 </View>
                                             </View>,
                                             "aulas": <View style={{
-                                                backgroundColor: "#f9f1e5",
+                                                backgroundColor: theme.primary,
                                                 width: "80%",
                                                 height: 120,
                                                 borderRadius: 20,
@@ -309,14 +317,14 @@ export default function Turmas({ navigation }) {
                                                 <Header customStyle={{
                                                     fontWeight: "bold",
                                                     fontSize: 14,
-                                                    color: "black",
+                                                    color: theme.textColor,
                                                     marginStart: "5%",
                                                 }}>{b.conteudo?.substring(0, 40) + (b.conteudo?.length > 40 ? "..." : "")}</Header>
 
                                                 <Header customStyle={{
                                                     fontWeight: "bold",
                                                     fontSize: 14,
-                                                    color: "black",
+                                                    color: theme.textColor,
                                                     marginStart: "5%",
                                                     alignSelf: "flex-start",
                                                     marginTop: "2%"
@@ -324,7 +332,7 @@ export default function Turmas({ navigation }) {
                                                 <Header customStyle={{
                                                     fontWeight: "bold",
                                                     fontSize: 14,
-                                                    color: "black",
+                                                    color: theme.textColor,
                                                     marginStart: "5%",
                                                     alignSelf: "flex-start",
                                                     marginTop: "1%"
@@ -333,7 +341,7 @@ export default function Turmas({ navigation }) {
                                                 <Header customStyle={{
                                                     fontWeight: "bold",
                                                     fontSize: 12,
-                                                    color: "black",
+                                                    color: theme.textColor,
                                                     marginStart: "5%",
                                                     alignSelf: "flex-start",
                                                     marginTop: "3%"
@@ -342,7 +350,7 @@ export default function Turmas({ navigation }) {
                                             "materiais_de_aula": <TouchableOpacity onPress={() => {
                                                 Linking.openURL(`https://suap.ifbaiano.edu.br${b.url}`)
                                             }} style={{
-                                                backgroundColor: "#f9f1e5",
+                                                backgroundColor: theme.primary,
                                                 width: "80%",
                                                 height: 120,
                                                 borderRadius: 20,
@@ -358,7 +366,7 @@ export default function Turmas({ navigation }) {
                                                 <Header customStyle={{
                                                     fontWeight: "bold",
                                                     fontSize: 17,
-                                                    color: "black",
+                                                    color: theme.textColor,
                                                     marginStart: "5%",
                                                     marginTop: "10%"
                                                 }}>{b.descricao?.substring(0, 40) + (b.descricao?.length > 40 ? "..." : "")}</Header>
@@ -366,7 +374,7 @@ export default function Turmas({ navigation }) {
                                                 <Header customStyle={{
                                                     fontWeight: "bold",
                                                     fontSize: 15,
-                                                    color: "black",
+                                                    color: theme.textColor,
                                                     marginStart: "5%",
                                                     alignSelf: "flex-start",
                                                     marginTop: "5%"

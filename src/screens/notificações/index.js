@@ -17,6 +17,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableOpacity } from 'react-native';
 import loading from '../loading';
 
+import themes from '../../../temas/';
+
 export default function Notificacoes({ navigation }) {
 
     const [userData, setUserData] = useState({});
@@ -25,7 +27,13 @@ export default function Notificacoes({ navigation }) {
 
     const [notificacoes, setNotificacoes] = useState(false);
 
+    const [theme, setTheme] = useState(false);
+
     useEffect(() => {
+        AsyncStorage.getItem("theme").then(res => {
+            setTheme(themes[res || "normal"].notificacoes);
+        })
+
         AsyncStorage.getItem("userdata").then(data => {
 
             setUserData(JSON.parse(data));
@@ -44,6 +52,8 @@ export default function Notificacoes({ navigation }) {
     }, [])
 
     if (!notificacoes) return loading();
+
+    if (!theme) return loading();
 
     return (
         <Background navigation={navigation}>
@@ -85,7 +95,7 @@ export default function Notificacoes({ navigation }) {
 
                 <View style={{
                     flex: 0.9,
-                    backgroundColor: "white",
+                    backgroundColor: theme.background,
                     width: "100%",
                 }}>
                     <View style={{
@@ -105,7 +115,7 @@ export default function Notificacoes({ navigation }) {
                         />
 
                         <Header style={{
-                            color: "#004AAD",
+                            color: theme.header,
                             fontSize: 25,
                             fontWeight: "bold",
                             marginStart: "1%"
@@ -125,7 +135,7 @@ export default function Notificacoes({ navigation }) {
                         }}>
                             {notificacoes?.map((b, i) => {
                                 return <View style={{
-                                    backgroundColor: "#f9f1e5",
+                                    backgroundColor: theme.primary,
                                     width: "80%",
                                     height: 120,
                                     borderRadius: 20,
@@ -159,7 +169,7 @@ export default function Notificacoes({ navigation }) {
                                                 <Header customStyle={{
                                                     fontWeight: "bold",
                                                     fontSize: 11,
-                                                    color: "black",
+                                                    color: theme.secondary,
                                                     flex: 1,
                                                     marginStart: "5%",
                                                     opacity: 0.5

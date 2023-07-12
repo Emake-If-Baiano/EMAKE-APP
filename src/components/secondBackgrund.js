@@ -1,7 +1,5 @@
 import React from 'react'
 import { ImageBackground, StyleSheet, KeyboardAvoidingView, StatusBar, View, Dimensions, TouchableOpacity, Image } from 'react-native'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-const Tab = createBottomTabNavigator();
 
 import Header from './Header';
 

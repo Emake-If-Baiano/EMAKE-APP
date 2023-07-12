@@ -21,7 +21,6 @@ import loading from '../loading';
 
 import themes from "../../../temas";
 
-console.log(themes)
 export default function StartScreen({ navigation }) {
 
     const [userData, setUserData] = useState({});

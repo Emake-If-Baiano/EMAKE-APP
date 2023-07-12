@@ -34,13 +34,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableOpacity } from 'react-native';
 import loading from '../loading';
 
+import themes from "../../../temas";
+
 export default function Notificações({ navigation }) {
 
     const [userData, setUserData] = useState(false);
 
     const [documents, setDocuments] = useState([]);
 
+    const [theme, setTheme] = useState(false);
+
     useEffect(() => {
+        AsyncStorage.getItem("theme").then(res => {
+            setTheme(themes[res || "normal"].documentos);
+        })
+
         AsyncStorage.getItem("userdata").then(data => {
 
             setUserData(JSON.parse(data));
@@ -96,7 +104,7 @@ export default function Notificações({ navigation }) {
                         flex: 1,
                     }}>
                         <Header customStyle={{
-                            color: "#00FF29",
+                            color: theme.primary,
                             width: "100%",
                             marginStart: "5%"
                         }}>Sair </Header>
@@ -104,7 +112,7 @@ export default function Notificações({ navigation }) {
                 </View>
                 <ScrollView style={{
                     flex: 0.9,
-                    backgroundColor: "white",
+                    backgroundColor: theme.background,
                     width: "100%",
                 }}>
                     {[{
@@ -134,7 +142,7 @@ export default function Notificações({ navigation }) {
                                     />
 
                                     <Header style={{
-                                        color: "#225D62",
+                                        color: theme.header,
                                         fontSize: 20,
                                         fontWeight: "bold",
                                         marginStart: "1%"
@@ -146,7 +154,7 @@ export default function Notificações({ navigation }) {
                                 {ei.components.length ? ei.components.map((e, index) => {
                                     return (<TouchableOpacity key={index} style={{
                                         flex: 0.3,
-                                        backgroundColor: index % 2 ? "#61e786" : "#004AAD",
+                                        backgroundColor: index % 2 ? theme.primary : theme.secondary,
                                         width: "85%",
                                         alignSelf: index % 2 ? "flex-start" : "flex-end",
                                         borderRadius: 15,
@@ -157,7 +165,7 @@ export default function Notificações({ navigation }) {
                                         Linking.openURL("https://suap.ifbaiano.edu.br" + e.link)
                                     }}>
                                         <Header style={{
-                                            color: index % 2 ? "#225D62" : "#00FF12",
+                                            color: index % 2 ? theme.secondary : theme.primary,
                                             fontSize: e.nome.length > 30 ? 17 : 20,
                                             alignSelf: "center",
                                             fontWeight: "bold",

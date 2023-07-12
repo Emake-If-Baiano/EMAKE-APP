@@ -1,15 +1,9 @@
 module.exports = {
-    "name": "normal",
+    "name": "bluetema",
     "dashboard": {
         "background": "white",
         "primary": "#61e786",
-        "secondary": "#004AAD",
-        "textColor": "#61e786",
-        "periodColor": "#004AAD",
-        "fillColor": "white",
-        "firstTextColor": "#61e786",
-        "secondTextColor": "#004AAD",
-        "navColor": "#004AAD"
+        "secondary": "#004AAD"
     },
     "boletim": {
         "background": "white",

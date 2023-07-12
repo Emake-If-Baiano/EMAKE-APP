@@ -20,6 +20,7 @@ import { TouchableOpacity } from 'react-native';
 import loading from '../loading';
 
 import themes from "../../../temas";
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function StartScreen({ navigation }) {
 
@@ -40,10 +41,28 @@ export default function StartScreen({ navigation }) {
 
     const [noticieIndex, setNoticieIndex] = useState(0);
 
-    useEffect(() => {
+    const [themeName, setThemeName] = useState("normal");
 
+
+    useFocusEffect(
+        React.useCallback(() => {
+            AsyncStorage.getItem("theme").then(res => {
+                setTheme(themes[res || "normal"].dashboard);
+
+                setThemeName(res || "normal");
+            })
+
+            return () => {
+
+            };
+        }, [])
+    );
+
+    useEffect(() => {
         AsyncStorage.getItem("theme").then(res => {
             setTheme(themes[res || "normal"].dashboard);
+
+            setThemeName(res || "normal");
         })
         AsyncStorage.getItem("userdata").then(res => {
             if (res) {
@@ -140,7 +159,7 @@ export default function StartScreen({ navigation }) {
     if (!theme) return loading();
 
     return (
-        <Background navigation={navigation} theme={theme}>
+        <Background navigation={navigation} changeTheme={themeName}>
             <View style={{
                 flex: 1,
                 justifyContent: "flex-end",
@@ -179,7 +198,7 @@ export default function StartScreen({ navigation }) {
                         justifyContent: "space-around",
                     }}>
                         <Header customStyle={{
-                            color: theme.primary,
+                            color: theme.textColor,
                             fontSize: 22,
                             flex: 0.7,
                             alignSelf: "center"
@@ -207,7 +226,7 @@ export default function StartScreen({ navigation }) {
 
                             <Header customStyle={{
                                 fontSize: 14,
-                                color: theme.primary,
+                                color: theme.textColor,
                                 alignSelf: "center"
                             }}>Perfil</Header>
                         </TouchableOpacity>
@@ -235,7 +254,7 @@ export default function StartScreen({ navigation }) {
                     }}>
                         <Header customStyle={{
                             flex: 0.2,
-                            color: theme.secondary,
+                            color: theme.textColor,
                             fontSize: 17,
                             alignSelf: "center",
                             fontWeight: "bold"
@@ -259,7 +278,7 @@ export default function StartScreen({ navigation }) {
                                 width={15}
                                 fill={percent}
                                 tintColor={theme.secondary}
-                                backgroundColor={theme.background}
+                                backgroundColor={theme.fillColor}
                                 lineCap="round"
                                 rotation={180}
                                 duration={3000}>
@@ -285,14 +304,14 @@ export default function StartScreen({ navigation }) {
                             }}>
                                 <Header customStyle={{
                                     fontSize: 15,
-                                    color: theme.secondary,
+                                    color: theme.periodColor,
                                     fontWeight: "bold",
                                     width: "100%",
                                 }}>Ano Letivo - {periodo.ano}.{periodo.semestre}</Header>
 
                                 <Header customStyle={{
                                     fontSize: 15,
-                                    color: theme.secondary,
+                                    color: theme.periodColor,
                                     fontWeight: "bold",
                                     width: "100%"
                                 }}>Aulas restantes: {boletim.reduce((a, b) => a + Number(b.carga_horaria), 0) - boletim.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0)} </Header>
@@ -336,7 +355,7 @@ export default function StartScreen({ navigation }) {
                             />
 
                             <Header style={{
-                                color: index % 2 ? theme.secondary : theme.primary,
+                                color: index % 2 ? theme.secondTextColor : theme.firstTextColor,
                                 fontSize: 17,
                                 alignSelf: "center",
                                 fontWeight: "bold",

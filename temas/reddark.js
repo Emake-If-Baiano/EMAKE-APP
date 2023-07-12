@@ -1,15 +1,15 @@
 module.exports = {
-    "name": "normal",
+    "name": "bluedark",
     "dashboard": {
-        "background": "white",
-        "primary": "#61e786",
-        "secondary": "#004AAD",
-        "textColor": "#61e786",
-        "periodColor": "#004AAD",
+        "background": "#14141C",
+        "primary": "#631C1C",
+        "secondary": "#341C24",
+        "textColor": "white",
+        "periodColor": "white",
         "fillColor": "white",
-        "firstTextColor": "#61e786",
-        "secondTextColor": "#004AAD",
-        "navColor": "#004AAD"
+        "firstTextColor": "white",
+        "secondTextColor": "white",
+        "navColor": "white"
     },
     "boletim": {
         "background": "white",

@@ -5,22 +5,11 @@ import { Modal, Switch, Text } from 'react-native';
 import { View } from 'react-native';
 import { Image } from 'react-native';
 
-import { PrimaryButton } from 'react-native-onboard';
-
 import * as Keychain from 'react-native-keychain';
 
+import { RadioButton } from 'react-native-paper';
+
 import Header from '../../components/Header';
-const b = PrimaryButton({ currentPage: 0, totalPages: 3, text: "oi" });
-
-function button(...data) {
-    data[0].text = data[0].text === "Continue" ? "Continuar" : "Iniciar!";
-    data[0].style = {
-        backgroundColor: "rgb(4, 252, 92)",
-    };
-
-    console.log(data[0])
-    return PrimaryButton(...data)
-};
 
 import Login from '../../services/SUAP';
 
@@ -33,6 +22,9 @@ import loading from '../loading';
 
 import themes from '../../../temas';
 
+import themeImages from './themes_examples';
+
+import { ScrollView } from 'react-native';
 
 export default function Configuracoes({ navigation }) {
 
@@ -44,12 +36,17 @@ export default function Configuracoes({ navigation }) {
 
     const [visible, setVisible] = useState(false);
 
+    const [visible2, setVisible2] = useState(false);
+
     const [theme, setTheme] = useState(false);
+
+    const [themeName, setThemeName] = useState("normal");
 
     useEffect(() => {
 
         AsyncStorage.getItem("theme").then(res => {
             setTheme(themes[res || "normal"].config);
+            setThemeName(res || "normal");
         })
 
         AsyncStorage.getItem("darkmode").then(data => {
@@ -81,7 +78,7 @@ export default function Configuracoes({ navigation }) {
     if (!theme) return loading();
 
     return (
-        <Background navigation={navigation}>
+        <Background navigation={navigation} changeTheme={themeName}>
             <View style={{
                 flex: 1,
                 justifyContent: "flex-end",
@@ -234,21 +231,107 @@ export default function Configuracoes({ navigation }) {
                         </View>
                     </Modal>
 
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={visible2}
+                        onRequestClose={() => {
+                            setVisible2(false)
+                        }}
+                        onDismiss={() => {
+                            setVisible2(false)
+                        }}>
+                        <View style={{
+                            flex: 1,
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}>
+                            <TouchableOpacity style={{
+                                flex: 0.3,
+                                backgroundColor: "transparent",
+                                width: "100%"
+                            }} onPress={() => {
+                                setVisible2(false);
+                            }}>
+
+                            </TouchableOpacity>
+                            <View style={{
+                                flex: 0.4,
+                                width: "80%",
+                                backgroundColor: theme.split,
+                                borderRadius: 25,
+                                justifyContent: "space-evenly",
+                                shadowOpacity: 0.5,
+                                shadowRadius: 10,
+                                elevation: 10,
+                            }}>
+                                <ScrollView contentContainerStyle={{
+                                    flexGrow: 1
+                                }} horizontal={true}
+                                    style={{
+                                        width: "100%",
+                                    }}>
+                                    {Object.entries(themes).map(([key, value], index) => {
+
+                                        return (
+                                            <View key={index} style={{
+                                                borderRadius: 25,
+                                                justifyContent: "center",
+                                                alignItems: "center",
+                                                height: "100%",
+                                                width: 120
+                                            }}>
+
+                                                <Image style={{
+                                                    width: "90%",
+                                                    height: "80%",
+                                                    resizeMode: "cover",
+                                                    borderRadius: 10,
+                                                }} source={themeImages[key]}
+                                                />
+
+                                                <RadioButton
+                                                    value={key}
+                                                    status={themeName === key ? 'checked' : 'unchecked'}
+                                                    onPress={() => {
+                                                        AsyncStorage.setItem("theme", key).then(() => {
+                                                            setTheme(value.config);
+                                                            setThemeName(key);
+                                                            console.log(key)
+                                                        })
+                                                    }}
+                                                />
+                                            </View>
+                                        )
+                                    })}
+                                </ScrollView>
+                            </View>
+
+                            <TouchableOpacity style={{
+                                flex: 0.3,
+                                backgroundColor: "transparent",
+                                width: "100%"
+                            }} onPress={() => {
+                                setVisible2(false);
+                            }}>
+
+                            </TouchableOpacity>
+                        </View>
+                    </Modal>
+
+
                     <View style={{
                         flex: 0.9,
                         justifyContent: "space-between",
                         alignItems: "center",
                     }}>
                         {[{
-                            name: "Modo escuro",
+                            name: "Alterar tema",
                             color: theme.split,
                             value: darkMode ? true : false,
                             key: "darkmode",
                             onTouch: () => {
-                                setDarkMode(!darkMode);
-                                AsyncStorage.setItem("darkmode", JSON.stringify({
-                                    status: !darkMode
-                                }))
+                                setVisible2(true);
                             }
                         }, {
                             name: "Notificações de faltas",
@@ -296,12 +379,9 @@ export default function Configuracoes({ navigation }) {
                             onTouch: () => {
                                 setVisible(true);
                             }
-                        }, {
-                            name: "Alterar senha",
-                            color: theme.split,
                         }].map((category, index) => {
                             return (
-                                [4, 5].includes(index) ? <TouchableOpacity key={index} style={{
+                                [0, 4].includes(index) ? <TouchableOpacity key={index} style={{
                                     flexDirection: "row",
                                     backgroundColor: category.color,
                                     width: "100%",
@@ -334,7 +414,7 @@ export default function Configuracoes({ navigation }) {
                                         {category.name}
                                     </Header>
 
-                                    {![4, 5].includes(index) && <Switch
+                                    {![0, 4].includes(index) && <Switch
                                         trackColor={{ false: theme.track.disabled, true: theme.track.enabled }}
                                         thumbColor={theme.track.background}
                                         onValueChange={() => {

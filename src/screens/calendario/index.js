@@ -17,6 +17,8 @@ import { TouchableOpacity } from 'react-native';
 import loading from '../loading';
 
 import * as Keychain from 'react-native-keychain';
+import themes from '../../../temas';
+
 export default function Calendario({ navigation }) {
 
     const [userData, setUserData] = useState({});
@@ -25,7 +27,14 @@ export default function Calendario({ navigation }) {
 
     const [calendario, setCalendario] = useState(false);
 
+    const [theme, setTheme] = useState(false);
+
     useEffect(() => {
+
+        AsyncStorage.getItem("theme").then(res => {
+            setTheme(themes[res || "normal"].calendario);
+        })
+
         AsyncStorage.getItem("userdata").then(data => {
 
             setUserData(JSON.parse(data));
@@ -52,6 +61,7 @@ export default function Calendario({ navigation }) {
 
     if (!calendario) return loading();
 
+    if (!theme) return loading();
     return (
         <Background navigation={navigation}>
             <View style={{
@@ -83,7 +93,7 @@ export default function Calendario({ navigation }) {
                         flex: 1,
                     }}>
                         <Header customStyle={{
-                            color: "#00FF29",
+                            color: theme.primary,
                             width: "100%",
                             marginStart: "5%"
                         }}>Sair</Header>
@@ -92,7 +102,7 @@ export default function Calendario({ navigation }) {
 
                 <View style={{
                     flex: 0.9,
-                    backgroundColor: "white",
+                    backgroundColor: theme.background,
                     width: "100%",
                 }}>
                     <View style={{
@@ -112,7 +122,7 @@ export default function Calendario({ navigation }) {
                         />
 
                         <Header style={{
-                            color: "#004AAD",
+                            color: theme.secondary,
                             fontSize: 25,
                             fontWeight: "bold",
                             marginStart: "1%"
@@ -126,7 +136,7 @@ export default function Calendario({ navigation }) {
                         <ScrollView vertical={true} contentContainerStyle={{
 
                         }} style={{
-                            backgroundColor: "white",
+                            backgroundColor: theme.background,
                             width: "100%",
 
                         }}>

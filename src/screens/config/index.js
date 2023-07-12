@@ -31,6 +31,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableOpacity } from 'react-native';
 import loading from '../loading';
 
+import themes from '../../../temas';
+
+
 export default function Configuracoes({ navigation }) {
 
     const [userData, setUserData] = useState(false);
@@ -41,7 +44,14 @@ export default function Configuracoes({ navigation }) {
 
     const [visible, setVisible] = useState(false);
 
+    const [theme, setTheme] = useState(false);
+
     useEffect(() => {
+
+        AsyncStorage.getItem("theme").then(res => {
+            setTheme(themes[res || "normal"].config);
+        })
+
         AsyncStorage.getItem("darkmode").then(data => {
             if (data) {
                 setDarkMode(JSON.parse(data).status)
@@ -67,6 +77,8 @@ export default function Configuracoes({ navigation }) {
     if (!credentials) return loading();
 
     if (!userData) return loading();
+
+    if (!theme) return loading();
 
     return (
         <Background navigation={navigation}>
@@ -98,7 +110,7 @@ export default function Configuracoes({ navigation }) {
                         flex: 1,
                     }}>
                         <Header customStyle={{
-                            color: "#00FF29",
+                            color: theme.primary,
                             width: "100%",
                             marginStart: "5%"
                         }}>Sair</Header>
@@ -107,7 +119,7 @@ export default function Configuracoes({ navigation }) {
 
                 <View style={{
                     flex: 0.9,
-                    backgroundColor: "white",
+                    backgroundColor: theme.background,
                     width: "100%",
                 }}>
                     <View style={{
@@ -116,7 +128,7 @@ export default function Configuracoes({ navigation }) {
                         alignItems: "center",
                         flex: 0.15,
                         width: "100%",
-                        backgroundColor: "#C8D8DE",
+                        backgroundColor: theme.header,
                         height: "100%"
                     }}>
                         <Image
@@ -130,7 +142,7 @@ export default function Configuracoes({ navigation }) {
                         />
 
                         <Header style={{
-                            color: "#004AAD",
+                            color: theme.secondary,
                             fontSize: 22,
                             fontWeight: "bold",
                             marginStart: "1%",
@@ -156,7 +168,7 @@ export default function Configuracoes({ navigation }) {
                             <View style={{
                                 flex: 0.25,
                                 width: "80%",
-                                backgroundColor: "#E9FFED",
+                                backgroundColor: theme.split,
                                 borderRadius: 25,
                                 justifyContent: "space-evenly",
                                 shadowOpacity: 0.5,
@@ -167,7 +179,7 @@ export default function Configuracoes({ navigation }) {
                                 <Header customStyle={{
                                     maxWidth: "90%",
                                     marginStart: "5%",
-                                    color: "black",
+                                    color: theme.fontColor,
                                     fontWeight: "bold",
                                     fontSize: 25,
                                     marginTop: "2%",
@@ -229,7 +241,7 @@ export default function Configuracoes({ navigation }) {
                     }}>
                         {[{
                             name: "Modo escuro",
-                            color: "#E9FFED",
+                            color: theme.split,
                             value: darkMode ? true : false,
                             key: "darkmode",
                             onTouch: () => {
@@ -240,7 +252,7 @@ export default function Configuracoes({ navigation }) {
                             }
                         }, {
                             name: "Notificações de faltas",
-                            color: "#E9FFED",
+                            color: theme.split,
                             value: userData.faltas,
                             key: "faltas",
                             onTouch: () => {
@@ -253,7 +265,7 @@ export default function Configuracoes({ navigation }) {
                             }
                         }, {
                             name: "Notificações de materiais",
-                            color: "#E9FFED",
+                            color: theme.split,
                             value: userData.materiais,
                             key: "materiais",
                             onTouch: () => {
@@ -266,7 +278,7 @@ export default function Configuracoes({ navigation }) {
                             }
                         }, {
                             name: "Notificações de notas",
-                            color: "#E9FFED",
+                            color: theme.split,
                             value: userData.notas,
                             key: "notas",
                             onTouch: () => {
@@ -279,14 +291,14 @@ export default function Configuracoes({ navigation }) {
                             }
                         }, {
                             name: "Apagar meus dados",
-                            color: "#E9FFED",
+                            color: theme.split,
                             key: "delete",
                             onTouch: () => {
                                 setVisible(true);
                             }
                         }, {
                             name: "Alterar senha",
-                            color: "#E9FFED",
+                            color: theme.split,
                         }].map((category, index) => {
                             return (
                                 [4, 5].includes(index) ? <TouchableOpacity key={index} style={{
@@ -299,7 +311,7 @@ export default function Configuracoes({ navigation }) {
                                     alignItems: "center",
                                 }} onPress={category.onTouch}>
                                     <Header customStyle={{
-                                        color: "#225D62",
+                                        color: theme.fontColor,
                                         fontSize: 20,
                                         marginStart: "5%"
                                     }}>
@@ -313,9 +325,9 @@ export default function Configuracoes({ navigation }) {
                                     opacity: 1,
                                     justifyContent: "flex-start",
                                     alignItems: "center",
-                                }} onPress={category.touch}>
+                                }}>
                                     <Header customStyle={{
-                                        color: "#225D62",
+                                        color: theme.fontColor,
                                         fontSize: 20,
                                         marginStart: "5%"
                                     }}>
@@ -323,8 +335,8 @@ export default function Configuracoes({ navigation }) {
                                     </Header>
 
                                     {![4, 5].includes(index) && <Switch
-                                        trackColor={{ false: '#4E627E', true: 'lightgreen' }}
-                                        thumbColor={"white"}
+                                        trackColor={{ false: theme.track.disabled, true: theme.track.enabled }}
+                                        thumbColor={theme.track.background}
                                         onValueChange={() => {
                                             category.onTouch();
                                         }}

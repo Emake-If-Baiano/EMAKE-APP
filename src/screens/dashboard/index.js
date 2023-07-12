@@ -19,6 +19,9 @@ import { TouchableOpacity } from 'react-native';
 
 import loading from '../loading';
 
+import themes from "../../../temas";
+
+console.log(themes)
 export default function StartScreen({ navigation }) {
 
     const [userData, setUserData] = useState({});
@@ -32,11 +35,17 @@ export default function StartScreen({ navigation }) {
         semestre: "2"
     });
 
+    const [theme, setTheme] = useState(false);
+
     const [noticies, setNoticies] = useState([]);
 
     const [noticieIndex, setNoticieIndex] = useState(0);
 
     useEffect(() => {
+
+        AsyncStorage.getItem("theme").then(res => {
+            setTheme(themes[res || "normal"].dashboard);
+        })
         AsyncStorage.getItem("userdata").then(res => {
             if (res) {
                 setUserData(JSON.parse(res));
@@ -129,8 +138,10 @@ export default function StartScreen({ navigation }) {
 
     if (!userData.nome_usual) return loading();
 
+    if (!theme) return loading();
+
     return (
-        <Background navigation={navigation}>
+        <Background navigation={navigation} theme={theme}>
             <View style={{
                 flex: 1,
                 justifyContent: "flex-end",
@@ -169,7 +180,7 @@ export default function StartScreen({ navigation }) {
                         justifyContent: "space-around",
                     }}>
                         <Header customStyle={{
-                            color: "#61e786",
+                            color: theme.primary,
                             fontSize: 22,
                             flex: 0.7,
                             alignSelf: "center"
@@ -197,7 +208,7 @@ export default function StartScreen({ navigation }) {
 
                             <Header customStyle={{
                                 fontSize: 14,
-                                color: "#61e786",
+                                color: theme.primary,
                                 alignSelf: "center"
                             }}>Perfil</Header>
                         </TouchableOpacity>
@@ -206,7 +217,7 @@ export default function StartScreen({ navigation }) {
 
                 <View style={{
                     flex: 0.75,
-                    backgroundColor: "white",
+                    backgroundColor: theme.background,
                     borderTopEndRadius: 40,
                     borderTopStartRadius: 40,
                     width: "100%",
@@ -215,7 +226,7 @@ export default function StartScreen({ navigation }) {
                 }}>
                     <View style={{
                         flex: 0.3,
-                        backgroundColor: "white",
+                        backgroundColor: theme.background,
                         width: "90%",
                         alignSelf: "flex-end",
                         marginEnd: 20,
@@ -225,7 +236,7 @@ export default function StartScreen({ navigation }) {
                     }}>
                         <Header customStyle={{
                             flex: 0.2,
-                            color: "#004AAD",
+                            color: theme.secondary,
                             fontSize: 17,
                             alignSelf: "center",
                             fontWeight: "bold"
@@ -241,22 +252,22 @@ export default function StartScreen({ navigation }) {
                                 alignItems: "center",
                                 flexDirection: "row",
                                 justifyContent: "space-around",
-                                backgroundColor: "#61e786"
+                                backgroundColor: theme.primary
                             }}>
 
                             <AnimatedCircularProgress
                                 size={100}
                                 width={15}
                                 fill={percent}
-                                tintColor="#004AAD"
-                                backgroundColor="white"
+                                tintColor={theme.secondary}
+                                backgroundColor={theme.background}
                                 lineCap="round"
                                 rotation={180}
                                 duration={3000}>
                                 {(fill) => (
                                     <Header customStyle={{
                                         fontSize: 21,
-                                        color: "#004AAD",
+                                        color: theme.secondary,
                                         alignSelf: "center",
                                         fontWeight: "bold"
                                     }}>
@@ -275,14 +286,14 @@ export default function StartScreen({ navigation }) {
                             }}>
                                 <Header customStyle={{
                                     fontSize: 15,
-                                    color: "#004AAD",
+                                    color: theme.secondary,
                                     fontWeight: "bold",
                                     width: "100%",
                                 }}>Ano Letivo - {periodo.ano}.{periodo.semestre}</Header>
 
                                 <Header customStyle={{
                                     fontSize: 15,
-                                    color: "#004AAD",
+                                    color: theme.secondary,
                                     fontWeight: "bold",
                                     width: "100%"
                                 }}>Aulas restantes: {boletim.reduce((a, b) => a + Number(b.carga_horaria), 0) - boletim.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0)} </Header>
@@ -305,7 +316,7 @@ export default function StartScreen({ navigation }) {
                     }].map((category, index) => {
                         return (<TouchableOpacity key={index} style={{
                             flex: 0.1,
-                            backgroundColor: index % 2 ? "#61e786" : "#004AAD",
+                            backgroundColor: index % 2 ? theme.primary : theme.secondary,
                             width: "60%",
                             alignSelf: index % 2 ? "flex-start" : "flex-end",
                             marginEnd: index % 2 ? 0 : 20,
@@ -326,7 +337,7 @@ export default function StartScreen({ navigation }) {
                             />
 
                             <Header style={{
-                                color: index % 2 ? "#142b6f" : "#61e786",
+                                color: index % 2 ? theme.secondary : theme.primary,
                                 fontSize: 17,
                                 alignSelf: "center",
                                 fontWeight: "bold",

@@ -18,11 +18,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { TouchableOpacity } from 'react-native';
 
+import themes from '../../../temas';
+
 export default function Notificações({ navigation }) {
 
     const [userData, setUserData] = useState(false);
 
     const [ira, setIra] = useState(0);
+
+    const [theme, setTheme] = useState(false);
 
     function calcIRA(boletins) {
         console.log(boletins, "oi")
@@ -54,6 +58,10 @@ export default function Notificações({ navigation }) {
     };
 
     useEffect(() => {
+        AsyncStorage.getItem("theme").then(res => {
+            setTheme(themes[res || "normal"].dados);
+        })
+
         AsyncStorage.getItem("userdata").then(data => {
 
             setUserData(JSON.parse(data));
@@ -85,7 +93,7 @@ export default function Notificações({ navigation }) {
 
     if (!userData) return loading()
 
-    if (!ira) return loading();
+    if (!theme) return loading();
 
     return (
         <Background navigation={navigation}>
@@ -118,7 +126,7 @@ export default function Notificações({ navigation }) {
                         flex: 1,
                     }}>
                         <Header customStyle={{
-                            color: "#00FF29",
+                            color: theme.primary,
                             width: "100%",
                             marginStart: "5%"
                         }}>Sair </Header>
@@ -126,14 +134,14 @@ export default function Notificações({ navigation }) {
                 </View>
                 <ScrollView style={{
                     flex: 0.9,
-                    backgroundColor: "white",
+                    backgroundColor: theme.background,
                     width: "100%",
                 }}>
                     {[{
                         name: "Dados Gerais",
                         image: require("../../../assets/dados_gerais.png"),
-                        backColor: "#61e786",
-                        textColor: "#225D62",
+                        backColor: theme.backColor_1,
+                        textColor: theme.textColor_1,
                         components: [{
                             name: "Nome",
                             value: userData?.nome_usual,
@@ -150,8 +158,8 @@ export default function Notificações({ navigation }) {
                     }, {
                         name: "Dados acadêmicos",
                         image: require("../../../assets/dados_academicos.png"),
-                        backColor: "#004AAD",
-                        textColor: "#00FF12",
+                        backColor: theme.backColor_2,
+                        textColor: theme.textColor_2,
                         components: [{
                             name: "Matrícula",
                             value: userData.matricula
@@ -191,7 +199,7 @@ export default function Notificações({ navigation }) {
                                     />
 
                                     <Header style={{
-                                        color: "#225D62",
+                                        color: theme.headerColor,
                                         fontSize: 20,
                                         fontWeight: "bold",
                                         marginStart: "1%"
@@ -260,7 +268,7 @@ export default function Notificações({ navigation }) {
 
                                                         <Header selectable={true} customStyle={{
                                                             fontSize: 15,
-                                                            color: "#225D62",
+                                                            color: theme.headerColor,
                                                             flex: 0.6,
                                                             fontWeight: "bold",
                                                             marginStart: "5%",
@@ -274,171 +282,6 @@ export default function Notificações({ navigation }) {
                                 })}
                             </View>)
                     })}
-                    {/* <Header style={{
-                        flex: 0.05,
-                        color: "#225D62",
-                        fontSize: 20,
-                        alignSelf: "center",
-                    }}>
-                        Dados Gerais
-                    </Header>
-
-                    <View style={{
-                        flex: 0.1,
-                        flexDirection: "row",
-                        marginTop: "5%"
-                    }}>
-                        <Image
-                            style={{
-                                width: 50,
-                                height: 50,
-                                alignSelf: "center",
-                                borderRadius: 40,
-                                marginStart: "3%"
-                            }}
-                            source={{
-                                uri: "https://suap.ifbaiano.edu.br/" + userData.url_foto_75x100
-                            }}
-                        />
-
-                        <Header adjustsFontSizeToFit={true} customStyle={{
-                            color: "#225D62",
-                            fontSize: 17,
-                            alignSelf: "center",
-                            maxWidth: "80%",
-                            marginStart: "3%"
-                        }}>
-                            {userData?.vinculo?.nome}
-                        </Header>
-                    </View>
-
-                    <View style={{
-                        flex: 0.1,
-                        marginTop: "5%"
-                    }}>
-                        <View style={{
-                            flex: 0.4,
-                            backgroundColor: "#00FF29",
-                            width: "40%",
-                            borderTopEndRadius: 25,
-                            borderBottomEndRadius: 25,
-                        }}>
-                            <Header customStyle={{
-                                fontSize: 15,
-                                color: "#225D62",
-                                alignSelf: "center",
-                                fontWeight: "bold"
-                            }}>
-                                Email Acadêmico
-                            </Header>
-                        </View>
-
-                        <Header customStyle={{
-                            fontSize: 15,
-                            color: "#225D62",
-                            alignSelf: "center",
-                            flex: 0.6,
-                            fontWeight: "bold"
-                        }}>
-                            {userData.email}
-                        </Header>
-                    </View>
-
-                    <View style={{
-                        flex: 0.1,
-                        paddinTop: "10%"
-                    }}>
-                        <View style={{
-                            flex: 0.4,
-                            backgroundColor: "#00FF29",
-                            width: "40%",
-                            borderTopEndRadius: 25,
-                            borderBottomEndRadius: 25,
-                        }}>
-                            <Header customStyle={{
-                                fontSize: 15,
-                                color: "#225D62",
-                                alignSelf: "center",
-                                fontWeight: "bold"
-                            }}>
-                                CPF
-                            </Header>
-                        </View>
-
-                        <Header customStyle={{
-                            fontSize: 15,
-                            color: "#225D62",
-                            alignSelf: "center",
-                            flex: 0.6,
-                            fontWeight: "bold"
-                        }}>
-                            {userData.cpf}
-                        </Header>
-                    </View>
-
-                    <View style={{
-                        flex: 0.1,
-                        paddinTop: "10%"
-                    }}>
-                        <View style={{
-                            flex: 0.4,
-                            backgroundColor: "#00FF29",
-                            width: "40%",
-                            borderTopEndRadius: 25,
-                            borderBottomEndRadius: 25,
-                        }}>
-                            <Header customStyle={{
-                                fontSize: 15,
-                                color: "#225D62",
-                                alignSelf: "center",
-                                fontWeight: "bold"
-                            }}>
-                                Situação Sistêmica
-                            </Header>
-                        </View>
-
-                        <Header customStyle={{
-                            fontSize: 15,
-                            color: "#225D62",
-                            alignSelf: "center",
-                            flex: 0.6,
-                            fontWeight: "bold"
-                        }}>
-                            {userData.vinculo?.situacao_sistemica}
-                        </Header>
-                    </View>
-
-                    <View style={{
-                        flex: 0.1,
-                        paddinTop: "10%"
-                    }}>
-                        <View style={{
-                            flex: 0.4,
-                            backgroundColor: "#00FF29",
-                            width: "40%",
-                            borderTopEndRadius: 25,
-                            borderBottomEndRadius: 25,
-                        }}>
-                            <Header customStyle={{
-                                fontSize: 15,
-                                color: "#225D62",
-                                alignSelf: "center",
-                                fontWeight: "bold"
-                            }}>
-                                Situação Sistêmica
-                            </Header>
-                        </View>
-
-                        <Header customStyle={{
-                            fontSize: 15,
-                            color: "#225D62",
-                            alignSelf: "center",
-                            flex: 0.6,
-                            fontWeight: "bold"
-                        }}>
-                            {userData.vinculo?.situacao_sistemica}
-                        </Header>
-                    </View> */}
                 </ScrollView>
             </View>
         </Background>

@@ -29,7 +29,7 @@
         "backgroundColor": "#29473b"
       },
       "package": "com.srwhale.EMAKE",
-      "versionCode": 12
+      "versionCode": 13
     },
     "web": {
       "favicon": "./assets/logo.png"

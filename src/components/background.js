@@ -1,7 +1,5 @@
 import React from 'react'
-import { ImageBackground, StyleSheet, KeyboardAvoidingView, StatusBar, View, Dimensions} from 'react-native'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-const Tab = createBottomTabNavigator();
+import { ImageBackground, StyleSheet, KeyboardAvoidingView, StatusBar, View, Dimensions } from 'react-native'
 
 export default function Background({ children, navigation }) {
 
@@ -9,7 +7,7 @@ export default function Background({ children, navigation }) {
 
         <ImageBackground
             style={styles.background}
-            source={require('../../assets/initial_background.png')}
+            source={require('../../assets/normal_background.png')}
         >
             <StatusBar translucent backgroundColor="transparent" />
             <KeyboardAvoidingView style={styles.container} behavior="position" enabled>

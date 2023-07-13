@@ -14,19 +14,27 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableOpacity } from 'react-native';
 import loading from '../loading';
 
+import themes from '../../../temas/';
+
 export default function Notificações({ navigation }) {
 
     const [userData, setUserData] = useState({});
 
+    const [theme, setTheme] = useState(false);
+
     useEffect(() => {
+        AsyncStorage.getItem("theme").then(res => {
+            setTheme(themes[res || "normal"].perfil);
+        })
+
         AsyncStorage.getItem("userdata").then(data => {
             setUserData(JSON.parse(data));
         });
-
-        console.log(userData)
     }, []);
 
     if (!userData) return loading();
+
+    if (!theme) return loading();
 
     return (
         <Background navigation={navigation}>
@@ -67,7 +75,7 @@ export default function Notificações({ navigation }) {
 
                 <View style={{
                     flex: 0.9,
-                    backgroundColor: "white",
+                    backgroundColor: theme.background,
                     width: "100%",
                 }}>
                     <View style={{
@@ -95,7 +103,7 @@ export default function Notificações({ navigation }) {
                         />
 
                         <Header customStyle={{
-                            color: "#225D62",
+                            color: theme.header,
                             fontSize: 20,
                             maxWidth: "100%",
                             textAlign: "center",
@@ -107,7 +115,7 @@ export default function Notificações({ navigation }) {
 
                         <Header selectable={true} customStyle={{
                             marginTop: "1%",
-                            color: "#225D62",
+                            color: theme.header,
                             fontSize: 14,
                             maxWidth: "70%",
                             textAlign: "center",
@@ -125,12 +133,12 @@ export default function Notificações({ navigation }) {
                         {[{
                             name: "Meus Dados",
                             image: require("../../../assets/meus_dados.png"),
-                            color: "rgb(196, 212, 236)",
+                            color: theme.primary,
                             touch: () => navigation.navigate("Dados")
                         }, {
                             name: "Documentos",
                             image: require("../../../assets/documentos.png"),
-                            color: "rgb(204, 220, 220)",
+                            color: theme.secondary,
                             touch: () => navigation.navigate("Documentos")
                         }].map((category, index) => {
                             return (
@@ -148,12 +156,13 @@ export default function Notificações({ navigation }) {
                                             width: 50,
                                             height: 50,
                                             alignSelf: "center",
+                                            tintColor: index % 2 == 0 ? theme.tinColorOne : theme.tinColorTwo,
                                         }}
                                         source={category.image}
                                     />
 
                                     <Header customStyle={{
-                                        color: "#225D62",
+                                        color: index % 2 == 0 ? theme.textColorOne : theme.textColorTwo,
                                         fontSize: 20,
                                         opacity: 1
                                     }}>

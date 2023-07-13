@@ -1,17 +1,41 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { ImageBackground, StyleSheet, KeyboardAvoidingView, StatusBar, View, Dimensions, TouchableOpacity, Image } from 'react-native'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-const Tab = createBottomTabNavigator();
 
 import Header from './Header';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import loading from '../screens/loading';
 
-export default function Background({ children, navigation }) {
+import themes from '../../temas';
+const themeImages = {
+    normal: require('../../assets/normal_background.png'),
+    bluedark: require('../../assets/bluedark_background.png'),
+    reddark: require('../../assets/reddark_background.png'),
+    bluetema: require('../../assets/bluetema_background.png'),
+};
+
+export default function Background({ children, navigation, changeTheme }) {
+
+    useEffect(() => {
+        AsyncStorage.getItem("theme").then(res => {
+            setTheme(res || "normal")
+        })
+    }, [changeTheme]);
+
+    const [theme, setTheme] = useState(false);
+
+    useEffect(() => {
+        AsyncStorage.getItem("theme").then(res => {
+            setTheme(res || "normal")
+        })
+    }, []);
+
+    if (!theme) return loading()
 
     return (
 
         <ImageBackground
             style={styles.background}
-            source={require('../../assets/initial_background.png')}
+            source={changeTheme ? themeImages[theme] : themeImages[theme]}
         >
             <StatusBar translucent backgroundColor={"transparent"} />
             <KeyboardAvoidingView style={styles.container} behavior="position" enabled>
@@ -22,7 +46,9 @@ export default function Background({ children, navigation }) {
                 flex: 0.1
             }} behavior='position' enabled>
                 <View
-                    style={styles.barView}>
+                    style={[styles.barView, {
+                        backgroundColor: changeTheme ? themes[theme].dashboard.primary : themes[theme].dashboard.primary
+                    }]}>
 
                     <TouchableOpacity
                         style={styles.barViewItem}
@@ -33,6 +59,7 @@ export default function Background({ children, navigation }) {
                             style={{
                                 width: "35%",
                                 height: "45%",
+                                tintColor: changeTheme ? themes[theme].dashboard.navColor : themes[theme].dashboard.navColor
                             }}
                         />
                         <Header
@@ -53,6 +80,7 @@ export default function Background({ children, navigation }) {
                             style={{
                                 width: "35%",
                                 height: "45%",
+                                tintColor: changeTheme ? themes[theme].dashboard.navColor : themes[theme].dashboard.navColor
                             }}
                         />
 
@@ -74,6 +102,7 @@ export default function Background({ children, navigation }) {
                             style={{
                                 width: "35%",
                                 height: "45%",
+                                tintColor: changeTheme ? themes[theme].dashboard.navColor : themes[theme].dashboard.navColor
                             }}
                         />
 
@@ -111,7 +140,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         height: "100%",
-        backgroundColor: "#61e786"
     },
     barViewItem: {
         flex: 0.33,

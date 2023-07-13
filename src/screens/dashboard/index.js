@@ -19,6 +19,9 @@ import { TouchableOpacity } from 'react-native';
 
 import loading from '../loading';
 
+import themes from "../../../temas";
+import { useFocusEffect } from '@react-navigation/native';
+
 export default function StartScreen({ navigation }) {
 
     const [userData, setUserData] = useState({});
@@ -32,11 +35,35 @@ export default function StartScreen({ navigation }) {
         semestre: "2"
     });
 
+    const [theme, setTheme] = useState(false);
+
     const [noticies, setNoticies] = useState([]);
 
     const [noticieIndex, setNoticieIndex] = useState(0);
 
+    const [themeName, setThemeName] = useState("normal");
+
+
+    useFocusEffect(
+        React.useCallback(() => {
+            AsyncStorage.getItem("theme").then(res => {
+                setTheme(themes[res || "normal"].dashboard);
+
+                setThemeName(res || "normal");
+            })
+
+            return () => {
+
+            };
+        }, [])
+    );
+
     useEffect(() => {
+        AsyncStorage.getItem("theme").then(res => {
+            setTheme(themes[res || "normal"].dashboard);
+
+            setThemeName(res || "normal");
+        })
         AsyncStorage.getItem("userdata").then(res => {
             if (res) {
                 setUserData(JSON.parse(res));
@@ -94,29 +121,37 @@ export default function StartScreen({ navigation }) {
                     setUserData(resData);
                 });
 
-                if (!boletim.length || !percent) Login.getBoletim(data.token).then(resData => {
+                if (periodo.ano === "2021") Login.obterPeriodoLetivo(data.token).then(async resData => {
+                    for (const i of resData.reverse()) {
+                        const check = await new Promise((reso) => {
+                            Login.getBoletim(data.token, i.ano_letivo, i.periodo_letivo).then(resDataB => {
+                                console.log(resDataB)
+                                if (resDataB.length) {
+                                    AsyncStorage.setItem('boletim', JSON.stringify(resDataB));
 
-                    AsyncStorage.setItem('boletim', JSON.stringify(resData));
+                                    AsyncStorage.setItem("percent", `${100 / (resDataB.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0)) * (resDataB.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0) - resDataB.reduce((a, b) => a + Number(b.numero_faltas), 0))}`)
 
-                    AsyncStorage.setItem("percent", `${100 / (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0)) * (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0) - resData.reduce((a, b) => a + Number(b.numero_faltas), 0))}`)
+                                    setBoletim(resDataB);
 
-                    setBoletim(resData);
+                                    setPercent(100 / (resDataB.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0)) * (resDataB.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0) - resDataB.reduce((a, b) => a + Number(b.numero_faltas), 0)));
 
-                    setPercent(100 / (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0)) * (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0) - resData.reduce((a, b) => a + Number(b.numero_faltas), 0)));
-                });
+                                    setPeriodo({
+                                        ano: i.ano_letivo,
+                                        semestre: i.periodo_letivo
+                                    });
 
-                if (periodo.ano === "2021") Login.obterPeriodoLetivo(data.token).then(resData => {
-                    let last = resData.reverse()[1] || resData[0];
+                                    AsyncStorage.setItem('periodo', JSON.stringify({
+                                        ano: i.ano_letivo,
+                                        semestre: i.periodo_letivo
+                                    }));
 
-                    AsyncStorage.setItem('periodo', JSON.stringify({
-                        ano: last.ano_letivo,
-                        semestre: last.periodo_letivo
-                    }));
+                                    reso(true)
+                                } else reso(false);
+                            })
+                        });
 
-                    setPeriodo({
-                        ano: last.ano_letivo,
-                        semestre: last.periodo_letivo
-                    })
+                        if (check) break;
+                    }
                 });
 
             }).catch(Err => {
@@ -129,8 +164,10 @@ export default function StartScreen({ navigation }) {
 
     if (!userData.nome_usual) return loading();
 
+    if (!theme) return loading();
+
     return (
-        <Background navigation={navigation}>
+        <Background navigation={navigation} changeTheme={themeName}>
             <View style={{
                 flex: 1,
                 justifyContent: "flex-end",
@@ -152,7 +189,7 @@ export default function StartScreen({ navigation }) {
                     }} onPress={() => {
                         Share.share({
                             title: "EMAKE - IF BAIANO - TEIXEIRA DE FREITAS",
-                            message: `Olá! Estou compartilhando com você o novo aplicativo de SUAP do IF BAIANO - TEIXEIRA DE FREITAS!\n\nBaixe agora mesmo em: https://play.google.com/store/apps/details?id=com.srwhale.EMAKE&hl=en-US&ah=rdzPvCISrGg_fmGcIUtxnYPdsjk`
+                            message: `Olá! Estou compartilhando com você o novo aplicativo de SUAP do IF BAIANO - TEIXEIRA DE FREITAS!\n\nBaixe agora mesmo em: https://play.google.com/store/apps/details?id=com.srwhale.EMAKE`
                         })
                     }}>
                         <Image
@@ -169,7 +206,7 @@ export default function StartScreen({ navigation }) {
                         justifyContent: "space-around",
                     }}>
                         <Header customStyle={{
-                            color: "#61e786",
+                            color: theme.textColor,
                             fontSize: 22,
                             flex: 0.7,
                             alignSelf: "center"
@@ -197,7 +234,7 @@ export default function StartScreen({ navigation }) {
 
                             <Header customStyle={{
                                 fontSize: 14,
-                                color: "#61e786",
+                                color: theme.textColor,
                                 alignSelf: "center"
                             }}>Perfil</Header>
                         </TouchableOpacity>
@@ -206,7 +243,7 @@ export default function StartScreen({ navigation }) {
 
                 <View style={{
                     flex: 0.75,
-                    backgroundColor: "white",
+                    backgroundColor: theme.background,
                     borderTopEndRadius: 40,
                     borderTopStartRadius: 40,
                     width: "100%",
@@ -215,7 +252,7 @@ export default function StartScreen({ navigation }) {
                 }}>
                     <View style={{
                         flex: 0.3,
-                        backgroundColor: "white",
+                        backgroundColor: theme.background,
                         width: "90%",
                         alignSelf: "flex-end",
                         marginEnd: 20,
@@ -225,7 +262,7 @@ export default function StartScreen({ navigation }) {
                     }}>
                         <Header customStyle={{
                             flex: 0.2,
-                            color: "#004AAD",
+                            color: theme.textColor,
                             fontSize: 17,
                             alignSelf: "center",
                             fontWeight: "bold"
@@ -241,22 +278,22 @@ export default function StartScreen({ navigation }) {
                                 alignItems: "center",
                                 flexDirection: "row",
                                 justifyContent: "space-around",
-                                backgroundColor: "#61e786"
+                                backgroundColor: theme.primary
                             }}>
 
                             <AnimatedCircularProgress
                                 size={100}
                                 width={15}
                                 fill={percent}
-                                tintColor="#004AAD"
-                                backgroundColor="white"
+                                tintColor={theme.secondary}
+                                backgroundColor={theme.fillColor}
                                 lineCap="round"
                                 rotation={180}
                                 duration={3000}>
                                 {(fill) => (
                                     <Header customStyle={{
                                         fontSize: 21,
-                                        color: "#004AAD",
+                                        color: theme.secondary,
                                         alignSelf: "center",
                                         fontWeight: "bold"
                                     }}>
@@ -275,14 +312,14 @@ export default function StartScreen({ navigation }) {
                             }}>
                                 <Header customStyle={{
                                     fontSize: 15,
-                                    color: "#004AAD",
+                                    color: theme.periodColor,
                                     fontWeight: "bold",
                                     width: "100%",
                                 }}>Ano Letivo - {periodo.ano}.{periodo.semestre}</Header>
 
                                 <Header customStyle={{
                                     fontSize: 15,
-                                    color: "#004AAD",
+                                    color: theme.periodColor,
                                     fontWeight: "bold",
                                     width: "100%"
                                 }}>Aulas restantes: {boletim.reduce((a, b) => a + Number(b.carga_horaria), 0) - boletim.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0)} </Header>
@@ -305,7 +342,7 @@ export default function StartScreen({ navigation }) {
                     }].map((category, index) => {
                         return (<TouchableOpacity key={index} style={{
                             flex: 0.1,
-                            backgroundColor: index % 2 ? "#61e786" : "#004AAD",
+                            backgroundColor: index % 2 ? theme.primary : theme.secondary,
                             width: "60%",
                             alignSelf: index % 2 ? "flex-start" : "flex-end",
                             marginEnd: index % 2 ? 0 : 20,
@@ -326,7 +363,7 @@ export default function StartScreen({ navigation }) {
                             />
 
                             <Header style={{
-                                color: index % 2 ? "#142b6f" : "#61e786",
+                                color: index % 2 ? theme.secondTextColor : theme.firstTextColor,
                                 fontSize: 17,
                                 alignSelf: "center",
                                 fontWeight: "bold",

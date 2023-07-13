@@ -44,7 +44,7 @@ async function Login(user, password) {
 
 async function getBoletim(token, ano, periodo) {
     instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
+    console.log(ano, periodo)
     return instance.get(`/minhas-informacoes/boletim/${ano || 2022}/${periodo || 1}/`).then(e => {
         return e.data
     }, (err) => {

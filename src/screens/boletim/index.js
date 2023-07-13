@@ -18,6 +18,9 @@ import { TouchableOpacity } from 'react-native';
 import loading from '../loading';
 
 import * as Keychain from 'react-native-keychain';
+
+import themes from '../../../temas';
+
 export default function Notificações({ navigation }) {
 
     const [userData, setUserData] = useState(false);
@@ -37,6 +40,8 @@ export default function Notificações({ navigation }) {
     const [materia, setMateria] = useState(false);
 
     const [detal, setDetals] = useState({});
+
+    const [theme, setTheme] = useState({});
 
     const loadDetals = (user, password, ano, periodo, diario) => {
 
@@ -82,10 +87,10 @@ export default function Notificações({ navigation }) {
                     width: "85%",
                 }}>
                     <ScrollView style={{
-                        backgroundColor: "#004AAD",
+                        backgroundColor: theme.secondary,
                         width: "100%",
                         borderRadius: 30,
-                        borderColor: "#61e786",
+                        borderColor: theme.primary,
                         borderWidth: 4,
                     }} contentContainerStyle={{
                         padding: "3%"
@@ -93,7 +98,7 @@ export default function Notificações({ navigation }) {
                         {[boletim.map((b, i) => {
                             return (<TouchableOpacity key={i}>
                                 <Header customStyle={{
-                                    color: "#61e786",
+                                    color: theme.primary,
                                     fontSize: 18,
                                     padding: "2%"
                                 }} onPress={() => {
@@ -152,8 +157,19 @@ export default function Notificações({ navigation }) {
 
     function loadPeriodBoletim(token, ano, periodo) {
         Login.getBoletim(token, ano, periodo).then(data => {
-
-            if (!data) data = [];
+            console.log(data)
+            if (!data.length) data = [{
+                disciplina: " - Nenhuma disciplina",
+                nota_etapa_1: {
+                    nota: 0
+                },
+                nota_etapa_2: {
+                    nota: 0
+                },
+                nota_avaliacao_final: {
+                    nota: 0
+                }
+            }];
 
             setBoletim(data);
 
@@ -161,6 +177,11 @@ export default function Notificações({ navigation }) {
         })
     }
     useEffect(() => {
+
+        AsyncStorage.getItem("theme").then(res => {
+            setTheme(themes[res || "normal"].boletim);
+        })
+
         AsyncStorage.getItem("userdata").then(data => {
 
             setUserData(JSON.parse(data));
@@ -174,38 +195,35 @@ export default function Notificações({ navigation }) {
             }
         });
 
-        AsyncStorage.getItem("periodos").then(data => {
-            if (data) {
-                const p = JSON.parse(data);
-
-                setPeriodos(p);
-
-                let last = p.reverse()[1] || p[0];
-
-                setPeriodo({
-                    ano: last.ano_letivo,
-                    periodo: last.periodo_letivo
-                });
-            }
-        })
         AsyncStorage.getItem("userinfo").then(data => {
             const parse = JSON.parse(data);
 
             setCredentials(parse);
 
-            Login.obterPeriodoLetivo(parse.token).then(periodos => {
+            Login.obterPeriodoLetivo(parse.token).then(async periodos => {
                 setPeriodos(periodos);
 
                 AsyncStorage.setItem("periodos", JSON.stringify(periodos));
 
-                let last = periodos.reverse()[1] || periodos[0];
+                for (const i of periodos.reverse().slice(1)) {
+                    console.log(`CHECKING PERIOD`, i)
+                    const check = await new Promise((reso) => {
+                        Login.getBoletim(parse.token, i.ano_letivo, i.periodo_letivo).then(resDataB => {
+                            if (resDataB.length) {
+                                setPeriodo({
+                                    ano: i.ano_letivo,
+                                    semestre: i.periodo_letivo
+                                });
 
-                setPeriodo({
-                    ano: last.ano_letivo,
-                    periodo: last.periodo_letivo
-                });
+                                loadPeriodBoletim(parse.token, i.ano_letivo, i.periodo_letivo);
 
-                loadPeriodBoletim(parse.token, last.ano_letivo, last.periodo_letivo);
+                                reso(true)
+                            } else reso(false);
+                        })
+                    });
+
+                    if (check) break;
+                }
             })
         });
     }, [])
@@ -213,6 +231,9 @@ export default function Notificações({ navigation }) {
     if (!boletim) return loading();
     if (!ira) return loading();
 
+    if (!theme) return loading();
+
+    if (!periodo.ano) return loading();
     return (
         <Background navigation={navigation}>
 
@@ -248,7 +269,7 @@ export default function Notificações({ navigation }) {
                     <View style={{
                         width: "100%",
                         flex: 0.85,
-                        backgroundColor: "white",
+                        backgroundColor: theme.background,
                         borderRadius: 25,
                         borderColor: "black",
                         borderTopWidth: 4,
@@ -260,7 +281,7 @@ export default function Notificações({ navigation }) {
                         <View style={{
                             width: "100%",
                             flex: 0.1,
-                            backgroundColor: "#BCFFC6",
+                            backgroundColor: theme.primary,
                             borderRadius: 40,
                             borderColor: "black",
                             justifyContent: "center",
@@ -272,7 +293,7 @@ export default function Notificações({ navigation }) {
                         }}>
                             <Header customStyle={{
                                 fontSize: 20,
-                                color: "#004AAD",
+                                color: theme.secondary,
                                 fontWeight: "bold",
                                 textAlign: "center"
                             }}>
@@ -283,7 +304,7 @@ export default function Notificações({ navigation }) {
                         {Boolean(detal.Professores) && <Header customStyle={{
                             flex: 0.05,
                             fontSize: 16,
-                            color: "#004AAD",
+                            color: theme.secondary,
                             marginStart: "5%",
                             fontWeight: "bold"
                         }}>
@@ -292,7 +313,7 @@ export default function Notificações({ navigation }) {
 
                         {!Boolean(detal.Professores) && <Header customStyle={{
                             fontSize: 25,
-                            color: "#004AAD",
+                            color: theme.secondary,
                             marginStart: "5%",
                             fontWeight: "bold"
                         }}>
@@ -309,7 +330,7 @@ export default function Notificações({ navigation }) {
                                 <Header customStyle={{
                                     flex: 0.2,
                                     fontSize: 17,
-                                    color: "#004AAD",
+                                    color: theme.secondary,
                                     marginStart: "3%",
                                     marginTop: "2%",
                                     fontWeight: "bold"
@@ -326,14 +347,14 @@ export default function Notificações({ navigation }) {
                                 }}>
                                     {["Sigla", "Tipo", "Descrição", "Peso", "Obteve"].map((e, i) => {
                                         return (<View style={{
-                                            backgroundColor: "#004AAD",
+                                            backgroundColor: theme.secondary,
                                             borderRadius: 40,
                                             flex: ["Tipo", "Descrição"].includes(e) ? 0.3 : 0.1333,
                                             justifyContent: "center",
                                             alignItems: "center"
                                         }}>
                                             <Header customStyle={{
-                                                color: "#61e786",
+                                                color: theme.primary,
                                                 fontSize: 11
                                             }}>
                                                 {e}
@@ -351,13 +372,13 @@ export default function Notificações({ navigation }) {
                                     }}>
                                         {Object.values(e).map((e, i) => {
                                             return (<View style={{
-                                                backgroundColor: j % 2 === 0 ? "rgba(0, 74, 173, 0.6)" : "rgba(0, 255, 18, 0.4)",
+                                                backgroundColor: j % 2 === 0 ? theme.rgba_1 : theme.rgba_2,
                                                 flex: [1, 2].includes(i) ? 0.3 : 0.1333,
                                                 justifyContent: "center",
                                                 alignItems: [1, 2].includes(i) ? "flex-start" : "center"
                                             }}>
                                                 <Header customStyle={{
-                                                    color: j % 2 !== 0 ? "#004AAD" : "#61e786",
+                                                    color: j % 2 !== 0 ? theme.secondary : theme.primary,
                                                     fontSize: 13,
                                                     marginStart: [1, 2].includes(i) ? "15%" : 0
                                                 }}>
@@ -413,7 +434,7 @@ export default function Notificações({ navigation }) {
                         flex: 1,
                     }}>
                         <Header customStyle={{
-                            color: "#00FF29",
+                            color: theme.primary,
                             width: "100%",
                             marginStart: "5%"
                         }}>Sair </Header>
@@ -421,7 +442,7 @@ export default function Notificações({ navigation }) {
                 </View>
                 <View style={{
                     flex: 0.95,
-                    backgroundColor: "white",
+                    backgroundColor: theme.background,
                     width: "100%",
                     alignItems: "center",
                 }}>
@@ -442,7 +463,7 @@ export default function Notificações({ navigation }) {
                         />
 
                         <Header style={{
-                            color: "#004AAD",
+                            color: theme.secondary,
                             fontSize: 25,
                             fontWeight: "bold",
                             marginStart: "1%"
@@ -453,27 +474,25 @@ export default function Notificações({ navigation }) {
 
                     <View style={{
                         flex: 0.1,
-                        backgroundColor: "blue"
+                        backgroundColor: "blue",
+                        width: "100%",
+                        justifyContent: "center",
+                        alignItems: "center",
                     }}>
                         <ScrollView
-                            vertical={true}
-                            style={{
-                                backgroundColor: "yellow",
-
-                            }}
+                            horizontal={true}
                             contentContainerStyle={{
-                                flex: 1,
-                                backgroundColor: "#004AAD",
+                                backgroundColor: theme.secondary,
                                 flexDirection: "row",
-                                justifyContent: "space-around",
+                                justifyContent: "space-evenly",
                                 alignItems: "center",
-                                width: "100%"
+                                flexGrow: 1
                             }}>
                             {periodos.map((p, i) => {
                                 return (
                                     <TouchableOpacity key={i} style={{
-                                        width: "30%",
-                                        backgroundColor: "#61e786",
+                                        width: 100,
+                                        backgroundColor: theme.primary,
                                         borderRadius: 40,
                                         height: "80%",
                                         opacity: periodo?.ano === p.ano_letivo ? 1 : 0.55,
@@ -488,7 +507,7 @@ export default function Notificações({ navigation }) {
                                         loadPeriodBoletim(credentials.token, p.ano_letivo, p.periodo_letivo)
                                     }}>
                                         <Header customStyle={{
-                                            color: "#004AAD",
+                                            color: theme.secondary,
                                             fontSize: 18,
                                             fontWeight: "bold"
                                         }}>
@@ -501,7 +520,7 @@ export default function Notificações({ navigation }) {
                     </View>
 
                     <Header customStyle={{
-                        color: "#004AAD",
+                        color: theme.secondary,
                         fontSize: 25,
                         fontWeight: "bold",
                         textAlign: "center",
@@ -510,18 +529,18 @@ export default function Notificações({ navigation }) {
 
                     <TouchableOpacity style={{
                         flex: 0.06,
-                        backgroundColor: "#004AAD",
+                        backgroundColor: theme.secondary,
                         width: "90%",
                         borderRadius: 40,
                         borderWidth: 5,
-                        borderColor: "#61e786",
+                        borderColor: theme.primary,
                         justifyContent: "center",
                     }} onPress={() => {
                         setVisible(!visible)
                     }}>
                         <Header customStyle={{
                             fontSize: 17,
-                            color: "#61e786",
+                            color: theme.primary,
                             fontWeight: "bold",
                             textAlign: "left",
                             marginStart: "5%",
@@ -531,7 +550,7 @@ export default function Notificações({ navigation }) {
                         </Header>
                     </TouchableOpacity>
                     <Header customStyle={{
-                        color: "#004AAD",
+                        color: theme.secondary,
                         fontSize: 17,
                         fontWeight: "bold",
                         flex: 0.04,
@@ -546,23 +565,23 @@ export default function Notificações({ navigation }) {
                     }}>
                         {[{
                             name: "Disciplina",
-                            color: "#004AAD",
+                            color: theme.secondary,
                             flex: 0.6
                         }, {
                             name: "N1",
-                            color: "#61e786",
+                            color: theme.primary,
                             flex: 0.1
                         }, {
                             name: "N2",
-                            color: "#61e786",
+                            color: theme.primary,
                             flex: 0.1
                         }, {
                             name: "MD",
-                            color: "#61e786",
+                            color: theme.primary,
                             flex: 0.1
                         }, {
                             name: "NAF",
-                            color: "#61e786",
+                            color: theme.primary,
                             flex: 0.1
                         }].map((item, index) => {
                             return (<View key={index} style={{
@@ -572,7 +591,7 @@ export default function Notificações({ navigation }) {
                                 alignItems: "center",
                             }}>
                                 <Header customStyle={{
-                                    color: index === 0 ? "#61e786" : "#004AAD",
+                                    color: index === 0 ? theme.primary : theme.secondary,
                                     fontSize: 18.5,
                                     fontWeight: "bold"
                                 }}>
@@ -583,10 +602,10 @@ export default function Notificações({ navigation }) {
                     </View>
                     <View style={{
                         flex: 0.5,
-                        backgroundColor: "FFFFFF",
+                        backgroundColor: theme.background,
                         width: "100%",
                     }}>
-                        <ScrollView contentContainerStyle={{
+                        {boletim.length ? <ScrollView contentContainerStyle={{
 
                         }} style={{
                             height: "100%"
@@ -594,13 +613,13 @@ export default function Notificações({ navigation }) {
                             {boletim?.sort((a, b) => a.disciplina?.split("- ")[1] - b.disciplina?.split("- ")[1]).map((item, index) => {
                                 return (<View key={index} style={{
                                     height: 50,
-                                    backgroundColor: "#FFFFFF",
+                                    backgroundColor: theme.background,
                                     flexDirection: "row",
                                     justifyContent: "center",
                                     alignItems: "center",
                                 }}>
                                     <TouchableOpacity style={{
-                                        backgroundColor: "white",
+                                        backgroundColor: theme.background,
                                         alignItems: "center",
                                         width: "60%",
                                         justifyContent: "center",
@@ -617,7 +636,7 @@ export default function Notificações({ navigation }) {
                                             alignItems: "center",
                                         }}>
                                             <Header customStyle={{
-                                                color: "#004AAD",
+                                                color: theme.secondary,
                                                 fontSize: 17,
                                                 fontWeight: "bold",
                                                 textAlign: "center",
@@ -628,7 +647,7 @@ export default function Notificações({ navigation }) {
 
                                         <View style={{
                                             height: "15%",
-                                            backgroundColor: "#61e786",
+                                            backgroundColor: theme.primary,
                                             width: "100%",
                                             opacity: 0.4
                                         }}>
@@ -641,12 +660,12 @@ export default function Notificações({ navigation }) {
                                     }}>
                                         <View style={{
                                             height: "85%",
-                                            backgroundColor: "#004AAD",
+                                            backgroundColor: theme.secondary,
                                             justifyContent: "center",
                                             alignItems: "center",
                                         }}>
                                             <Header style={{
-                                                color: "#61e786",
+                                                color: theme.primary,
                                                 fontSize: 17.5,
                                                 fontWeight: "bold",
                                                 textAlign: "center",
@@ -657,7 +676,7 @@ export default function Notificações({ navigation }) {
 
                                         <View style={{
                                             height: "15%",
-                                            backgroundColor: "#61e786",
+                                            backgroundColor: theme.primary,
                                             width: "100%",
                                             opacity: 0.4
                                         }}>
@@ -669,13 +688,13 @@ export default function Notificações({ navigation }) {
                                     }}>
                                         <View style={{
                                             height: "85%",
-                                            backgroundColor: "#61e786",
+                                            backgroundColor: theme.primary,
                                             opacity: 0.7,
                                             justifyContent: "center",
                                             alignItems: "center",
                                         }}>
                                             <Header style={{
-                                                color: "#004AAD",
+                                                color: theme.secondary,
                                                 fontSize: 17.5,
                                                 fontWeight: "bold",
                                                 textAlign: "center",
@@ -686,7 +705,7 @@ export default function Notificações({ navigation }) {
 
                                         <View style={{
                                             height: "15%",
-                                            backgroundColor: "#61e786",
+                                            backgroundColor: theme.primary,
                                             width: "100%",
                                             opacity: 0.4
                                         }}>
@@ -699,12 +718,12 @@ export default function Notificações({ navigation }) {
                                     }}>
                                         <View style={{
                                             height: "85%",
-                                            backgroundColor: "#004AAD",
+                                            backgroundColor: theme.secondary,
                                             justifyContent: "center",
                                             alignItems: "center",
                                         }}>
                                             <Header style={{
-                                                color: (item.nota_etapa_1?.nota + (item.nota_etapa_2?.nota || 0)) / 2 > 60 ? "#61e786" : "red",
+                                                color: (item.nota_etapa_1?.nota + (item.nota_etapa_2?.nota || 0)) / 2 > 60 ? theme.primary : "red",
                                                 fontSize: 17.5,
                                                 fontWeight: "bold",
                                                 textAlign: "center",
@@ -715,7 +734,7 @@ export default function Notificações({ navigation }) {
 
                                         <View style={{
                                             height: "15%",
-                                            backgroundColor: "#61e786",
+                                            backgroundColor: theme.primary,
                                             width: "100%",
                                             opacity: 0.4
                                         }}>
@@ -727,13 +746,13 @@ export default function Notificações({ navigation }) {
                                     }}>
                                         <View style={{
                                             height: "85%",
-                                            backgroundColor: "#61e786",
+                                            backgroundColor: theme.primary,
                                             opacity: 0.7,
                                             justifyContent: "center",
                                             alignItems: "center",
                                         }}>
                                             <Header style={{
-                                                color: "#004AAD",
+                                                color: theme.secondary,
                                                 fontSize: 17.5,
                                                 fontWeight: "bold",
                                                 textAlign: "center",
@@ -744,7 +763,7 @@ export default function Notificações({ navigation }) {
 
                                         <View style={{
                                             height: "15%",
-                                            backgroundColor: "#61e786",
+                                            backgroundColor: theme.primary,
                                             width: "100%",
                                             opacity: 0.4
                                         }}>
@@ -752,7 +771,12 @@ export default function Notificações({ navigation }) {
                                     </View>
                                 </View>)
                             })}
-                        </ScrollView>
+                        </ScrollView> : <Header customStyle={{
+                            color: "black",
+                            fontSize: 25
+                        }}>
+                            Carregando...
+                        </Header>}
                     </View>
                 </View>
             </View>
@@ -789,12 +813,6 @@ const styles = {
     logo_text_container: {
         flex: 0.1,
         maxWidth: "80%",
-    },
-    logo_text_text: {
-        fontSize: 30,
-        fontWeight: 'bold',
-        alignSelf: 'center',
-        color: "white"
     },
     image_container: {
         flex: 0.7,

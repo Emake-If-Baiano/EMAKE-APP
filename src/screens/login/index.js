@@ -95,6 +95,10 @@ export default function StartScreen({ navigation }) {
         })
     }
     useEffect(() => {
+        AsyncStorage.getAllKeys().then(keys => {
+            AsyncStorage.multiRemove(keys)
+        });
+
         requestUserPermission();
 
         AsyncStorage.getItem("token").then(token => {

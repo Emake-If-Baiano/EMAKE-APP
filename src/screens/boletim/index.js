@@ -87,10 +87,10 @@ export default function Notificações({ navigation }) {
                     width: "85%",
                 }}>
                     <ScrollView style={{
-                        backgroundColor: theme.secondary,
+                        backgroundColor: theme.selectBackground,
                         width: "100%",
                         borderRadius: 30,
-                        borderColor: theme.primary,
+                        borderColor: theme.selectBorder,
                         borderWidth: 4,
                     }} contentContainerStyle={{
                         padding: "3%"
@@ -98,7 +98,7 @@ export default function Notificações({ navigation }) {
                         {[boletim.map((b, i) => {
                             return (<TouchableOpacity key={i}>
                                 <Header customStyle={{
-                                    color: theme.primary,
+                                    color: theme.selectTextColor,
                                     fontSize: 18,
                                     padding: "2%"
                                 }} onPress={() => {
@@ -434,7 +434,7 @@ export default function Notificações({ navigation }) {
                         flex: 1,
                     }}>
                         <Header customStyle={{
-                            color: theme.primary,
+                            color: theme.textColor,
                             width: "100%",
                             marginStart: "5%"
                         }}>Sair </Header>
@@ -463,7 +463,7 @@ export default function Notificações({ navigation }) {
                         />
 
                         <Header style={{
-                            color: theme.secondary,
+                            color: theme.textColor,
                             fontSize: 25,
                             fontWeight: "bold",
                             marginStart: "1%"
@@ -492,7 +492,7 @@ export default function Notificações({ navigation }) {
                                 return (
                                     <TouchableOpacity key={i} style={{
                                         width: 100,
-                                        backgroundColor: theme.primary,
+                                        backgroundColor: theme.periodColor,
                                         borderRadius: 40,
                                         height: "80%",
                                         opacity: periodo?.ano === p.ano_letivo ? 1 : 0.55,
@@ -520,7 +520,7 @@ export default function Notificações({ navigation }) {
                     </View>
 
                     <Header customStyle={{
-                        color: theme.secondary,
+                        color: theme.textColor,
                         fontSize: 25,
                         fontWeight: "bold",
                         textAlign: "center",
@@ -540,7 +540,7 @@ export default function Notificações({ navigation }) {
                     }}>
                         <Header customStyle={{
                             fontSize: 17,
-                            color: theme.primary,
+                            color: theme.toqueOne,
                             fontWeight: "bold",
                             textAlign: "left",
                             marginStart: "5%",
@@ -550,7 +550,7 @@ export default function Notificações({ navigation }) {
                         </Header>
                     </TouchableOpacity>
                     <Header customStyle={{
-                        color: theme.secondary,
+                        color: theme.toqueTwo,
                         fontSize: 17,
                         fontWeight: "bold",
                         flex: 0.04,
@@ -591,7 +591,7 @@ export default function Notificações({ navigation }) {
                                 alignItems: "center",
                             }}>
                                 <Header customStyle={{
-                                    color: index === 0 ? theme.primary : theme.secondary,
+                                    color: item.name === "Disciplina" ? theme.disciplina : theme.nColor,
                                     fontSize: 18.5,
                                     fontWeight: "bold"
                                 }}>
@@ -636,7 +636,7 @@ export default function Notificações({ navigation }) {
                                             alignItems: "center",
                                         }}>
                                             <Header customStyle={{
-                                                color: theme.secondary,
+                                                color: theme.textColor,
                                                 fontSize: 17,
                                                 fontWeight: "bold",
                                                 textAlign: "center",
@@ -647,7 +647,7 @@ export default function Notificações({ navigation }) {
 
                                         <View style={{
                                             height: "15%",
-                                            backgroundColor: theme.primary,
+                                            backgroundColor: theme.divColor,
                                             width: "100%",
                                             opacity: 0.4
                                         }}>
@@ -665,7 +665,7 @@ export default function Notificações({ navigation }) {
                                             alignItems: "center",
                                         }}>
                                             <Header style={{
-                                                color: theme.primary,
+                                                color: theme.noteOne,
                                                 fontSize: 17.5,
                                                 fontWeight: "bold",
                                                 textAlign: "center",
@@ -676,7 +676,7 @@ export default function Notificações({ navigation }) {
 
                                         <View style={{
                                             height: "15%",
-                                            backgroundColor: theme.primary,
+                                            backgroundColor: theme.divColor,
                                             width: "100%",
                                             opacity: 0.4
                                         }}>
@@ -689,12 +689,11 @@ export default function Notificações({ navigation }) {
                                         <View style={{
                                             height: "85%",
                                             backgroundColor: theme.primary,
-                                            opacity: 0.7,
                                             justifyContent: "center",
                                             alignItems: "center",
                                         }}>
                                             <Header style={{
-                                                color: theme.secondary,
+                                                color: theme.noteTwo,
                                                 fontSize: 17.5,
                                                 fontWeight: "bold",
                                                 textAlign: "center",
@@ -705,7 +704,7 @@ export default function Notificações({ navigation }) {
 
                                         <View style={{
                                             height: "15%",
-                                            backgroundColor: theme.primary,
+                                            backgroundColor: theme.divColor,
                                             width: "100%",
                                             opacity: 0.4
                                         }}>
@@ -723,7 +722,7 @@ export default function Notificações({ navigation }) {
                                             alignItems: "center",
                                         }}>
                                             <Header style={{
-                                                color: (item.nota_etapa_1?.nota + (item.nota_etapa_2?.nota || 0)) / 2 > 60 ? theme.primary : "red",
+                                                color: (item.nota_etapa_1?.nota + (item.nota_etapa_2?.nota || 0)) / 2 > 60 ? theme.noteOne : "red",
                                                 fontSize: 17.5,
                                                 fontWeight: "bold",
                                                 textAlign: "center",
@@ -734,7 +733,7 @@ export default function Notificações({ navigation }) {
 
                                         <View style={{
                                             height: "15%",
-                                            backgroundColor: theme.primary,
+                                            backgroundColor: theme.divColor,
                                             width: "100%",
                                             opacity: 0.4
                                         }}>
@@ -747,12 +746,11 @@ export default function Notificações({ navigation }) {
                                         <View style={{
                                             height: "85%",
                                             backgroundColor: theme.primary,
-                                            opacity: 0.7,
                                             justifyContent: "center",
                                             alignItems: "center",
                                         }}>
                                             <Header style={{
-                                                color: theme.secondary,
+                                                color: theme.noteTwo,
                                                 fontSize: 17.5,
                                                 fontWeight: "bold",
                                                 textAlign: "center",
@@ -763,7 +761,7 @@ export default function Notificações({ navigation }) {
 
                                         <View style={{
                                             height: "15%",
-                                            backgroundColor: theme.primary,
+                                            backgroundColor: theme.divColor,
                                             width: "100%",
                                             opacity: 0.4
                                         }}>

@@ -236,7 +236,7 @@ export default function Notificações({ navigation }) {
                                                         />
 
                                                         <Header adjustsFontSizeToFit={true} customStyle={{
-                                                            color: "#225D62",
+                                                            color: theme.secondary,
                                                             fontSize: 17,
                                                             alignSelf: "center",
                                                             maxWidth: "80%",

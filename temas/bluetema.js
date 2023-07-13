@@ -13,10 +13,22 @@ module.exports = {
     },
     "boletim": {
         "background": "white",
-        "primary": "#61e786",
-        "secondary": "#004AAD",
+        "primary": "#004AAD",
+        "secondary": "#053D89",
         "rgba_1": "rgba(0, 74, 173, 0.6)",
-        "rgba_2": "rgba(0, 255, 18, 0.4)"
+        "rgba_2": "rgba(0, 255, 18, 0.4)",
+        "periodColor": "white",
+        "textColor": "#053D89",
+        "toqueOne": "white",
+        "toqueTwo": "white",
+        "noteOne": "#61e786",
+        "noteTwo": "#61e786",
+        "disciplina": "white",
+        "divColor": "gray",
+        "nColor": "white",
+        "selectBorder": "#00FF12",
+        "selectBackground": "#053D89",
+        "selectTextColor": "#E9FFED"
     },
     "calendario": {
         "background": "white",
@@ -38,19 +50,20 @@ module.exports = {
     },
     "dados": {
         "background": "white",
-        "primary": "#61e786",
-        "secondary": "#004AAD",
-        "backColor_1": "#61e786",
+        "primary": "white",
+        "secondary": "#053D89",
+        "backColor_1": "#053D89",
         "backColor_2": "#004AAD",
-        "textColor_1": "#225D62",
-        "textColor_2": "#00FF12",
-        "headerColor": "#225D62"
+        "textColor_1": "white",
+        "textColor_2": "white",
+        "headerColor": "#004AAD"
     },
     "documentos": {
         "background": "white",
         "primary": "#61e786",
         "secondary": "#004AAD",
-        "header": "#225D62"
+        "header": "#225D62",
+        "textColor": "white"
     },
     "notificacoes": {
         "background": "white",
@@ -60,8 +73,8 @@ module.exports = {
     },
     "perfil": {
         "background": "white",
-        "primary": "#113548",
-        "secondary": "#225D62",
+        "primary": "#053D89",
+        "secondary": "#004AAD",
         "header": "#004AAD",
         "textColor": "white",
         "tinColorOne": "white",

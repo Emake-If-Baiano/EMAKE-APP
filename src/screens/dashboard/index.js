@@ -121,29 +121,37 @@ export default function StartScreen({ navigation }) {
                     setUserData(resData);
                 });
 
-                if (!boletim.length || !percent) Login.getBoletim(data.token).then(resData => {
+                if (periodo.ano === "2021") Login.obterPeriodoLetivo(data.token).then(async resData => {
+                    for (const i of resData.reverse()) {
+                        const check = await new Promise((reso) => {
+                            Login.getBoletim(data.token, i.ano_letivo, i.periodo_letivo).then(resDataB => {
+                                console.log(resDataB)
+                                if (resDataB.length) {
+                                    AsyncStorage.setItem('boletim', JSON.stringify(resDataB));
 
-                    AsyncStorage.setItem('boletim', JSON.stringify(resData));
+                                    AsyncStorage.setItem("percent", `${100 / (resDataB.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0)) * (resDataB.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0) - resDataB.reduce((a, b) => a + Number(b.numero_faltas), 0))}`)
 
-                    AsyncStorage.setItem("percent", `${100 / (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0)) * (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0) - resData.reduce((a, b) => a + Number(b.numero_faltas), 0))}`)
+                                    setBoletim(resDataB);
 
-                    setBoletim(resData);
+                                    setPercent(100 / (resDataB.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0)) * (resDataB.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0) - resDataB.reduce((a, b) => a + Number(b.numero_faltas), 0)));
 
-                    setPercent(100 / (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0)) * (resData.reduce((a, b) => a + Number(b.carga_horaria_cumprida), 0) - resData.reduce((a, b) => a + Number(b.numero_faltas), 0)));
-                });
+                                    setPeriodo({
+                                        ano: i.ano_letivo,
+                                        semestre: i.periodo_letivo
+                                    });
 
-                if (periodo.ano === "2021") Login.obterPeriodoLetivo(data.token).then(resData => {
-                    let last = resData.reverse()[1] || resData[0];
+                                    AsyncStorage.setItem('periodo', JSON.stringify({
+                                        ano: i.ano_letivo,
+                                        semestre: i.periodo_letivo
+                                    }));
 
-                    AsyncStorage.setItem('periodo', JSON.stringify({
-                        ano: last.ano_letivo,
-                        semestre: last.periodo_letivo
-                    }));
+                                    reso(true)
+                                } else reso(false);
+                            })
+                        });
 
-                    setPeriodo({
-                        ano: last.ano_letivo,
-                        semestre: last.periodo_letivo
-                    })
+                        if (check) break;
+                    }
                 });
 
             }).catch(Err => {
@@ -181,7 +189,7 @@ export default function StartScreen({ navigation }) {
                     }} onPress={() => {
                         Share.share({
                             title: "EMAKE - IF BAIANO - TEIXEIRA DE FREITAS",
-                            message: `Olá! Estou compartilhando com você o novo aplicativo de SUAP do IF BAIANO - TEIXEIRA DE FREITAS!\n\nBaixe agora mesmo em: https://play.google.com/store/apps/details?id=com.srwhale.EMAKE&hl=en-US&ah=rdzPvCISrGg_fmGcIUtxnYPdsjk`
+                            message: `Olá! Estou compartilhando com você o novo aplicativo de SUAP do IF BAIANO - TEIXEIRA DE FREITAS!\n\nBaixe agora mesmo em: https://play.google.com/store/apps/details?id=com.srwhale.EMAKE`
                         })
                     }}>
                         <Image

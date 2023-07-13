@@ -133,7 +133,7 @@ export default function Calendario({ navigation }) {
                     <View style={{
                         flex: 1,
                     }}>
-                        <ScrollView vertical={true} contentContainerStyle={{
+                        {calendario.length ? <ScrollView vertical={true} contentContainerStyle={{
 
                         }} style={{
                             backgroundColor: theme.background,
@@ -158,7 +158,13 @@ export default function Calendario({ navigation }) {
                                     })}
                                 </View>
                             })}
-                        </ScrollView>
+                        </ScrollView> : <Header customStyle={{
+                            color: "black",
+                            fontSize: 20,
+                            fontWeight: "bold"
+                        }}>
+                            Sem calendário disponível
+                        </Header>}
                     </View>
                 </View>
             </View>

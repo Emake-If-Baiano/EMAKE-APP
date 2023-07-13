@@ -157,8 +157,19 @@ export default function Notificações({ navigation }) {
 
     function loadPeriodBoletim(token, ano, periodo) {
         Login.getBoletim(token, ano, periodo).then(data => {
-
-            if (!data) data = [];
+            console.log(data)
+            if (!data.length) data = [{
+                disciplina: " - Nenhuma disciplina",
+                nota_etapa_1: {
+                    nota: 0
+                },
+                nota_etapa_2: {
+                    nota: 0
+                },
+                nota_avaliacao_final: {
+                    nota: 0
+                }
+            }];
 
             setBoletim(data);
 
@@ -184,38 +195,35 @@ export default function Notificações({ navigation }) {
             }
         });
 
-        AsyncStorage.getItem("periodos").then(data => {
-            if (data) {
-                const p = JSON.parse(data);
-
-                setPeriodos(p);
-
-                let last = p.reverse()[1] || p[0];
-
-                setPeriodo({
-                    ano: last.ano_letivo,
-                    periodo: last.periodo_letivo
-                });
-            }
-        })
         AsyncStorage.getItem("userinfo").then(data => {
             const parse = JSON.parse(data);
 
             setCredentials(parse);
 
-            Login.obterPeriodoLetivo(parse.token).then(periodos => {
+            Login.obterPeriodoLetivo(parse.token).then(async periodos => {
                 setPeriodos(periodos);
 
                 AsyncStorage.setItem("periodos", JSON.stringify(periodos));
 
-                let last = periodos.reverse()[1] || periodos[0];
+                for (const i of periodos.reverse().slice(1)) {
+                    console.log(`CHECKING PERIOD`, i)
+                    const check = await new Promise((reso) => {
+                        Login.getBoletim(parse.token, i.ano_letivo, i.periodo_letivo).then(resDataB => {
+                            if (resDataB.length) {
+                                setPeriodo({
+                                    ano: i.ano_letivo,
+                                    semestre: i.periodo_letivo
+                                });
 
-                setPeriodo({
-                    ano: last.ano_letivo,
-                    periodo: last.periodo_letivo
-                });
+                                loadPeriodBoletim(parse.token, i.ano_letivo, i.periodo_letivo);
 
-                loadPeriodBoletim(parse.token, last.ano_letivo, last.periodo_letivo);
+                                reso(true)
+                            } else reso(false);
+                        })
+                    });
+
+                    if (check) break;
+                }
             })
         });
     }, [])
@@ -225,6 +233,7 @@ export default function Notificações({ navigation }) {
 
     if (!theme) return loading();
 
+    if (!periodo.ano) return loading();
     return (
         <Background navigation={navigation}>
 
@@ -465,26 +474,24 @@ export default function Notificações({ navigation }) {
 
                     <View style={{
                         flex: 0.1,
-                        backgroundColor: "blue"
+                        backgroundColor: "blue",
+                        width: "100%",
+                        justifyContent: "center",
+                        alignItems: "center",
                     }}>
                         <ScrollView
-                            vertical={true}
-                            style={{
-                                backgroundColor: "yellow",
-
-                            }}
+                            horizontal={true}
                             contentContainerStyle={{
-                                flex: 1,
                                 backgroundColor: theme.secondary,
                                 flexDirection: "row",
-                                justifyContent: "space-around",
+                                justifyContent: "space-evenly",
                                 alignItems: "center",
-                                width: "100%"
+                                flexGrow: 1
                             }}>
                             {periodos.map((p, i) => {
                                 return (
                                     <TouchableOpacity key={i} style={{
-                                        width: "30%",
+                                        width: 100,
                                         backgroundColor: theme.primary,
                                         borderRadius: 40,
                                         height: "80%",
@@ -598,7 +605,7 @@ export default function Notificações({ navigation }) {
                         backgroundColor: theme.background,
                         width: "100%",
                     }}>
-                        <ScrollView contentContainerStyle={{
+                        {boletim.length ? <ScrollView contentContainerStyle={{
 
                         }} style={{
                             height: "100%"
@@ -764,7 +771,12 @@ export default function Notificações({ navigation }) {
                                     </View>
                                 </View>)
                             })}
-                        </ScrollView>
+                        </ScrollView> : <Header customStyle={{
+                            color: "black",
+                            fontSize: 25
+                        }}>
+                            Carregando...
+                        </Header>}
                     </View>
                 </View>
             </View>

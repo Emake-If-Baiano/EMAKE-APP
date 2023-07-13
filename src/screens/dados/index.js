@@ -93,8 +93,6 @@ export default function Notificações({ navigation }) {
 
     if (!userData) return loading()
 
-    if (!ira) return loading();
-
     if (!theme) return loading();
 
     return (

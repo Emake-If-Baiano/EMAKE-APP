@@ -44,7 +44,7 @@ export default function Turmas({ navigation }) {
 
     function loadPeriodBoletim(token, ano, periodo) {
         Login.getBoletim(token, ano, periodo).then(data => {
-
+            console.log(data)
             if (!data) data = [];
 
             setBoletim(data);
@@ -66,21 +66,6 @@ export default function Turmas({ navigation }) {
             }
         });
 
-        AsyncStorage.getItem("periodos").then(data => {
-            if (data) {
-                const p = JSON.parse(data);
-
-                setPeriodos(p);
-
-                let last = p.reverse()[1] || p[0];
-
-                setPeriodo({
-                    ano: last.ano_letivo,
-                    periodo: last.periodo_letivo
-                });
-            }
-        })
-
         AsyncStorage.getItem("turmas").then(data => {
             if (data) {
                 setTurmas(JSON.parse(data));
@@ -93,32 +78,40 @@ export default function Turmas({ navigation }) {
 
             setCredentials(parse);
 
-            Login.obterPeriodoLetivo(parse.token).then(periodos => {
+            Login.obterPeriodoLetivo(parse.token).then(async periodos => {
                 setPeriodos(periodos);
 
                 AsyncStorage.setItem("periodos", JSON.stringify(periodos));
 
-                let last = periodos.reverse()[1] || periodos[0];
+                for (const i of periodos.reverse()) {
+                    await new Promise((reso) => {
+                        Login.getBoletim(parse.token, i.ano_letivo, i.periodo_letivo).then(resDataB => {
+                            if (resDataB.length) {
+                                if (!periodo.ano) {
+                                    setPeriodo(p => {
+                                        if (p.ano) return p;
 
-                setPeriodo({
-                    ano: last.ano_letivo,
-                    periodo: last.periodo_letivo
-                });
+                                        setBoletim(resDataB);
 
-                loadPeriodBoletim(parse.token, last.ano_letivo, last.periodo_letivo);
+                                        return {
+                                            ano: i.ano_letivo,
+                                            semestre: i.periodo_letivo
+                                        }
+                                    });
+                                }
 
-                periodos.forEach(p => {
-                    Login.obterTurmas(parse.token, p.ano_letivo, p.periodo_letivo).then(turmasN => {
-                        if (!turmasN) return;
+                                setTurmas(tu => {
+                                    return [...tu, ...resDataB]
+                                });
+                                AsyncStorage.getItem("turmas").then(tur => {
+                                    AsyncStorage.setItem("turmas", JSON.stringify([...(tur ? JSON.parse(tur) : []), ...resDataB]));
+                                })
+                            }
 
-                        setTurmas(tu => {
-                            return [...tu, ...turmasN]
-                        });
-                        AsyncStorage.getItem("turmas").then(tur => {
-                            AsyncStorage.setItem("turmas", JSON.stringify([...(tur ? JSON.parse(tur) : []), ...turmasN]));
+                            reso(true)
                         })
-                    })
-                })
+                    });
+                }
             });
         });
     }, [])
@@ -126,6 +119,8 @@ export default function Turmas({ navigation }) {
     if (!boletim) return loading();
 
     if (!turmas.length) return loading();
+
+    if (!periodo.ano) return loading();
 
     return (
         <Background navigation={navigation}>
@@ -421,27 +416,21 @@ export default function Turmas({ navigation }) {
                     </View>
                     <View style={{
                         flex: 0.1,
-                        backgroundColor: "blue"
                     }}>
                         <ScrollView
-                            vertical={true}
-                            style={{
-                                backgroundColor: "yellow",
-
-                            }}
+                            horizontal={true}
                             contentContainerStyle={{
-                                flex: 1,
-                                backgroundColor: "#004AAD",
+                                backgroundColor: theme.semestreSelector.background,
                                 flexDirection: "row",
-                                justifyContent: "space-around",
+                                justifyContent: "space-evenly",
                                 alignItems: "center",
-                                width: "100%"
+                                flexGrow: 1
                             }}>
                             {periodos.map((p, i) => {
                                 return (
                                     <TouchableOpacity key={i} style={{
-                                        width: "30%",
-                                        backgroundColor: "#61e786",
+                                        width: 100,
+                                        backgroundColor: theme.semestreSelector.primary,
                                         borderRadius: 40,
                                         height: "80%",
                                         opacity: periodo?.ano === p.ano_letivo ? 1 : 0.55,
@@ -456,7 +445,7 @@ export default function Turmas({ navigation }) {
                                         loadPeriodBoletim(credentials.token, p.ano_letivo, p.periodo_letivo)
                                     }}>
                                         <Header customStyle={{
-                                            color: "#004AAD",
+                                            color: theme.semestreSelector.textColor,
                                             fontSize: 18,
                                             fontWeight: "bold"
                                         }}>
@@ -470,7 +459,7 @@ export default function Turmas({ navigation }) {
                     <View style={{
                         flex: 0.75,
                     }}>
-                        <ScrollView vertical={true} contentContainerStyle={{
+                        {boletim.length ? <ScrollView vertical={true} contentContainerStyle={{
 
                         }} style={{
                             backgroundColor: "white",
@@ -559,7 +548,13 @@ export default function Turmas({ navigation }) {
                                     </View>
                                 </TouchableOpacity>
                             })}
-                        </ScrollView>
+                        </ScrollView> : <Header customStyle={{
+                            color: "black",
+                            fontSize: 25
+                        }}>
+
+                            Carregando...
+                        </Header>}
                     </View>
                 </View>
             </View>

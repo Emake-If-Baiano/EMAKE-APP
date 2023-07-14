@@ -67,10 +67,10 @@ module.exports = {
         "textColor": "white"
     },
     "notificacoes": {
-        "background": "white",
-        "primary": "#f3fcf9",
-        "secondary": "black",
-        "header": "#004AAD"
+        "background": "#14141C",
+        "primary": "#631C1C",
+        "secondary": "white",
+        "header": "white"
     },
     "perfil": {
         "background": "#14141C",

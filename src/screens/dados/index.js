@@ -80,7 +80,10 @@ export default function Notificações({ navigation }) {
             Login.getBoletim(parse.token).then(res => {
 
                 if (!res) {
-                    navigation.navigate("Login");
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: 'Login' }],
+                    })
                     return;
                 }
                 const ira = calcIRA(res);
@@ -115,7 +118,10 @@ export default function Notificações({ navigation }) {
                                 Keychain.resetGenericPassword().then(() => {
                                     AsyncStorage.removeItem("darkmode");
 
-                                    navigation.navigate("Login");
+                                    navigation.reset({
+                                        index: 0,
+                                        routes: [{ name: 'Login' }],
+                                    })
                                 })
                             })
                         });

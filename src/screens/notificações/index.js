@@ -75,7 +75,10 @@ export default function Notificacoes({ navigation }) {
                                 Keychain.resetGenericPassword().then(() => {
                                     AsyncStorage.removeItem("darkmode");
 
-                                    navigation.navigate("Login");
+                                    navigation.reset({
+                                        index: 0,
+                                        routes: [{ name: 'Login' }],
+                                    })
                                 })
                             })
                         });
@@ -129,7 +132,7 @@ export default function Notificacoes({ navigation }) {
                         <ScrollView vertical={true} contentContainerStyle={{
                             flex: 1
                         }} style={{
-                            backgroundColor: "white",
+                            backgroundColor: theme.background,
                             width: "100%",
 
                         }}>
@@ -151,7 +154,7 @@ export default function Notificacoes({ navigation }) {
                                     <Header customStyle={{
                                         fontWeight: "bold",
                                         fontSize: 16,
-                                        color: "black",
+                                        color: theme.secondary,
                                         marginStart: "5%",
                                         flex: 0.3,
                                     }}>{b.titulo}</Header>

@@ -142,7 +142,10 @@ export default function Turmas({ navigation }) {
                                 Keychain.resetGenericPassword().then(() => {
                                     AsyncStorage.removeItem("darkmode");
 
-                                    navigation.navigate("Login");
+                                    navigation.reset({
+                                        index: 0,
+                                        routes: [{ name: 'Login' }],
+                                    })
                                 })
                             })
                         });

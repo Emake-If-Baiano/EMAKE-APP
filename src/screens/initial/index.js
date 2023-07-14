@@ -73,7 +73,10 @@ export default function StartScreen({ navigation }) {
                         secondaryColor='rgb(4, 252, 92)'
                         backgroundColor="transparent"
                         onDone={() => {
-                            navigation.navigate("Login")
+                            navigation.reset({
+                                index: 0,
+                                routes: [{ name: 'Login' }],
+                            })
                         }}
                         onNext={() => {
                             if (index === 2) {
@@ -126,7 +129,7 @@ export default function StartScreen({ navigation }) {
 const styles = {
     logo_container: {
         width: "100%",
-        height: 190,
+        height: 150
     },
     logo_image: {
         width: "100%",

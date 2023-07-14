@@ -67,7 +67,7 @@ module.exports = {
     },
     "notificacoes": {
         "background": "white",
-        "primary": "#f3fcf9",
+        "primary": "#0CC0DF",
         "secondary": "black",
         "header": "#004AAD"
     },

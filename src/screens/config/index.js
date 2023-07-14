@@ -96,7 +96,10 @@ export default function Configuracoes({ navigation }) {
                                 Keychain.resetGenericPassword().then(() => {
                                     AsyncStorage.removeItem("darkmode");
 
-                                    navigation.navigate("Login");
+                                    navigation.reset({
+                                        index: 0,
+                                        routes: [{ name: 'Login' }],
+                                    })
                                 })
                             })
                         });
@@ -204,7 +207,10 @@ export default function Configuracoes({ navigation }) {
                                                 Keychain.resetGenericPassword().then(() => {
                                                     AsyncStorage.removeItem("darkmode");
 
-                                                    navigation.navigate("Login");
+                                                    navigation.reset({
+                                                        index: 0,
+                                                        routes: [{ name: 'Login' }],
+                                                    })
                                                 })
                                             })
                                         });

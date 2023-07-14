@@ -40,7 +40,7 @@ module.exports = {
         "primary": "#61e786",
         "secondary": "white",
         "header": "#113548",
-        "split": "#225D62",
+        "split": "#1C4B63",
         "fontColor": "white",
         "track": {
             "disabled": "#4E627E",
@@ -66,10 +66,10 @@ module.exports = {
         "textColor": "white",
     },
     "notificacoes": {
-        "background": "white",
-        "primary": "#f3fcf9",
-        "secondary": "black",
-        "header": "#004AAD"
+        "background": "#022A35",
+        "primary": "#1C4B63",
+        "secondary": "white",
+        "header": "white"
     },
     "perfil": {
         "background": "#022A35",

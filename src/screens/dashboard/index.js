@@ -92,7 +92,10 @@ export default function StartScreen({ navigation }) {
         });
 
         AsyncStorage.getItem("userinfo").then(resD => {
-            if (!resD) return navigation.navigate("Login");
+            if (!resD) return navigation.reset({
+                index: 0,
+                routes: [{ name: 'Login' }],
+            })
             const p = JSON.parse(resD);
 
             Login.Login(p.user, p.password).then(res => {
@@ -104,7 +107,10 @@ export default function StartScreen({ navigation }) {
                     password: p.password,
                     token: data.access,
                 }))
-                if (!data.token) return navigation.navigate("Login");
+                if (!data.token) return navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'Login' }],
+                })
 
                 if (!userData.nome_usual) Login.getUserData(data.token).then(resData => {
 

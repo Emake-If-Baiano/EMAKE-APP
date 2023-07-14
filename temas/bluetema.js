@@ -37,10 +37,10 @@ module.exports = {
     },
     "config": {
         "background": "white",
-        "primary": "#61e786",
-        "secondary": "#004AAD",
-        "header": "#C8D8DE",
-        "split": "#E9FFED",
+        "primary": "#053D89",
+        "secondary": "#053D89",
+        "header": "#E9FFED",
+        "split": "#C8D8DE",
         "fontColor": "black",
         "track": {
             "disabled": "#4E627E",
@@ -86,11 +86,14 @@ module.exports = {
         "background": "white",
         "primary": "#f3fcf9",
         "semestreSelector": {
-            "background": "#004AAD",
-            "textColor": "white",
-            "primary": "#61e786",
+            "background": "#053D89",
+            "textColor": "#004AAD",
+            "primary": "white",
         },
-        "textColor": "black",
-        "sair": "#61e786"
+        "textColor": "#004AAD",
+        "sair": "#61e786",
+        "turmaColor": "#0CC0DF",
+        "selected": "cyan",
+        "fillTurmas": "#004AAD"
     }
 }

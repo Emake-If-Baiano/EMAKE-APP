@@ -31,17 +31,17 @@ module.exports = {
         "selectTextColor": "#E9FFED"
     },
     "calendario": {
-        "background": "white",
+        "background": "#631C1C",
         "primary": "#61e786",
-        "secondary": "#004AAD"
+        "secondary": "white"
     },
     "config": {
-        "background": "white",
+        "background": "#631C1C",
         "primary": "#61e786",
-        "secondary": "#004AAD",
-        "header": "#C8D8DE",
-        "split": "#E9FFED",
-        "fontColor": "black",
+        "secondary": "white",
+        "header": "#631C1C",
+        "split": "#341C24",
+        "fontColor": "white",
         "track": {
             "disabled": "#4E627E",
             "enabled": "lightgreen",
@@ -84,14 +84,17 @@ module.exports = {
         "textColorTwo": "#631C1C"
     },
     "turmas": {
-        "background": "white",
+        "background": "#14141C",
         "primary": "#f3fcf9",
         "semestreSelector": {
-            "background": "#004AAD",
-            "textColor": "white",
-            "primary": "#61e786",
+            "background": "#631C1C",
+            "textColor": "#004AAD",
+            "primary": "white",
         },
-        "textColor": "black",
-        "sair": "#61e786"
+        "textColor": "white",
+        "sair": "#61e786",
+        "turmaColor": "#631C1C",
+        "selected": "#61e786",
+        "fillTurmas": "white"
     }
 }

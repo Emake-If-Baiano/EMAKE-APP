@@ -91,6 +91,9 @@ module.exports = {
             "primary": "#61e786",
         },
         "textColor": "black",
-        "sair": "#61e786"
+        "sair": "#61e786",
+        "turmaColor": "#f3fcf9",
+        "selected": "green",
+        "fillTurmas": "#004AAD"
     }
 }

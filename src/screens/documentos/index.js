@@ -93,7 +93,10 @@ export default function Notificações({ navigation }) {
                                 Keychain.resetGenericPassword().then(() => {
                                     AsyncStorage.removeItem("darkmode");
 
-                                    navigation.navigate("Login");
+                                    navigation.reset({
+                                        index: 0,
+                                        routes: [{ name: 'Login' }],
+                                    })
                                 })
                             })
                         });
@@ -165,7 +168,7 @@ export default function Notificações({ navigation }) {
                                         Linking.openURL("https://suap.ifbaiano.edu.br" + e.link)
                                     }}>
                                         <Header style={{
-                                            color: index % 2 ? theme.secondary : theme.primary,
+                                            color: theme.textColor,
                                             fontSize: e.nome.length > 30 ? 17 : 20,
                                             alignSelf: "center",
                                             fontWeight: "bold",

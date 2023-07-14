@@ -80,7 +80,10 @@ export default function Notificações({ navigation }) {
             Login.getBoletim(parse.token).then(res => {
 
                 if (!res) {
-                    navigation.navigate("Login");
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: 'Login' }],
+                    })
                     return;
                 }
                 const ira = calcIRA(res);
@@ -115,7 +118,10 @@ export default function Notificações({ navigation }) {
                                 Keychain.resetGenericPassword().then(() => {
                                     AsyncStorage.removeItem("darkmode");
 
-                                    navigation.navigate("Login");
+                                    navigation.reset({
+                                        index: 0,
+                                        routes: [{ name: 'Login' }],
+                                    })
                                 })
                             })
                         });
@@ -236,7 +242,7 @@ export default function Notificações({ navigation }) {
                                                         />
 
                                                         <Header adjustsFontSizeToFit={true} customStyle={{
-                                                            color: "#225D62",
+                                                            color: theme.secondary,
                                                             fontSize: 17,
                                                             alignSelf: "center",
                                                             maxWidth: "80%",

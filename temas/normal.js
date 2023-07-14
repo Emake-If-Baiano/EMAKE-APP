@@ -16,7 +16,19 @@ module.exports = {
         "primary": "#61e786",
         "secondary": "#004AAD",
         "rgba_1": "rgba(0, 74, 173, 0.6)",
-        "rgba_2": "rgba(0, 255, 18, 0.4)"
+        "rgba_2": "rgba(0, 255, 18, 0.4)",
+        "periodColor": "#61e786",
+        "textColor": "#004AAD",
+        "toqueOne": "#61e786",
+        "toqueTwo": "#004AAD",
+        "noteOne": "#61e786",
+        "noteTwo": "#004AAD",
+        "disciplina": "#61e786",
+        "divColor": "#61e786",
+        "nColor": "#004AAD",
+        "selectBackground": "#113548",
+        "selectTextColor": "#E9FFED",
+        "selectBorder": "#00FF12",
     },
     "calendario": {
         "background": "white",
@@ -39,7 +51,7 @@ module.exports = {
     "dados": {
         "background": "white",
         "primary": "#61e786",
-        "secondary": "#004AAD",
+        "secondary": "#225D62",
         "backColor_1": "#61e786",
         "backColor_2": "#004AAD",
         "textColor_1": "#225D62",
@@ -50,7 +62,8 @@ module.exports = {
         "background": "white",
         "primary": "#61e786",
         "secondary": "#004AAD",
-        "header": "#225D62"
+        "header": "#225D62",
+        "textColor": "white"
     },
     "notificacoes": {
         "background": "white",
@@ -78,6 +91,9 @@ module.exports = {
             "primary": "#61e786",
         },
         "textColor": "black",
-        "sair": "#61e786"
+        "sair": "#61e786",
+        "turmaColor": "#f3fcf9",
+        "selected": "green",
+        "fillTurmas": "#004AAD"
     }
 }

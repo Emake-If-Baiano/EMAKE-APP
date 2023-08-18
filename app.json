@@ -1,0 +1,57 @@
+{
+  "expo": {
+    "plugins": [
+      [
+        "expo-updates",
+        {
+          "username": "srwhale"
+        }
+      ]
+    ],
+    "name": "EMAKE",
+    "slug": "EMAKE",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/logo_antiga.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/logo_antiga.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#29473b"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "notification": {
+      "icon": "./assets/logo_antiga.png",
+      "color": "#29473b"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "googleServicesFile": "./google-services.json",
+      "softwareKeyboardLayoutMode": "pan",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/logo_antiga.png",
+        "backgroundColor": "#29473b"
+      },
+      "package": "com.srwhale.EMAKE",
+      "versionCode": 20
+    },
+    "web": {
+      "favicon": "./assets/logo_antiga.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "fd116e4f-0cb2-4aaf-a866-39217cc06205"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/fd116e4f-0cb2-4aaf-a866-39217cc06205"
+    }
+  }
+}
